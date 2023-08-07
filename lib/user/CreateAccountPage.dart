@@ -23,7 +23,7 @@ class _CreateAccountState extends State<CreateAccount> {
   bool isTyping = false;
   bool _showPassword = false;
 
-  final _formkey = GlobalKey<FormState>();
+  //final _formkey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {

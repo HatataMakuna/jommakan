@@ -15,6 +15,7 @@ TASKS INSIDE THIS FILE
 
 import 'package:flutter/material.dart';
 import 'CreateAccountPage.dart';
+import 'ForgetPassword.dart';
 
 void main() => runApp(MaterialApp(home: LoginPage()));
 
@@ -111,7 +112,10 @@ class _LoginState extends State<LoginPage> {
 
   Widget forgetPasswordBtn(BuildContext context) {
     return TextButton(
-      onPressed: null, // link to forget password page
+      onPressed: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ForgetPasswordPage())
+      ), // link to forget password page
       child: Text('FORGET PASSWORD?'),
     );
   }

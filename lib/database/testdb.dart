@@ -1,30 +1,22 @@
-/* import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+import 'package:objectbox/objectbox.dart';
 
-Future<Database> _initializeDatabase() async {
-  // Get the path for the database file
-  String databasesPath = await getDatabasesPath();
-  String path = join(databasesPath, 'jommakan.db');
+@Entity()
+class User {
+  @Id()
+  int id = 0;
+  
+  String? name;
+  
+  @Property(type: PropertyType.date) // Store as int in milliseconds
+  DateTime? date;
 
-  // Open the database
-  Database database = await openDatabase(path, version: 1,
-      onCreate: (Database db, int version) async {
-    // Create the table when the database is created
-    await db.execute(
-      'CREATE TABLE Users (user_id INTEGER PRIMARY KEY, name TEXT, age INTEGER)',
-    );
-  });
-
-  return database;
+  @Transient() // Ignore this property, not stored in the database.
+  int? computedProperty;
 }
 
-void main() async {
-  // Initialize the database
-  Database database = await _initializeDatabase();
+// You can have multiple entities in the same file (here models.dart), or you can have them spread across multiple files in your package's lib directory.
 
-  // Use the database
-  // ...
-
-  // Close the database connection when no longer needed
-  await database.close();
-} */
+/*
+Run flutter pub run build_runner build  to generate the binding code required to use ObjectBox.
+ObjectBox generator will look for all @Entity annotations in your lib folder and create a single database definition lib/objectbox-model.json and supporting code in lib/objectbox.g.dart
+*/
