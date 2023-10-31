@@ -35,12 +35,12 @@ class _LoginState extends State<LoginPage> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Login'),
-          leading: IconButton(
+          /* leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pop();
             },
-          ),
+          ), */
         ),
         body: loginForm(context),
       ),

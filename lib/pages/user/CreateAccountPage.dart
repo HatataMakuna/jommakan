@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 void main() => runApp(MaterialApp(home: CreateAccount()));
 
 class CreateAccount extends StatefulWidget {
+  const CreateAccount({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _CreateAccountState();
@@ -20,6 +22,7 @@ class _CreateAccountState extends State<CreateAccount> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _repeatPasswordController = TextEditingController();
   bool isTyping = false;
   bool _showPassword = false;
 
@@ -52,6 +55,7 @@ class _CreateAccountState extends State<CreateAccount> {
             usernameField(),
             emailField(),
             passwordField(),
+            repeatPasswordField(),
             registerButton(),
             // text fields
           ],
@@ -66,8 +70,6 @@ class _CreateAccountState extends State<CreateAccount> {
       decoration: InputDecoration(labelText: 'Username'),
     );
   }
-
-// how to make the error text in InputDecoration does not appear when first launch the page
   
 
   Widget emailField() {
@@ -104,13 +106,38 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
+  Widget repeatPasswordField() {
+    return TextField(
+      controller: _repeatPasswordController,
+      decoration: InputDecoration(
+        labelText: 'Repeat Password',
+        errorText: _repeatPasswordErrorText(),
+        
+        // "Show Password" icon
+        suffixIcon: IconButton(
+          icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility),
+          onPressed: () {
+            setState(() {
+              _showPassword = !_showPassword;
+            });
+          },
+        ),
+      ),
+      onChanged: (value) => _validatePassword(value),
+      obscureText: !_showPassword, // Hide or show password based on _showPassword value
+    );
+  }
+
   Widget registerButton() {
     return ElevatedButton(
       onPressed: () {
         // Handle registration button logic
-
       },
       child: Text('Register Now'),
+      style: ElevatedButton.styleFrom(
+        elevation: 5, // Set the elevation (depth) of the button
+        shadowColor: Colors.black, // Set the shadow color
+      )
     );
   }
 
@@ -143,6 +170,16 @@ class _CreateAccountState extends State<CreateAccount> {
     return null;
   }
 
+  String? _repeatPasswordErrorText() {
+    final textToCompare = _passwordController.value.text;
+    final inputText = _repeatPasswordController.value.text;
+    if (inputText != textToCompare) {
+      return 'Password does not match';
+    } else {
+      return null;
+    }
+  }
+
   void registerUser() {
     // logic here
   }
@@ -153,4 +190,3 @@ class _CreateAccountState extends State<CreateAccount> {
     super.dispose();
   }
 }
-

@@ -1,22 +1,34 @@
-import 'package:objectbox/objectbox.dart';
+/*import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 
-@Entity()
-class User {
-  @Id()
-  int id = 0;
-  
-  String? name;
-  
-  @Property(type: PropertyType.date) // Store as int in milliseconds
-  DateTime? date;
+import '../main.dart';
 
-  @Transient() // Ignore this property, not stored in the database.
-  int? computedProperty;
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+*/
+
+import 'dart:async';
+
+import 'package:firebase_database/firebase_database.dart';
+
+final databaseReference = FirebaseDatabase.instance.reference();
+
+void writeData() {
+  databaseReference.child('users').set({
+    'name': 'John Doe',
+    'email': 'johndoe@example.com',
+  });
 }
 
-// You can have multiple entities in the same file (here models.dart), or you can have them spread across multiple files in your package's lib directory.
+void readData() {
+  databaseReference.child('users').once().then((DataSnapshot snapshot) {
+    print('Data: ${snapshot.value}');
+  } as FutureOr Function(DatabaseEvent value));
+}
 
-/*
-Run flutter pub run build_runner build  to generate the binding code required to use ObjectBox.
-ObjectBox generator will look for all @Entity annotations in your lib folder and create a single database definition lib/objectbox-model.json and supporting code in lib/objectbox.g.dart
-*/
+void main() {
+  writeData();
+}

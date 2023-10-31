@@ -2,6 +2,10 @@
 
 A new Flutter project.
 
+## Database setup
+- Install the Firebase CLI via "npm" by running this command on your terminal:
+`npm install -g firebase-tools`
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
