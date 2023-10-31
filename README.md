@@ -1,10 +1,8 @@
-# cw_fyp_2pt0
-
-A new Flutter project.
+# JomMakan
+A TAR UMT online food ordering system project using Dart and Flutter.
 
 ## Database setup
-- Install the Firebase CLI via "npm" by running this command on your terminal:
-`npm install -g firebase-tools`
+TBA
 
 ## Getting Started
 
