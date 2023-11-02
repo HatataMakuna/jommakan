@@ -14,12 +14,12 @@ TASKS INSIDE THIS FILE
 */
 
 import 'package:flutter/material.dart';
-import 'CreateAccountPage.dart';
-import 'ForgetPassword.dart';
 
 void main() => runApp(MaterialApp(home: LoginPage()));
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _LoginState();
@@ -61,13 +61,13 @@ class _LoginState extends State<LoginPage> {
             SizedBox(height: 20.0),
             TextField(
               decoration: InputDecoration(
-                labelText: 'Username',
+                labelText: 'USERNAME',
               ),
             ),
             SizedBox(height: 10.0),
             TextField(
               decoration: InputDecoration(
-                labelText: 'Password',
+                labelText: 'PASSWORD',
               ),
               obscureText: true,
             ),
@@ -112,10 +112,7 @@ class _LoginState extends State<LoginPage> {
 
   Widget forgetPasswordBtn(BuildContext context) {
     return TextButton(
-      onPressed: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ForgetPasswordPage())
-      ), // link to forget password page
+      onPressed: () => Navigator.pushNamed(context, '/user/forget-password'),
       child: Text('FORGET PASSWORD?'),
     );
   }
@@ -133,10 +130,7 @@ class _LoginState extends State<LoginPage> {
       children: [
         Text('Don\'t have account?'),
         TextButton(
-          onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CreateAccount()),
-            ), // go to register account page
+          onPressed: () => Navigator.pushNamed(context, '/user/create-account'), // go to register account page
           child: Text(
             'Create new account',
             style: TextStyle(
