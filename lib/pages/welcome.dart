@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 
-// external pages
-import 'user/LoginPage.dart';
+// components
+import '../components/indicator.dart';
 
-void main() => runApp(const MyApp());
+//void main() => runApp(const MyApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Welcome extends StatelessWidget {
+  const Welcome({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: WelcomePage(),
-    );
+    return const WelcomePage();
   }
 }
 
@@ -57,10 +55,7 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
         _animationController.forward();
       } else {
         // Navigate to login page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-        );
+        Navigator.pushNamed(context, '/user/login');
       }
     });
   }
@@ -89,7 +84,13 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
                     child: child,
                   );
                 },
-                child: welcomeSection2(),
+                child: Column(
+                  children: [
+                    welcomeSection2(),
+                    const SizedBox(height: 20),
+                    const Indicator(totalIndicators: 3, activeIndex: 0),
+                  ]
+                )
               ),
             if (_currentSection == 3)
               AnimatedBuilder(
@@ -100,7 +101,13 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
                     child: child,
                   );
                 },
-                child: welcomeSection3(),
+                child: Column(
+                  children: [
+                    welcomeSection3(),
+                    const SizedBox(height: 20),
+                    const Indicator(totalIndicators: 3, activeIndex: 1),
+                  ]
+                )
               ),
             if (_currentSection == 4)
               AnimatedBuilder(
@@ -111,7 +118,13 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
                     child: child,
                   );
                 },
-                child: welcomeSection4(),
+                child: Column(
+                  children: [
+                    welcomeSection4(),
+                    const SizedBox(height: 20),
+                    const Indicator(totalIndicators: 3, activeIndex: 2),
+                  ],
+                )
               ),
             const SizedBox(height: 20),
             nextButton(),
@@ -240,8 +253,8 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
             fontSize: 16,
             fontFamily: 'Abhaya Libre',
             fontWeight: FontWeight.w500,
-          )
-        )
+          ),
+        ),
       ]
     );
   }
