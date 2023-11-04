@@ -1,11 +1,11 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, file_names
 
 // new email address
 // new password
 // repeat password - must be at least 8 characters
 
 import 'package:flutter/material.dart';
-//import 'AccountValidation.dart';
+import 'package:jom_makan/server/register.dart';
 
 void main() => runApp(MaterialApp(home: CreateAccount()));
 
@@ -25,6 +25,7 @@ class _CreateAccountState extends State<CreateAccount> {
   final TextEditingController _repeatPasswordController = TextEditingController();
   bool isTyping = false;
   bool _showPassword = false;
+  final Register _register = Register(); // Instantiate Register (server-side) class
 
   //final _formkey = GlobalKey<FormState>();
 
@@ -52,10 +53,14 @@ class _CreateAccountState extends State<CreateAccount> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            usernameField(),
+            nameField(),
+            SizedBox(height: 20,),
             emailField(),
+            SizedBox(height: 20,),
             passwordField(),
+            SizedBox(height: 20,),
             repeatPasswordField(),
+            SizedBox(height: 20,),
             registerButton(),
             // text fields
           ],
@@ -64,16 +69,15 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
-  Widget usernameField() {
+  // Text Fields
+  Widget nameField() {
     return TextField(
       controller: _nameController,
-      decoration: InputDecoration(labelText: 'Username'),
+      decoration: InputDecoration(labelText: 'Name'),
     );
   }
-  
 
   Widget emailField() {
-    ////////////////////
     return TextField(
       controller: _emailController,
       decoration: InputDecoration(
@@ -123,16 +127,16 @@ class _CreateAccountState extends State<CreateAccount> {
           },
         ),
       ),
-      onChanged: (value) => _validatePassword(value),
+      onChanged: (value) => _validateRepeatPassword(value),
       obscureText: !_showPassword, // Hide or show password based on _showPassword value
     );
   }
 
+  // Button
   Widget registerButton() {
     return ElevatedButton(
-      onPressed: () {
-        // Handle registration button logic
-      },
+      // Disable the button if there are errors
+      onPressed: _hasErrors() ? null : registerUser,
       child: Text('Register Now'),
       style: ElevatedButton.styleFrom(
         elevation: 5, // Set the elevation (depth) of the button
@@ -141,6 +145,7 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
+  // Validations
   void _validateEmail(String value) {
     setState(() => isTyping = true);
   }
@@ -149,7 +154,11 @@ class _CreateAccountState extends State<CreateAccount> {
     setState(() {});
   }
 
-  // email error message
+  void _validateRepeatPassword(String value) {
+    setState(() {});
+  }
+
+  // Error Messages
   String? _emailErrorText() {
     final text = _emailController.value.text;
     if (text.isEmpty) {
@@ -180,8 +189,29 @@ class _CreateAccountState extends State<CreateAccount> {
     }
   }
 
-  void registerUser() {
-    // logic here
+  bool _hasErrors() {
+    return _emailErrorText() != null ||
+      _passwordErrorText() != null ||
+      _repeatPasswordErrorText() != null;
+  }
+
+  // Passing the data to "register.dart" for performing the server-side script
+  void registerUser() async {
+    String name = _nameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    bool registrationResult = await _register.registerUser(
+      name: name, email: email, password: password,
+    );
+
+    if (registrationResult) {
+      // Registration was successful, handle navigation or other tasks here
+      print('Registration successful!');
+    } else {
+      // Registration failed, show an error message or handle it accordingly
+      print('Registration failed!');
+    }
   }
 
   @override
