@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 // list of pages here
 import 'pages/welcome.dart';
-import 'pages/user/LoginPage.dart';
-import 'pages/user/CreateAccountPage.dart';
-import 'pages/user/ForgetPassword.dart';
+import 'pages/user/login.dart';
+import 'pages/user/create_account.dart';
+import 'pages/user/forget_password.dart';
 
 void main() => runApp(const MyApp());
 

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, file_names
+// ignore_for_file: prefer_const_constructors
 
 // new email address
 // new password
@@ -136,12 +136,38 @@ class _CreateAccountState extends State<CreateAccount> {
   Widget registerButton() {
     return ElevatedButton(
       // Disable the button if there are errors
-      onPressed: _hasErrors() ? null : registerUser,
+      onPressed: _hasErrors() ? null : () {
+        // confirm register
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Confirm Registration?'),
+              content: Text('Are you sure you want to register?'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                ),
+                ElevatedButton(
+                  child: Text('Register'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                    registerUser(); // Call the registerUser function
+                  }
+                )
+              ]
+            );
+          },
+        );
+      },
       child: Text('Register Now'),
       style: ElevatedButton.styleFrom(
         elevation: 5, // Set the elevation (depth) of the button
         shadowColor: Colors.black, // Set the shadow color
-      )
+      ),
     );
   }
 
