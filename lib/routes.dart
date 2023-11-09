@@ -1,10 +1,12 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 
 // list of pages here
 import 'pages/welcome.dart';
-import 'pages/user/LoginPage.dart';
-import 'pages/user/CreateAccountPage.dart';
-import 'pages/user/ForgetPassword.dart';
+import 'pages/user/login.dart';
+import 'pages/user/create_account.dart';
+import 'pages/user/forget_password.dart';
 
 void main() => runApp(const MyApp());
 
@@ -22,6 +24,7 @@ class MyApp extends StatelessWidget {
         '/user/login': (context) => const LoginPage(),
         '/user/create-account': (context) => const CreateAccount(),
         '/user/forget-password': (context) => ForgetPasswordPage(),
+        //'/home': (context) => 
       },
     );
   }
