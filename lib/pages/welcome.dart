@@ -33,12 +33,12 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 600),
     );
     _animation = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: Curves.easeOut,
+        curve: Curves.easeOutCubic,
       )
     );
   }
@@ -62,78 +62,128 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
     });
   }
 
+  void _previousSection() {
+    setState(() {
+      if (_currentSection > 1) {
+        _currentSection--;
+        _animationController.reset();
+        _animationController.reverse();
+      } else {
+        // Navigate back to previous page
+        Navigator.of(context).pop();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _currentSection > 1 ? AppBar(
+        backgroundColor: Colors.white,
+        leading: BackButton(
+          onPressed: () {
+            _previousSection;
+            _animationController.reverse();
+          }
+        )
+      ) : AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center, // Center vertically
           children: <Widget>[
-            if (_currentSection == 1)
-              Stack(
-                alignment: Alignment.topLeft, // Align items at the top left corner
-                children: <Widget>[
-                  yellowCircle(),
-                  welcomeSection1(),
-                ],
+            if (_currentSection == 1) ...[
+              Column(
+                children: [
+                  Stack(
+                    alignment: Alignment.topLeft,
+                    children: <Widget>[
+                      yellowCircle(),
+                      welcomeSection1(),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Indicator(totalIndicators: 4, activeIndex: 0),
+                  const SizedBox(height: 20),
+                  nextButton(),
+                ]
               ),
-            if (_currentSection == 2)
+            ] else if (_currentSection == 2) ...[
               AnimatedBuilder(
                 animation: _animation,
                 builder: (context, child) {
                   return Transform.translate(
                     offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
-                    child: child,
+                    child: Opacity(
+                      opacity: 1 - _animation.value,
+                      child: child,
+                    ),
                   );
                 },
                 child: Column(
                   children: [
                     welcomeSection2(),
                     const SizedBox(height: 20),
-                    const Indicator(totalIndicators: 3, activeIndex: 0),
+                    const Indicator(totalIndicators: 4, activeIndex: 1),
+                    const SizedBox(height: 20),
+                    nextButton(),
                   ]
                 )
               ),
-            if (_currentSection == 3)
+            ] else if (_currentSection == 3) ...[
               AnimatedBuilder(
                 animation: _animationController,
                 builder: (context, child) {
                   return Transform.translate(
                     offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
-                    child: child,
+                    child: Opacity(
+                      opacity: 1 - _animation.value,
+                      child: child,
+                    ),
                   );
                 },
                 child: Column(
                   children: [
                     welcomeSection3(),
                     const SizedBox(height: 20),
-                    const Indicator(totalIndicators: 3, activeIndex: 1),
+                    const Indicator(totalIndicators: 4, activeIndex: 2),
+                    const SizedBox(height: 20),
+                    nextButton(),
                   ]
                 )
               ),
-            if (_currentSection == 4)
+            ] else if (_currentSection == 4) ...[
               AnimatedBuilder(
                 animation: _animationController,
                 builder: (context, child) {
                   return Transform.translate(
                     offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
-                    child: child,
+                    child: Opacity(
+                      opacity: 1 - _animation.value,
+                      child: child,
+                    ),
                   );
                 },
                 child: Column(
                   children: [
                     welcomeSection4(),
                     const SizedBox(height: 20),
-                    const Indicator(totalIndicators: 3, activeIndex: 2),
+                    const Indicator(totalIndicators: 4, activeIndex: 3),
+                    const SizedBox(height: 20),
+                    nextButton(),
                   ],
                 )
               ),
-            const SizedBox(height: 20),
-            nextButton(),
+            ],
           ]
         )
       )
     );
+  }
+
+  void backButton() {
+
   }
 
   Widget yellowCircle() {
@@ -150,6 +200,14 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
   Widget welcomeSection1() {
     return const Column(
       children: <Widget>[
+        Image(
+          image: ResizeImage(
+            AssetImage('images/logo.png'),
+            width: 319,
+            height: 72,
+          ),
+        ),
+        SizedBox(height: 20),
         Image(
           image: ResizeImage(
             AssetImage('images/welcome1.png'),
@@ -175,6 +233,14 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
   Widget welcomeSection2() {
     return const Column(
       children: <Widget>[
+        Image(
+          image: ResizeImage(
+            AssetImage('images/logo.png'),
+            width: 319,
+            height: 72,
+          ),
+        ),
+        SizedBox(height: 20),
         Image(
           image: ResizeImage(
             AssetImage('images/welcome2.png'),
@@ -209,6 +275,14 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
       children: <Widget>[
         Image(
           image: ResizeImage(
+            AssetImage('images/logo.png'),
+            width: 319,
+            height: 72,
+          ),
+        ),
+        SizedBox(height: 20),
+        Image(
+          image: ResizeImage(
             AssetImage('images/welcome3.png'),
             width: 299,
             height: 299,
@@ -232,6 +306,14 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
       mainAxisAlignment: MainAxisAlignment.center, // Center vertically
       crossAxisAlignment: CrossAxisAlignment.center, // Center horizontally
       children: <Widget>[
+        Image(
+          image: ResizeImage(
+            AssetImage('images/logo.png'),
+            width: 319,
+            height: 72,
+          ),
+        ),
+        SizedBox(height: 20),
         Image(
           image: ResizeImage(
             AssetImage('images/welcome4.png'),
