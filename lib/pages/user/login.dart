@@ -5,14 +5,6 @@ TASKS OUTSIDE THIS FILE
 - Change the logo
 */
 
-/*
-TASKS INSIDE THIS FILE
-- onPressed things need to assign links
-- both fields must be required ; invalid username or password error
-- OPTIONAL: Adjust text style (color, font size etc.)
-- OPTIONAL: Adjust size depending on screen size
-*/
-
 import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(home: LoginPage()));
@@ -57,26 +49,38 @@ class _LoginState extends State<LoginPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: 20),
             getLogoImage(),
-            SizedBox(height: 20.0),
+            SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
                 labelText: 'EMAIL ADDRESS',
               ),
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
                 labelText: 'PASSWORD',
               ),
               obscureText: true,
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 20),
             rememberMeChkBox(),
+            SizedBox(height: 40),
             forgetPasswordBtn(context),
+            SizedBox(height: 20),
             loginBtn(context),
+            SizedBox(height: 20),
             createAccountBtn(context),
+            SizedBox(height: 20),
             // footer image
+            Image(
+              image: ResizeImage(
+                AssetImage('images/jm-tarumt-logo.png'),
+                width: 318,
+                height: 56,
+              )
+            )
           ],
         ),
       ),
@@ -86,9 +90,9 @@ class _LoginState extends State<LoginPage> {
   Widget getLogoImage() {
     return Image(
       image: ResizeImage(
-        AssetImage('images/jommakan.JPG'),
-        width: 226,
-        height: 232,
+        AssetImage('images/logo.png'),
+        width: 319,
+        height: 72,
       ),
     );
   }
@@ -118,9 +122,14 @@ class _LoginState extends State<LoginPage> {
   }
 
   Widget loginBtn(BuildContext context) {
-    return TextButton(
+    return ElevatedButton(
       onPressed: null, // go to user dashboard / home
       child: Text('Login'),
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
     );
   }
 

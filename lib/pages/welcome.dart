@@ -1,14 +1,10 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
+import 'package:jom_makan/components/indicator.dart';
 
-// components
-import '../components/indicator.dart';
-
-//void main() => runApp(const MyApp());
+void main() => runApp(const MaterialApp(home: Welcome(),));
 
 class Welcome extends StatelessWidget {
-  const Welcome({Key? key});
+  const Welcome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,46 +13,29 @@ class Welcome extends StatelessWidget {
 }
 
 class WelcomePage extends StatefulWidget {
-  const WelcomePage({super.key});
+  const WelcomePage({Key? key}) : super(key: key);
 
   @override
   _WelcomePageState createState() => _WelcomePageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
+class _WelcomePageState extends State<WelcomePage> {
+  late PageController _pageController;
   int _currentSection = 1;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    );
-    _animation = Tween<double>(begin: 1.0, end: 0.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeOutCubic,
-      )
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
+    _pageController = PageController(initialPage: 0);
   }
 
   void _nextSection() {
     setState(() {
       if (_currentSection < 4) {
         _currentSection++;
-        _animationController.reset();
-        _animationController.forward();
+        _pageController.nextPage(duration: const Duration(milliseconds: 600), curve: Curves.easeOutCubic);
       } else {
-        // Navigate to login page
+        // Navigate to the login page
         Navigator.pushNamed(context, '/user/login');
       }
     });
@@ -66,10 +45,9 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
     setState(() {
       if (_currentSection > 1) {
         _currentSection--;
-        _animationController.reset();
-        _animationController.reverse();
+        _pageController.previousPage(duration: const Duration(milliseconds: 600), curve: Curves.easeOutCubic);
       } else {
-        // Navigate back to previous page
+        // Navigate back to the previous page
         Navigator.of(context).pop();
       }
     });
@@ -82,108 +60,69 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
         backgroundColor: Colors.white,
         leading: BackButton(
           onPressed: () {
-            _previousSection;
-            _animationController.reverse();
-          }
-        )
+            _previousSection();
+          },
+        ),
       ) : AppBar(
         backgroundColor: Colors.white,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Center vertically
-          children: <Widget>[
-            if (_currentSection == 1) ...[
-              Column(
-                children: [
-                  Stack(
-                    alignment: Alignment.topLeft,
-                    children: <Widget>[
-                      yellowCircle(),
-                      welcomeSection1(),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  const Indicator(totalIndicators: 4, activeIndex: 0),
-                  const SizedBox(height: 20),
-                  nextButton(),
-                ]
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(), // Disable swipe
+        children: [
+          // Section 1
+          Column(
+            children: [
+              const SizedBox(height: 20),
+              Stack(
+                alignment: Alignment.topLeft,
+                children: <Widget>[
+                  yellowCircle(),
+                  welcomeSection1(),
+                ],
               ),
-            ] else if (_currentSection == 2) ...[
-              AnimatedBuilder(
-                animation: _animation,
-                builder: (context, child) {
-                  return Transform.translate(
-                    offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
-                    child: Opacity(
-                      opacity: 1 - _animation.value,
-                      child: child,
-                    ),
-                  );
-                },
-                child: Column(
-                  children: [
-                    welcomeSection2(),
-                    const SizedBox(height: 20),
-                    const Indicator(totalIndicators: 4, activeIndex: 1),
-                    const SizedBox(height: 20),
-                    nextButton(),
-                  ]
-                )
-              ),
-            ] else if (_currentSection == 3) ...[
-              AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, child) {
-                  return Transform.translate(
-                    offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
-                    child: Opacity(
-                      opacity: 1 - _animation.value,
-                      child: child,
-                    ),
-                  );
-                },
-                child: Column(
-                  children: [
-                    welcomeSection3(),
-                    const SizedBox(height: 20),
-                    const Indicator(totalIndicators: 4, activeIndex: 2),
-                    const SizedBox(height: 20),
-                    nextButton(),
-                  ]
-                )
-              ),
-            ] else if (_currentSection == 4) ...[
-              AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, child) {
-                  return Transform.translate(
-                    offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
-                    child: Opacity(
-                      opacity: 1 - _animation.value,
-                      child: child,
-                    ),
-                  );
-                },
-                child: Column(
-                  children: [
-                    welcomeSection4(),
-                    const SizedBox(height: 20),
-                    const Indicator(totalIndicators: 4, activeIndex: 3),
-                    const SizedBox(height: 20),
-                    nextButton(),
-                  ],
-                )
-              ),
+              const SizedBox(height: 20),
+              const Indicator(totalIndicators: 4, activeIndex: 0),
+              const SizedBox(height: 20),
+              nextButton(),
             ],
-          ]
-        )
-      )
+          ),
+          // Section 2
+          Column(
+            children: [
+              const SizedBox(height: 20),
+              welcomeSection2(),
+              const SizedBox(height: 20),
+              const Indicator(totalIndicators: 4, activeIndex: 1),
+              const SizedBox(height: 20),
+              nextButton(),
+            ],
+          ),
+          // Section 3
+          Column(
+            children: [
+              const SizedBox(height: 20),
+              welcomeSection3(),
+              const SizedBox(height: 20),
+              const Indicator(totalIndicators: 4, activeIndex: 2),
+              const SizedBox(height: 20),
+              nextButton(),
+            ],
+          ),
+          // Section 4
+          Column(
+            children: [
+              const SizedBox(height: 20),
+              welcomeSection4(),
+              const SizedBox(height: 20),
+              const Indicator(totalIndicators: 4, activeIndex: 3),
+              const SizedBox(height: 20),
+              nextButton(),
+            ],
+          ),
+        ],
+      ),
     );
-  }
-
-  void backButton() {
-
   }
 
   Widget yellowCircle() {
@@ -318,7 +257,7 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
           image: ResizeImage(
             AssetImage('images/welcome4.png'),
             width: 299,
-            height: 338,
+            height: 299,
           ),
         ),
         SizedBox(height: 20),
@@ -349,10 +288,7 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
       height: 48,
       margin: const EdgeInsets.only(bottom: 20),
       child: ElevatedButton(
-        onPressed: () {
-          _nextSection(); // Call the logic to move to the next section
-          _animationController.forward(); // Start the animation
-        },
+        onPressed: _nextSection,
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -364,9 +300,9 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
             fontSize: 20,
             fontFamily: 'Abhaya Libre',
             fontWeight: FontWeight.w500,
-          )
-        )
-      )
+          ),
+        ),
+      ),
     );
   }
 }
