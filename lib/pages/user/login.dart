@@ -1,13 +1,14 @@
-// ignore_for_file: prefer_const_constructors
-
-/*
-TASKS OUTSIDE THIS FILE
-- Change the logo
-*/
+// TASKS:
+// - Enable the login button when all fields are filled
+// - After click the Login, pass the data to login logic page
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MaterialApp(home: LoginPage()));
+import 'package:jom_makan/stores/user_provider.dart';
+import 'package:jom_makan/server/login_user.dart';
+
+//void main() => runApp(MaterialApp(home: LoginPage()));
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,22 +21,25 @@ class LoginPage extends StatefulWidget {
 
 class _LoginState extends State<LoginPage> {
   bool? check = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final LoginUser _loginUser = LoginUser(); // Instantiate LoginUser class
+
+  String _errorText = ''; // To store error text
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Login'),
-          /* leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ), */
-        ),
-        body: loginForm(context),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
+        /* leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ), */
       ),
+      body: loginForm(context),
     );
   }
 
@@ -44,37 +48,41 @@ class _LoginState extends State<LoginPage> {
   /* ********** */
   Widget loginForm(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             getLogoImage(),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'EMAIL ADDRESS',
+            const SizedBox(height: 20),
+            if (_errorText.isNotEmpty) // Show error text if login failed
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(_errorText, style: const TextStyle(color: Colors.red)),
               ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: 'EMAIL ADDRESS')
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextField(
-              decoration: InputDecoration(
-                labelText: 'PASSWORD',
-              ),
+              controller: _passwordController,
+              decoration: const InputDecoration(labelText: 'PASSWORD'),
               obscureText: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             rememberMeChkBox(),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             forgetPasswordBtn(context),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             loginBtn(context),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             createAccountBtn(context),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // footer image
-            Image(
+            const Image(
               image: ResizeImage(
                 AssetImage('images/jm-tarumt-logo.png'),
                 width: 318,
@@ -88,7 +96,7 @@ class _LoginState extends State<LoginPage> {
   }
 
   Widget getLogoImage() {
-    return Image(
+    return const Image(
       image: ResizeImage(
         AssetImage('images/logo.png'),
         width: 319,
@@ -109,7 +117,7 @@ class _LoginState extends State<LoginPage> {
             });
           },
         ),
-        Text('REMEMBER ME'),
+        const Text('REMEMBER ME'),
       ],
     );
   }
@@ -117,14 +125,14 @@ class _LoginState extends State<LoginPage> {
   Widget forgetPasswordBtn(BuildContext context) {
     return TextButton(
       onPressed: () => Navigator.pushNamed(context, '/user/forget-password'),
-      child: Text('FORGET PASSWORD?'),
+      child: const Text('FORGET PASSWORD?'),
     );
   }
 
   Widget loginBtn(BuildContext context) {
     return ElevatedButton(
-      onPressed: null, // go to user dashboard / home
-      child: Text('Login'),
+      onPressed: () => _performLogin(context), // go to user dashboard / home
+      child: const Text('Login'),
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
@@ -137,10 +145,10 @@ class _LoginState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Don\'t have account?'),
+        const Text('Don\'t have account?'),
         TextButton(
           onPressed: () => Navigator.pushNamed(context, '/user/create-account'), // go to register account page
-          child: Text(
+          child: const Text(
             'Create new account',
             style: TextStyle(
               color: Colors.yellow,
@@ -149,5 +157,33 @@ class _LoginState extends State<LoginPage> {
         ),
       ],
     );
+  }
+
+  // Function to perform login
+  void _performLogin(BuildContext context) async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    // Call the loginUser function from LoginUser class
+    var loginResult = await _loginUser.loginUser(email: email, password: password);
+
+    if (loginResult['success']) {
+      // Login was successful, get the username
+      var username = loginResult['username'];
+
+      // update the user name in the provider
+      Provider.of<UserProvider>(context, listen: false).setUserName(username);
+
+      // navigate to the home page
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      // Login failed, show an error message
+      setState(() {
+        _errorText = 'Invalid email or password';
+      });
+
+      // Clear the password field
+      _passwordController.clear();
+    }
   }
 }

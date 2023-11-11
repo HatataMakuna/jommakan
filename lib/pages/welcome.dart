@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/components/indicator.dart';
 
-void main() => runApp(const MaterialApp(home: Welcome(),));
+//void main() => runApp(const MaterialApp(home: Welcome(),));
 
 class Welcome extends StatelessWidget {
   const Welcome({Key? key}) : super(key: key);
