@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/components/indicator.dart';
+import 'package:jom_makan/components/logo.dart';
 
 //void main() => runApp(const MaterialApp(home: Welcome(),));
 
@@ -22,6 +23,7 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   late PageController _pageController;
   int _currentSection = 1;
+  final Logo _logo = Logo();
 
   @override
   void initState() {
@@ -137,29 +139,23 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget welcomeSection1() {
-    return const Column(
+    return Column(
       children: <Widget>[
-        Image(
-          image: ResizeImage(
-            AssetImage('images/logo.png'),
-            width: 319,
-            height: 72,
-          ),
-        ),
-        SizedBox(height: 20),
-        Image(
+        _logo.getLogoImage(),
+        const SizedBox(height: 20),
+        const Image(
           image: ResizeImage(
             AssetImage('images/welcome1.png'),
             width: 204,
             height: 279,
           ),
         ),
-        SizedBox(height: 20),
-        Text(
+        const SizedBox(height: 20),
+        const Text(
           'Welcome', textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20, fontFamily: 'Poppins', fontWeight: FontWeight.w700,)
         ),
-        Text(
+        const Text(
           'It\'s a pleasure to meet you. We are excited that you\'re here so let\'s get started!',
           textAlign: TextAlign.center, style: TextStyle(
             fontSize: 16, fontFamily: 'Abhaya Libre', fontWeight: FontWeight.w500,
@@ -170,25 +166,19 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget welcomeSection2() {
-    return const Column(
+    return Column(
       children: <Widget>[
-        Image(
-          image: ResizeImage(
-            AssetImage('images/logo.png'),
-            width: 319,
-            height: 72,
-          ),
-        ),
-        SizedBox(height: 20),
-        Image(
+        _logo.getLogoImage(),
+        const SizedBox(height: 20),
+        const Image(
           image: ResizeImage(
             AssetImage('images/welcome2.png'),
             width: 299,
             height: 299,
           ),
         ),
-        SizedBox(height: 20),
-        Text(
+        const SizedBox(height: 20),
+        const Text(
           'All your favorites', textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 20,
@@ -196,7 +186,7 @@ class _WelcomePageState extends State<WelcomePage> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        Text(
+        const Text(
           'Order from the canteen stalls with easy, on-demand delivery.',
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -210,29 +200,23 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget welcomeSection3() {
-    return const Column(
+    return Column(
       children: <Widget>[
-        Image(
-          image: ResizeImage(
-            AssetImage('images/logo.png'),
-            width: 319,
-            height: 72,
-          ),
-        ),
-        SizedBox(height: 20),
-        Image(
+        _logo.getLogoImage(),
+        const SizedBox(height: 20),
+        const Image(
           image: ResizeImage(
             AssetImage('images/welcome3.png'),
             width: 299,
             height: 299,
           ),
         ),
-        SizedBox(height: 20),
-        Text(
+        const SizedBox(height: 20),
+        const Text(
           'Free delivery offers', textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20, fontFamily: 'Poppins', fontWeight: FontWeight.w700,),
         ),
-        Text(
+        const Text(
           'Free delivery for new customers and other payment methods.', textAlign: TextAlign.center,
           style: TextStyle(fontSize: 16, fontFamily: 'Abhaya Libre', fontWeight: FontWeight.w500,),
         ),
@@ -241,27 +225,21 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget welcomeSection4() {
-    return const Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center, // Center vertically
       crossAxisAlignment: CrossAxisAlignment.center, // Center horizontally
       children: <Widget>[
-        Image(
-          image: ResizeImage(
-            AssetImage('images/logo.png'),
-            width: 319,
-            height: 72,
-          ),
-        ),
-        SizedBox(height: 20),
-        Image(
+        _logo.getLogoImage(),
+        const SizedBox(height: 20),
+        const Image(
           image: ResizeImage(
             AssetImage('images/welcome4.png'),
             width: 299,
             height: 299,
           ),
         ),
-        SizedBox(height: 20),
-        Text(
+        const SizedBox(height: 20),
+        const Text(
           'Choose your food', textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 20,
@@ -269,7 +247,7 @@ class _WelcomePageState extends State<WelcomePage> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        Text(
+        const Text(
           'Easily find your type of food craving and you\'ll get delivery in a wide range.',
           textAlign: TextAlign.center,
           style: TextStyle(

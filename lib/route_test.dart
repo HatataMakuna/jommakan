@@ -25,7 +25,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => const LoginPage(), // Change this to which page you want the testing process to start with
+        '/': (context) => const MainPage(), // Change this to which page you want the testing process to start with
+        '/user/login': (context) => const LoginPage(),
         '/user/create-account': (context) => const CreateAccount(),
         '/user/forget-password': (context) => ForgetPasswordPage(),
         '/home': (context) => const MainPage(),

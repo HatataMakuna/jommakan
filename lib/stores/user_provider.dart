@@ -10,4 +10,10 @@ class UserProvider extends ChangeNotifier {
     _userName = name;
     notifyListeners();
   }
+
+  void logout() {
+    // Clear user information on logout
+    _userName = null;
+    notifyListeners();
+  }
 }

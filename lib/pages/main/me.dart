@@ -61,9 +61,13 @@ class MePage extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           if (label == 'Logout') {
-            // Handle logout logic
-            // For example, call a method to log the user out
-            // Provider.of<UserProvider>(context, listen: false).logout();
+            // Show logout confirmation dialog
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return logoutConfirmation(context);
+              },
+            );
           } else {
             // Handle other button clicks
           }
@@ -88,6 +92,29 @@ class MePage extends StatelessWidget {
           ),
         )
       )
+    );
+  }
+
+  // Logout
+  Widget logoutConfirmation(BuildContext context) {
+    return AlertDialog(
+      content: const Text('Are you sure you want to logout?'),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Provider.of<UserProvider>(context, listen: false).logout(); // performs logout logic
+            Navigator.of(context).pop(); // Close the dialog
+            Navigator.of(context).pushReplacementNamed('/user/login'); // Navigate to login page
+          },
+          child: const Text('Yes'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dialog without performing logout logic
+          },
+          child: const Text('No'),
+        ),
+      ]
     );
   }
 }

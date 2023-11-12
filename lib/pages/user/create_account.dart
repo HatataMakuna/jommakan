@@ -242,11 +242,9 @@ class _CreateAccountState extends State<CreateAccount> {
 
     if (registrationResult) {
       // Registration was successful, handle navigation or other tasks here
-      print('Registration successful!');
       _showSuccessDialog();
     } else {
       // Registration failed, show an error message or handle it accordingly
-      print('Registration failed!');
       _showFailureDialog();
     }
   }

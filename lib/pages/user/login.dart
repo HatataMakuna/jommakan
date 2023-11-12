@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:jom_makan/server/login_user.dart';
+import 'package:jom_makan/components/logo.dart';
 
 //void main() => runApp(MaterialApp(home: LoginPage()));
 
@@ -24,6 +25,7 @@ class _LoginState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final LoginUser _loginUser = LoginUser(); // Instantiate LoginUser class
+  final Logo _logo = Logo();
 
   String _errorText = ''; // To store error text
 
@@ -54,7 +56,7 @@ class _LoginState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            getLogoImage(),
+            _logo.getLogoImage(),
             const SizedBox(height: 20),
             if (_errorText.isNotEmpty) // Show error text if login failed
               Padding(
@@ -82,29 +84,13 @@ class _LoginState extends State<LoginPage> {
             createAccountBtn(context),
             const SizedBox(height: 20),
             // footer image
-            const Image(
-              image: ResizeImage(
-                AssetImage('images/jm-tarumt-logo.png'),
-                width: 318,
-                height: 56,
-              )
-            )
+            _logo.getLogoWithTarumt(),
           ],
         ),
       ),
     );
   }
-
-  Widget getLogoImage() {
-    return const Image(
-      image: ResizeImage(
-        AssetImage('images/logo.png'),
-        width: 319,
-        height: 72,
-      ),
-    );
-  }
-
+  
   Widget rememberMeChkBox() {
     return Row(
       children: [
