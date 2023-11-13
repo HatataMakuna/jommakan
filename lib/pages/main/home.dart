@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 import 'package:jom_makan/components/custom_icons_icons.dart';
 import 'package:jom_makan/components/logo.dart';
@@ -47,6 +49,8 @@ class _HomePageState extends State<HomePage> {
             _logo.getLogoImage(),
             const SizedBox(height: 30),
             categoriesList(),
+            const SizedBox(height: 30),
+            popularFoods(),
             const SizedBox(height: 30),
           ],
         ),
@@ -116,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                         Icon(foodIcons[index]), // put the text below the icon
                         const SizedBox(height: 2),
                         Text(foodCategories[index]),
-                      ]
+                      ],
                     ),
                   );
                 }
@@ -129,6 +133,40 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Popular foods
+  Widget popularFoods() {
+    return Card(
+      elevation: 5,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.zero,
+        side: BorderSide(
+          color: Colors.grey,
+          width: 1,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(Icons.whatshot_rounded),
+                SizedBox(width: 15),
+                Text(
+                  'Popular Foods',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
+      ),
+    );
+  }
 
   // You may like
   // recommendation applies here

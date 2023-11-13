@@ -20,8 +20,7 @@ class _CreateAccountState extends State<CreateAccount> {
   bool isTyping = false;
   bool _showPassword = false;
   final Register _register = Register(); // Instantiate Register (server-side) class
-
-  //final _formkey = GlobalKey<FormState>();
+  bool _isRegistering = false;
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +128,11 @@ class _CreateAccountState extends State<CreateAccount> {
     return ElevatedButton(
       // Disable the button if there are errors or empty fields
       onPressed: _hasEmptyFields() || _hasErrors() ? null : () {
+        // Set the registration status to true before showing the dialog
+        setState(() {
+          _isRegistering = true;
+        });
+
         // confirm register
         showDialog(
           context: context,
@@ -206,13 +210,16 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   String? _repeatPasswordErrorText() {
-    final textToCompare = _passwordController.value.text;
-    final inputText = _repeatPasswordController.value.text;
-    if (inputText != textToCompare) {
-      return 'Password does not match';
-    } else {
-      return null;
+    if (_isRegistering) {
+      final textToCompare = _passwordController.value.text;
+      final inputText = _repeatPasswordController.value.text;
+      if (inputText != textToCompare) {
+        return 'Password does not match';
+      } else {
+        return null;
+      }
     }
+    return null;
   }
 
   // Check whether the registration form has any errors
@@ -260,6 +267,10 @@ class _CreateAccountState extends State<CreateAccount> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
+                // Reset the registration status when canceling
+                setState(() {
+                  _isRegistering = false;
+                });
                 Navigator.of(context).pop();
               },
               child: const Text('OK'),

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'pages/user/edit_profile.dart';
 import 'stores/user_provider.dart'; // Import the UserProvider class
 
 import 'pages/main/main_page.dart';
@@ -22,6 +23,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<UserProvider>(context, listen: false).setUserName('Testing');
+    // Access the user name from the provider
+    String? userName = Provider.of<UserProvider>(context).userName;
+
     return MaterialApp(
       initialRoute: '/',
       routes: {
@@ -29,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/user/login': (context) => const LoginPage(),
         '/user/create-account': (context) => const CreateAccount(),
         '/user/forget-password': (context) => ForgetPasswordPage(),
+        '/user/edit-profile': (context) => EditProfile(username: userName.toString()),
         '/home': (context) => const MainPage(),
       },
     );
