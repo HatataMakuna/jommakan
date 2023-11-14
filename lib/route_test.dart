@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'pages/user/edit_profile.dart';
 import 'stores/user_provider.dart'; // Import the UserProvider class
 
 import 'pages/main/main_page.dart';
 import 'pages/user/create_account.dart';
+import 'pages/user/edit_profile.dart';
 import 'pages/user/forget_password.dart';
 import 'pages/user/login.dart';
+import 'pages/search/search.dart';
 
 void main() => runApp(
   ChangeNotifierProvider(
@@ -23,7 +23,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<UserProvider>(context, listen: false).setUserName('Testing');
+    // Schedule the modification after the build phase has completed
+    Future.delayed(Duration.zero, () {
+      Provider.of<UserProvider>(context, listen: false).setUserName('Testing');
+    });
+    
     // Access the user name from the provider
     String? userName = Provider.of<UserProvider>(context).userName;
 
@@ -36,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/user/forget-password': (context) => ForgetPasswordPage(),
         '/user/edit-profile': (context) => EditProfile(username: userName.toString()),
         '/home': (context) => const MainPage(),
+        '/search': (context) => const SearchPage(),
       },
     );
   }

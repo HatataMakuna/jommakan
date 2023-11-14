@@ -2,9 +2,12 @@
 // THE OFFICIAL ROUTES PAGE
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'stores/user_provider.dart'; // Import the UserProvider class
 
 import 'pages/main/main_page.dart';
 import 'pages/welcome.dart';
+import 'pages/user/edit_profile.dart';
 import 'pages/user/login.dart';
 import 'pages/user/create_account.dart';
 import 'pages/user/forget_password.dart';
@@ -16,6 +19,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Access the user name from the provider
+    String? userName = Provider.of<UserProvider>(context).userName;
+
     return MaterialApp(
       // Define the initial route.
       initialRoute: '/',
@@ -25,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/user/login': (context) => const LoginPage(),
         '/user/create-account': (context) => const CreateAccount(),
         '/user/forget-password': (context) => ForgetPasswordPage(),
+        '/user/edit-profile': (context) => EditProfile(username: userName.toString()),
         '/home': (context) => const MainPage(),
       },
     );
