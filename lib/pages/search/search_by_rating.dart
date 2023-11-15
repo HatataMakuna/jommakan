@@ -27,7 +27,6 @@ class SearchByRating {
                       onTap: () {
                         // Update the selected rating
                         selectedRating = i.toDouble();
-                        Navigator.pop(context); // Close the dialog
                       },
                       child: Icon(
                         i <= selectedRating.floor() ? Icons.star : Icons.star_border,

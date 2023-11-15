@@ -45,7 +45,7 @@ class SearchByPriceRange {
               },
               child: const Text('Cancel'),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
                 // Do something with minPrice and maxPrice, e.g., update your filter
                 // ...

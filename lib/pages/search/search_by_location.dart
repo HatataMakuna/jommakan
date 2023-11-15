@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/consts/category_icons.dart';
+import 'package:jom_makan/consts/location_icons.dart';
 
-class SearchByCategory {
-  Future<void> showCategoryFilterDialog(BuildContext context) async {
-    List<String> selectedCategories = []; // To store the selected categories
+class SearchByLocation {
+  Future<void> showLocationFilterDialog(BuildContext context) async {
+    List<String> selectedLocations = []; // To store the selected locations
 
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text(
-            'Filter by Category',
+            'Filter by Location',
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
@@ -23,29 +23,26 @@ class SearchByCategory {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(height: 15),
-                  // Display a checkbox for each category with icons
-                  for (int i = 0; i < foodCategories.length; i++)
+                  // Display a checkbox for each location with images
+                  for (int i = 0; i < locations.length; i++)
                     ListTile(
                       title: Row(
                         children: [
-                          Icon(foodIcons[i]), // Display the food icon
-                          const SizedBox(width: 8), // Add spacing between icon and text
+                          locationImages[i], // Display the image
+                          const SizedBox(width: 8),
                           Expanded(
-                            child: Text(foodCategories[i]),
+                            child: Text(locations[i]),
                           ),
                         ],
                       ),
                       trailing: Checkbox(
-                        value: selectedCategories.contains(foodCategories[i]),
+                        value: selectedLocations.contains(locations[i]),
                         onChanged: (bool? value) {
                           if (value != null) {
-                            if (value) {
-                              selectedCategories.add(foodCategories[i]);
-                            } else {
-                              selectedCategories.remove(foodCategories[i]);
-                            }
+                            selectedLocations.add(locations[i]);
+                          } else {
+                            selectedLocations.remove(locations[i]);
                           }
-                          // Note: State is not being set here, as it's not required in this case
                         },
                       ),
                     ),
@@ -56,22 +53,20 @@ class SearchByCategory {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context);
               },
               child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
-                // Do something with the selected categories, e.g., update your filter
-                // ...
-
-                Navigator.pop(context); // Close the dialog
+                // Do something with the selected locations, e.g., update your filter
+                Navigator.pop(context);
               },
               child: const Text('Apply'),
-            ),
-          ],
+            )
+          ]
         );
-      },
+      }
     );
   }
 }

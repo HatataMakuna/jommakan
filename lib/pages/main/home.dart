@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:jom_makan/components/custom_icons_icons.dart';
 import 'package:jom_makan/components/logo.dart';
+import 'package:jom_makan/consts/category_icons.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
 
   // Categories List
   Widget categoriesList() {
-    List<String> foodCategories = [
+    /* List<String> foodCategories = [
       'Rice', 'Noodle', 'Bread', 'Cake', 'Drinks',
       'Spaghetti', 'Pizza', 'Burger', 'Sushi', 'Western'
     ];
@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
       Icons.lunch_dining,
       CustomIcons.sushiIcon,
       Icons.fastfood,
-    ];
+    ]; */
 
     return Card(
       elevation: 5, // Set the shadow depth

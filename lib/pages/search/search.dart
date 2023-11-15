@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'search_by_price_range.dart';
 import 'search_by_rating.dart';
+import 'search_by_category.dart';
+import 'search_by_location.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -17,6 +19,8 @@ class _SearchPageState extends State<SearchPage> {
 
   final SearchByPriceRange _searchByPriceRange = SearchByPriceRange();
   final SearchByRating _searchByRating = SearchByRating();
+  final SearchByCategory _searchByCategory = SearchByCategory();
+  final SearchByLocation _searchByLocation = SearchByLocation();
 
   @override
   Widget build(BuildContext context) {
@@ -105,15 +109,15 @@ class _SearchPageState extends State<SearchPage> {
                         // Text button with white background, solid border 1px, and bold text
                         TextButton(
                           onPressed: () {
-                            // Logic here
+                            // Call the respectively dialogs
                             if (filterCriterias[index] == 'Price Range') {
                               _searchByPriceRange.showPriceRangeFilterDialog(context);
                             } else if (filterCriterias[index] == 'Rating') {
                               _searchByRating.showRatingFilterDialog(context);
                             } else if (filterCriterias[index] == 'Category') {
-
+                              _searchByCategory.showCategoryFilterDialog(context);
                             } else {
-                              // if Location
+                              _searchByLocation.showLocationFilterDialog(context);
                             }
                           },
                           style: TextButton.styleFrom(
@@ -135,7 +139,7 @@ class _SearchPageState extends State<SearchPage> {
                       ],
                     ),
                   );
-                }
+                },
               ),
             ),
           ],
