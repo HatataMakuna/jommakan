@@ -1,9 +1,6 @@
 # JomMakan
 A TAR UMT online food ordering system project using Dart and Flutter.
 
-## Database setup
-TBA
-
 ## Getting Started
 
 This project is a starting point for a Flutter application.

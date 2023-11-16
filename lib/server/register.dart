@@ -19,7 +19,7 @@ class Register {
 
       // Insert new user to the database
       var result = await conn.query(
-        'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+        'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
         [name, email, password],
       );
 

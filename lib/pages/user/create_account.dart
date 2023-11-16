@@ -1,13 +1,7 @@
-// ignore_for_file: prefer_const_constructors
-
-// new email address
-// new password
-// repeat password - must be at least 8 characters
-
 import 'package:flutter/material.dart';
 import 'package:jom_makan/server/register.dart';
 
-void main() => runApp(MaterialApp(home: CreateAccount()));
+//void main() => runApp(const MaterialApp(home: CreateAccount()));
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
@@ -26,41 +20,38 @@ class _CreateAccountState extends State<CreateAccount> {
   bool isTyping = false;
   bool _showPassword = false;
   final Register _register = Register(); // Instantiate Register (server-side) class
-
-  //final _formkey = GlobalKey<FormState>();
+  bool _isRegistering = false;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Create Account'),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Create Account'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        body: registerForm(),
       ),
+      body: registerForm(),
     );
   }
 
   Widget registerForm() {
     return Container(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
         child: Column(
           children: [
             nameField(),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20),
             emailField(),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20),
             passwordField(),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20),
             repeatPasswordField(),
-            SizedBox(height: 20,),
+            const SizedBox(height: 40),
             registerButton(),
             // text fields
           ],
@@ -73,7 +64,7 @@ class _CreateAccountState extends State<CreateAccount> {
   Widget nameField() {
     return TextField(
       controller: _nameController,
-      decoration: InputDecoration(labelText: 'Name'),
+      decoration: const InputDecoration(labelText: 'Name'),
     );
   }
 
@@ -132,27 +123,32 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
-  // Button
+  // Register Button
   Widget registerButton() {
     return ElevatedButton(
-      // Disable the button if there are errors
-      onPressed: _hasErrors() ? null : () {
+      // Disable the button if there are errors or empty fields
+      onPressed: _hasEmptyFields() || _hasErrors() ? null : () {
+        // Set the registration status to true before showing the dialog
+        setState(() {
+          _isRegistering = true;
+        });
+
         // confirm register
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Confirm Registration?'),
-              content: Text('Are you sure you want to register?'),
+              title: const Text('Confirm Registration?'),
+              content: const Text('Are you sure you want to register?'),
               actions: <Widget>[
                 TextButton(
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                   onPressed: () {
                     Navigator.of(context).pop(); // Close the dialog
                   },
                 ),
                 ElevatedButton(
-                  child: Text('Register'),
+                  child: const Text('Register'),
                   onPressed: () {
                     Navigator.of(context).pop(); // Close the dialog
                     registerUser(); // Call the registerUser function
@@ -163,7 +159,7 @@ class _CreateAccountState extends State<CreateAccount> {
           },
         );
       },
-      child: Text('Register Now'),
+      child: const Text('Register Now'),
       style: ElevatedButton.styleFrom(
         elevation: 5, // Set the elevation (depth) of the button
         shadowColor: Colors.black, // Set the shadow color
@@ -184,11 +180,19 @@ class _CreateAccountState extends State<CreateAccount> {
     setState(() {});
   }
 
+  // Navigate to login page
+  void goToLogin() {
+    print("Navigating to login page");
+    setState(() {
+      Navigator.pushNamed(context, '/user/login');
+    });
+  }
+
   // Error Messages
   String? _emailErrorText() {
     final text = _emailController.value.text;
     if (text.isEmpty) {
-      return null; // 'Can't be empty'
+      return null;
     } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$').hasMatch(text)) {
       return 'Please enter a valid email';
     }
@@ -198,7 +202,7 @@ class _CreateAccountState extends State<CreateAccount> {
   String? _passwordErrorText() {
     final text = _passwordController.value.text;
     if (text.isEmpty) {
-      return null; // 'Can't be empty'
+      return null;
     } else if (text.length < 8) {
       return 'Password too short';
     }
@@ -206,22 +210,34 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   String? _repeatPasswordErrorText() {
-    final textToCompare = _passwordController.value.text;
-    final inputText = _repeatPasswordController.value.text;
-    if (inputText != textToCompare) {
-      return 'Password does not match';
-    } else {
-      return null;
+    if (_isRegistering) {
+      final textToCompare = _passwordController.value.text;
+      final inputText = _repeatPasswordController.value.text;
+      if (inputText != textToCompare) {
+        return 'Password does not match';
+      } else {
+        return null;
+      }
     }
+    return null;
   }
 
+  // Check whether the registration form has any errors
   bool _hasErrors() {
     return _emailErrorText() != null ||
       _passwordErrorText() != null ||
       _repeatPasswordErrorText() != null;
   }
 
-  // Passing the data to "register.dart" for performing the server-side script
+  // Check whether the registration form has any empty fields
+  bool _hasEmptyFields() {
+    return _nameController.text.isEmpty || 
+      _emailController.text.isEmpty ||
+      _passwordController.text.isEmpty ||
+      _repeatPasswordController.text.isEmpty;
+  }
+
+  // Passing the data to "server/register.dart" for performing the server-side script
   void registerUser() async {
     String name = _nameController.text;
     String email = _emailController.text;
@@ -233,11 +249,61 @@ class _CreateAccountState extends State<CreateAccount> {
 
     if (registrationResult) {
       // Registration was successful, handle navigation or other tasks here
-      print('Registration successful!');
+      _showSuccessDialog();
     } else {
       // Registration failed, show an error message or handle it accordingly
-      print('Registration failed!');
+      _showFailureDialog();
     }
+  }
+
+  // Show dialog message where the user has been successfully registered
+  Future<void> _showSuccessDialog() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Registration Successful'),
+          content: const Text('You have been successfully registered.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Reset the registration status when canceling
+                setState(() {
+                  _isRegistering = false;
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+            ElevatedButton(
+              onPressed: goToLogin,
+              child: const Text('Go to Login'),
+            ),
+          ]
+        );
+      }
+    );
+  }
+
+  // Show dialog message where registration failed
+  Future<void> _showFailureDialog() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Registration Failed'),
+          content: const Text('Sorry, registration failed. Please try again.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Ok'),
+            )
+          ]
+        );
+      }
+    );
   }
 
   @override
