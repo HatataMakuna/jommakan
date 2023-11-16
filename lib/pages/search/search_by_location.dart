@@ -39,9 +39,11 @@ class SearchByLocation {
                         value: selectedLocations.contains(locations[i]),
                         onChanged: (bool? value) {
                           if (value != null) {
-                            selectedLocations.add(locations[i]);
-                          } else {
-                            selectedLocations.remove(locations[i]);
+                            if (value) {
+                              selectedLocations.add(locations[i]);
+                            } else {
+                              selectedLocations.remove(locations[i]);
+                            }
                           }
                         },
                       ),

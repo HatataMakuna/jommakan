@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../components/custom_icons_icons.dart';
+import '../components/custom_icons.dart';
 
 List<String> foodCategories = [
   'Rice', 'Noodle', 'Bread', 'Cake', 'Drinks',

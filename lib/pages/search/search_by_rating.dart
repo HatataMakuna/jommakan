@@ -44,7 +44,7 @@ class SearchByRating {
               },
               child: const Text('Cancel'),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
                 // Do something with the selected rating, e.g., update your filter
                 // ...

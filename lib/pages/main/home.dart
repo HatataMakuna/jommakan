@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ),
                 ),
               ],
@@ -75,24 +75,6 @@ class _HomePageState extends State<HomePage> {
 
   // Categories List
   Widget categoriesList() {
-    /* List<String> foodCategories = [
-      'Rice', 'Noodle', 'Bread', 'Cake', 'Drinks',
-      'Spaghetti', 'Pizza', 'Burger', 'Sushi', 'Western'
-    ];
-
-    List<IconData> foodIcons = [
-      Icons.rice_bowl,
-      Icons.ramen_dining,
-      Icons.bakery_dining,
-      Icons.cake,
-      Icons.coffee,
-      Icons.dinner_dining,
-      Icons.local_pizza,
-      Icons.lunch_dining,
-      CustomIcons.sushiIcon,
-      Icons.fastfood,
-    ]; */
-
     return Card(
       elevation: 5, // Set the shadow depth
       shape: const RoundedRectangleBorder(
