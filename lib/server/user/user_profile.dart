@@ -1,4 +1,4 @@
-import '../database/db_connection.dart';
+import 'package:jom_makan/database/db_connection.dart';
 
 class UserProfile {
   // Get user profile and display name and email in edit profile page

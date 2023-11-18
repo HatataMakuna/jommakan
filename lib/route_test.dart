@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'pages/foods/food_details.dart';
 import 'stores/user_provider.dart'; // Import the UserProvider class
 
 import 'pages/main/main_page.dart';

@@ -12,7 +12,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late String _searchQuery = '';
   final Logo _logo = Logo();
 
   @override

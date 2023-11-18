@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/consts/location_icons.dart';
+import 'package:http/http.dart' as http;
+import 'search.dart';
+import 'search_results_updater.dart';
 
-class SearchByLocation {
+abstract class SearchByLocation extends State<SearchPage> with SearchResultsUpdater {
   Future<void> showLocationFilterDialog(BuildContext context) async {
     List<String> selectedLocations = []; // To store the selected locations
 
@@ -60,8 +63,8 @@ class SearchByLocation {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
-                // Do something with the selected locations, e.g., update your filter
+              onPressed: () async {
+                await applyFilter(selectedLocations);
                 Navigator.pop(context);
               },
               child: const Text('Apply'),
@@ -70,5 +73,21 @@ class SearchByLocation {
         );
       }
     );
+  }
+
+  Future<void> applyFilter(List<String> selectedLocations) async {
+    // Implement your logic to apply the filter
+    // Make an HTTP request with the filter values
+    final response = await http.get(Uri.parse('http://localhost:3000/get-all-foods?locations=${selectedLocations.join(',')}'));
+    
+    // Process the response
+    if (response.statusCode == 200) {
+      // Handle the successful response
+      print('Filter applied successfully');
+      updateSearchResults(response.body);
+    } else {
+      // Handle errors
+      print('Failed to apply filter. Status code: ${response.statusCode}');
+    }
   }
 }
