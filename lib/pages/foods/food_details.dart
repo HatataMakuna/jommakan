@@ -1,29 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:jom_makan/database/db_connection.dart';
 import 'package:jom_makan/server/food/get_ratings.dart';
 
 class FoodDetailsPage extends StatefulWidget {
   final Map<String, dynamic> selectedFood; // Replace this with the actual data type you have
 
-  const FoodDetailsPage({Key? key, required this.selectedFood}) : super(key: key);
+  const FoodDetailsPage({super.key, required this.selectedFood});
 
   @override
   _FoodDetailsPageState createState() => _FoodDetailsPageState();
 }
 
 class _FoodDetailsPageState extends State<FoodDetailsPage> {
-  final FoodRatings _foodRatings = FoodRatings(MySqlConnectionPool());
+  final FoodRatings _foodRatings = FoodRatings();
   int quantity = 1;
   String notes = '';
+  late Future<List<int>> ratingsFuture; // Declare the Future variable
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Get ratings for the current food in initState
+    ratingsFuture = _foodRatings.getRatingsForFood(
+      int.parse(widget.selectedFood['foodID']),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
-        automaticallyImplyLeading: false,
+        title: Text(
+          widget.selectedFood['food_name'],
+          style: const TextStyle(color: Colors.black),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -49,13 +67,11 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
 
   Widget titleRating() {
     // Get ratings for the current food
-    Future<List<int>> ratingsFuture = _foodRatings.getRatingsForFood(
-      widget.selectedFood['food_name'],
-      widget.selectedFood['stall_name']
-    );
+    print('Title Rating');
+    print('Get Ratings for Food');
 
     return FutureBuilder<List<int>>(
-      future: ratingsFuture,
+      future: ratingsFuture, // Use the pre-assigned Future variable
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // If the Future is still running, show a loading indicator
@@ -79,27 +95,20 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Text(
+                    'Average Rating: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
                   Text(
-                    'Average Rating: $averageRating',
+                    averageRating.toStringAsFixed(2),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  RatingBar.builder(
-                    initialRating: averageRating,
-                    minRating: 0,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemSize: 20,
-                    itemBuilder: (context, _) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (rating) {
-                      // You can handle rating updates if needed
-                    },
-                  ),
+                      fontSize: 20,
+                      color: Colors.blue,
+                    )
+                  )
                 ],
               ),
             ],

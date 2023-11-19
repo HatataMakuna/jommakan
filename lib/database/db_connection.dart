@@ -1,16 +1,19 @@
-import 'package:mysql1/mysql1.dart';
+import 'package:mysql_client/mysql_client.dart';
 
-class MySqlConnectionPool {
-  static const int poolSize = 5; // Adjust the pool size based on your requirements
-
+  /* final int poolSize = 5; // Add a parameter for pool size
   late final List<MySqlConnection> _connections;
-  int _currentConnectionIndex = 0;
+  int _currentConnectionIndex = 0; */
 
-  MySqlConnectionPool() {
-    _connections = []; // Initialize an empty list
-  }
+final pool = MySQLConnectionPool(
+  host: 'jommakan.c1efdodxxtlq.us-east-1.rds.amazonaws.com',
+  port: 3306,
+  userName: 'admin',
+  password: 'fypjommakan',
+  maxConnections: 10,
+  databaseName: 'jommakan',
+);
 
-  Future<void> initConnections() async {
+  /* Future<void> initConnections() async {
     print("Initialize connections");
     _connections = await Future.wait(List.generate(poolSize, (_) => createConnection()));
   }
@@ -46,5 +49,4 @@ class MySqlConnectionPool {
 
       return _connections[_currentConnectionIndex];
     }
-  }
-}
+  } */

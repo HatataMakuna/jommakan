@@ -1,20 +1,10 @@
 import 'package:jom_makan/database/db_connection.dart';
-import 'package:mysql1/mysql1.dart';
 
 class SearchFoods {
-  final MySqlConnectionPool _connectionPool;
-
-  SearchFoods(this._connectionPool);
-
   Future<List<Map<String, dynamic>>> getFoods(String searchQuery) async {
-    MySqlConnection? conn;
-
     try {
-      conn = await _connectionPool.getConnection();
-      print(searchQuery);
-
       // Execute the SQL query to get foods based on the search query
-      var results = await conn.query(
+      var stmt = await pool.prepare(
         '''
         SELECT
           foods.foodID,
@@ -29,35 +19,47 @@ class SearchFoods {
           stalls ON foods.stallID = stalls.stallID
         WHERE
           UPPER(foods.food_name) LIKE UPPER(?)
-        ''',
-        [searchQuery],
+        '''
       );
 
-      // If there are results, return them
+      String searchValue = '%$searchQuery%';
+      var results = await stmt.execute([searchValue]);
+
       if (results.isNotEmpty) {
-        return List<Map<String, dynamic>>.from(results);
+        List<Map<String, dynamic>> foods = [];
+
+        for (final row in results.rows) {
+          foods.add({
+            'foodID': row.colByName("foodID"),
+            'food_name': row.colByName("food_name"),
+            'stall_name': row.colByName("stall_name"),
+            'food_price': row.colByName("food_price"),
+            'qty_in_stock': row.colByName("qty_in_stock"),
+            'food_image': row.colByName("food_image"),
+          });
+        }
+
+        await stmt.deallocate();
+        return foods;
       } else {
-        // If no results found, return an empty list
+        // Not found
         return [];
       }
     } catch (e) {
       print('Error retrieving foods: $e');
       // Handle the error as needed
       return [];
-    } finally {
-      // Release the connection back to the pool
-      await conn?.close();
     }
   }
 
-  void main() async {
+  /* void main() async {
     // Example of how to use the SearchFoods
-    final searchFoods = SearchFoods(MySqlConnectionPool());
+    final searchFoods = SearchFoods();
 
     // Replace 'Burger' with your actual search query
     final foods = await searchFoods.getFoods('rice');
 
     // Print the results (you can handle them as needed)
     print(foods);
-  }
+  } */
 }

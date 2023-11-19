@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  buffer:
+    dependency: transitive
+    description:
+      name: buffer
+      sha256: "94f60815065a8f0fd4f05be51faf86cf86519327e039d5c2aac72e1d1cc1dad4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.2"
   characters:
     dependency: transitive
     description:
@@ -123,14 +131,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
-  logging:
-    dependency: transitive
-    description:
-      name: logging
-      sha256: "623a88c9594aa774443aa3eb2d41807a48486b5613e67599fb4c41c0ad47c340"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
   matcher:
     dependency: transitive
     description:
@@ -155,14 +155,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
-  mysql1:
+  mysql_client:
     dependency: "direct dev"
     description:
-      name: mysql1
-      sha256: "68aec7003d2abc85769bafa1777af3f4a390a90c31032b89636758ff8eb839e9"
+      name: mysql_client
+      sha256: "6a0fdcbe3e0721c637f97ad24649be2f70dbce2b21ede8f962910e640f753fc2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.20.0"
+    version: "0.0.27"
   nested:
     dependency: transitive
     description:
@@ -179,14 +179,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
-  pool:
-    dependency: transitive
-    description:
-      name: pool
-      sha256: "20fe868b6314b322ea036ba325e6fc0711a22948856475e2c2b6306e8ab39c2a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.5.1"
   provider:
     dependency: "direct main"
     description:
@@ -248,6 +240,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.1"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      sha256: a97ce2013f240b2f3807bcbaf218765b6f301c3eff91092bcfa23a039e7dd151
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   typed_data:
     dependency: transitive
     description:

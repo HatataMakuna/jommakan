@@ -20,7 +20,7 @@ class _CreateAccountState extends State<CreateAccount> {
   final TextEditingController _repeatPasswordController = TextEditingController();
   bool isTyping = false;
   bool _showPassword = false;
-  final Register _register = Register(MySqlConnectionPool()); // Instantiate Register (server-side) class
+  final Register _register = Register(); // Instantiate Register (server-side) class
   bool _isRegistering = false;
 
   @override

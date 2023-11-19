@@ -1,36 +1,28 @@
 import 'package:jom_makan/database/db_connection.dart';
-import 'package:mysql1/mysql1.dart';
 
 class FoodRatings {
-  final MySqlConnectionPool _connectionPool;
-
-  FoodRatings(this._connectionPool);
-
-  Future<List<int>> getRatingsForFood(String foodName, String stallName) async {
-    MySqlConnection? conn;
-
+  Future<List<int>> getRatingsForFood(int foodID) async {
     try {
-      conn = await _connectionPool.getConnection();
+      var stmt = await pool.prepare('''
+        SELECT stars 
+        FROM ratings 
+        WHERE foodID = ?
+      ''');
 
       // Retrieve ratings for the given food name and stall name
-      var results = await conn.query(
-        'SELECT stars FROM ratings '
-        'INNER JOIN foods ON ratings.foodID = foods.foodID '
-        'INNER JOIN stalls ON foods.stallID = stalls.stallID '
-        'WHERE foods.food_name = ? AND stalls.stall_name = ?',
-        [foodName, stallName],
-      );
+      var results = await stmt.execute([foodID]);
 
       // Extract and return the ratings
-      List<int> ratings = results.map((result) => result['stars'] as int).toList();
+      List<int> ratings = [];
+      for (final row in results.rows) {
+        ratings.add(row.colByName("stars") as int);
+      }
 
+      await stmt.deallocate();
       return ratings;
     } catch (e) {
       print('Error retrieving ratings: $e');
       return [];
-    } finally {
-      // Release the connection back to the pool
-      await conn?.close();
     }
   }
 
@@ -49,4 +41,15 @@ class FoodRatings {
     // Round to 1 decimal place (adjust as needed)
     return double.parse(averageRating.toStringAsFixed(1));
   }
+}
+
+void main() async {
+    // Example of how to use the SearchFoods
+    final getratings = FoodRatings();
+
+    // Replace 'Burger' with your actual search query
+    final foods = await getratings.getRatingsForFood(1);
+
+    // Print the results (you can handle them as needed)
+    print(foods);
 }

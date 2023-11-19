@@ -1,11 +1,6 @@
-import 'package:mysql1/mysql1.dart';
 import 'package:jom_makan/database/db_connection.dart';
 
 class GetFoods {
-  final MySqlConnectionPool _connectionPool;
-
-  GetFoods(this._connectionPool);
-
   Future<List<Map<String, dynamic>>> getAllFoods({
     String? searchQuery,
     int? priceRangeMin,
@@ -14,11 +9,7 @@ class GetFoods {
     List<String>? selectedLocations,
     List<String>? selectedCategories,
   }) async {
-    MySqlConnection? conn;
-
     try {
-      conn = await _connectionPool.getConnection();
-
       // Build the SQL query based on parameters
       String query = '''
         SELECT
@@ -36,32 +27,36 @@ class GetFoods {
           UPPER(foods.food_name) LIKE UPPER(?)
       ''';
 
+      var stmt = await pool.prepare(query);
+
       // Use '%' in the query to match any substring of the food name
       String searchValue = searchQuery ?? '';
       searchValue = '%$searchValue%';
 
       // Execute the SQL query
-      var results = await conn.query(query, [searchValue]);
+      var results = await stmt.execute([searchValue]);
 
       // Extract and return the list of foods
-      List<Map<String, dynamic>> foods = results.map((result) {
-        return {
-          'foodID': result['foodID'],
-          'food_name': result['food_name'],
-          'stall_name': result['stall_name'],
-          'food_price': result['food_price'],
-          'qty_in_stock': result['qty_in_stock'],
-          'food_image': result['food_image'],
-        };
-      }).toList();
+      List<Map<String, dynamic>> foods = [];
+
+      for (final row in results.rows) {
+        foods.add({
+          'foodID': row.colByName("foodID"),
+          'food_name': row.colByName("food_name"),
+          'stall_name': row.colByName("stall_name"),
+          'food_price': row.colByName("food_price"),
+          'qty_in_stock': row.colByName("qty_in_stock"),
+          'food_image': row.colByName("food_image"),
+        });
+      }
+      
+      // Deallocate prepared statement
+      await stmt.deallocate();
 
       return foods;
     } catch (e) {
       print('Error fetching foods: $e');
       return [];
-    } finally {
-      // Release the connection back to the pool
-      await conn?.close();
     }
   }
 }
