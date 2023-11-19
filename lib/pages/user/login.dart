@@ -3,6 +3,7 @@
 // - After click the Login, pass the data to login logic page
 
 import 'package:flutter/material.dart';
+import 'package:jom_makan/database/db_connection.dart';
 import 'package:provider/provider.dart';
 
 import 'package:jom_makan/stores/user_provider.dart';
@@ -24,7 +25,7 @@ class _LoginState extends State<LoginPage> {
   bool? check = false;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final LoginUser _loginUser = LoginUser(); // Instantiate LoginUser class
+  final LoginUser _loginUser = LoginUser(MySqlConnectionPool()); // Instantiate LoginUser class
   final Logo _logo = Logo();
 
   String _errorText = ''; // To store error text

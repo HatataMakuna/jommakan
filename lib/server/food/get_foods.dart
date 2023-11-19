@@ -1,8 +1,12 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:mysql1/mysql1.dart';
+import 'package:jom_makan/database/db_connection.dart';
 
 class GetFoods {
-  Future<Map<String, dynamic>> getAllFoods({
+  final MySqlConnectionPool _connectionPool;
+
+  GetFoods(this._connectionPool);
+
+  Future<List<Map<String, dynamic>>> getAllFoods({
     String? searchQuery,
     int? priceRangeMin,
     int? priceRangeMax,
@@ -10,66 +14,54 @@ class GetFoods {
     List<String>? selectedLocations,
     List<String>? selectedCategories,
   }) async {
-    final Map<String, String> queryParams = {};
-
-    if (searchQuery != null) {
-      queryParams['search'] = searchQuery;
-    }
-
-    if (minRating != null) {
-      queryParams['minRating'] = minRating.toString();
-    }
-
-    if (selectedLocations != null && selectedLocations.isNotEmpty) {
-      queryParams['locations'] = selectedLocations.join(',');
-    }
-
-    if (selectedCategories != null && selectedCategories.isNotEmpty) {
-      queryParams['categories'] = selectedCategories.join(',');
-    }
-
-    // Add search query parameter to the API URL if provided
-    final Uri uri = Uri.https('localhost:3000', '/get-all-foods', {
-      'search': searchQuery,
-      'priceRangeMin': priceRangeMin?.toString(),
-      'priceRangeMax': priceRangeMax?.toString(),
-      'minRating': minRating?.toString(),
-      'locations': selectedLocations?.join(','),
-      'categories': selectedCategories?.join(','),
-    });
+    MySqlConnection? conn;
 
     try {
-      final response = await http.get(uri);
+      conn = await _connectionPool.getConnection();
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> data = json.decode(response.body);
-        List<Map<String, dynamic>> foods = List<Map<String, dynamic>>.from(data['foods']);
-        return {'success': true, 'foods': foods};
-      } else {
-        throw Exception('Failed to load data');
-      }
+      // Build the SQL query based on parameters
+      String query = '''
+        SELECT
+          foods.foodID,
+          foods.food_name,
+          stalls.stall_name,
+          foods.food_price,
+          foods.qty_in_stock,
+          foods.food_image
+        FROM
+          foods
+        JOIN
+          stalls ON foods.stallID = stalls.stallID
+        WHERE
+          UPPER(foods.food_name) LIKE UPPER(?)
+      ''';
+
+      // Use '%' in the query to match any substring of the food name
+      String searchValue = searchQuery ?? '';
+      searchValue = '%$searchValue%';
+
+      // Execute the SQL query
+      var results = await conn.query(query, [searchValue]);
+
+      // Extract and return the list of foods
+      List<Map<String, dynamic>> foods = results.map((result) {
+        return {
+          'foodID': result['foodID'],
+          'food_name': result['food_name'],
+          'stall_name': result['stall_name'],
+          'food_price': result['food_price'],
+          'qty_in_stock': result['qty_in_stock'],
+          'food_image': result['food_image'],
+        };
+      }).toList();
+
+      return foods;
     } catch (e) {
-      print('Error: $e');
-      return {'success': false, 'error': e.toString()};
+      print('Error fetching foods: $e');
+      return [];
+    } finally {
+      // Release the connection back to the pool
+      await conn?.close();
     }
   }
 }
-
-/* void main() async {
-  //Map<String, dynamic> result = await getAllFoods();
-
-  if (result['success']) {
-    List<dynamic> foods = result['foods'];
-    for (var food in foods) {
-      print('Food ID: ${food['foodID']}');
-      print('Food Name: ${food['food_name']}');
-      print('Stall Name: ${food['stall_name']}');
-      print('Food Price: ${food['food_price']}');
-      print('Qty in Stock: ${food['qty_in_stock']}');
-      print('Food Image URL: ${food['food_image_url']}');
-      print('-----------------------');
-    }
-  } else {
-    print('Failed to fetch data: ${result['error']}');
-  }
-} */

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/database/db_connection.dart';
 import 'package:jom_makan/server/user/user_profile.dart';
 
 class EditProfile extends StatefulWidget {
@@ -12,7 +13,8 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  final UserProfile _userProfile = UserProfile();
+  late UserProfile _userProfile;
+  final MySqlConnectionPool connectionPool = MySqlConnectionPool();
   
   // Controller for text fields
   final TextEditingController _nameController = TextEditingController();
@@ -33,6 +35,7 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
+    _userProfile = UserProfile(connectionPool); // Initialize _userProfile here
     _fetchUserProfile();
   }
 

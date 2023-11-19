@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/database/db_connection.dart';
 import 'package:jom_makan/pages/foods/food_details.dart';
 import 'package:jom_makan/server/food/get_foods.dart';
 
-final GetFoods _getFoods = GetFoods();
+final GetFoods _getFoods = GetFoods(MySqlConnectionPool());
 
   Widget foodList({
     String? searchQuery,
@@ -26,10 +27,10 @@ final GetFoods _getFoods = GetFoods();
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!['foods'] == null) {
+        } else if (!snapshot.hasData) {
           return const Center(child: Text('No data available'));
         } else {
-          List<Map<String, dynamic>> foods = snapshot.data?['foods'];
+          List<Map<String, dynamic>> foods = snapshot.data as List<Map<String, dynamic>>;
 
           return ListView.builder(
             itemCount: foods.length,
@@ -45,7 +46,7 @@ final GetFoods _getFoods = GetFoods();
                       context,
                       MaterialPageRoute(
                         builder: (context) => FoodDetailsPage(selectedFood: food),
-                      )
+                      ),
                     );
                   },
                   child: Container(
@@ -53,15 +54,11 @@ final GetFoods _getFoods = GetFoods();
                       maxHeight: 150,
                     ),
                     child: ListTile(
-                      // Wrap Image.network with Container to crop width and height
                       // ignore: sized_box_for_whitespace
-                      leading: Container(
+                      leading: Image(
+                        image: AssetImage('images/foods/' + food['food_image']),
                         width: 100,
                         height: 100,
-                        child: Image.network(
-                          food['food_image_url'],
-                          fit: BoxFit.fitHeight, // Use BoxFit.cover to crop the image
-                        )
                       ),
                       title: Text(
                         '${food['food_name']} - ${food['stall_name']}',

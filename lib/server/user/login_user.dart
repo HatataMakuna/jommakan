@@ -1,19 +1,24 @@
 import 'package:jom_makan/database/db_connection.dart';
+import 'package:mysql1/mysql1.dart';
 
 class LoginUser {
+  final MySqlConnectionPool _connectionPool;
+
+  LoginUser(this._connectionPool);
+
   Future<Map<String, dynamic>> loginUser({
     required String email,
     required String password,
   }) async {
+    MySqlConnection? conn;
+
     try {
-      final conn = await createConnection();
+      conn = await _connectionPool.getConnection();
 
       // Check if the user exists with the given email and password
       var results = await conn.query(
         'SELECT * FROM users WHERE email = ? AND password = ?', [email, password]
       );
-
-      await conn.close();
 
       // If the input matches with the database, login success
       if (results.isNotEmpty) {
@@ -29,6 +34,9 @@ class LoginUser {
     } catch (e) {
       print('Error during login: $e');
       return {'success': false, 'username': null};
+    } finally {
+      // Release the connection back to the pool
+      await conn?.close();
     }
   }
 }

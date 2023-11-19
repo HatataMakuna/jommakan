@@ -1,19 +1,29 @@
 import 'package:jom_makan/database/db_connection.dart';
+import 'package:mysql1/mysql1.dart';
 
 class UserProfile {
-  // Get user profile and display name and email in edit profile page
+  final MySqlConnectionPool _connectionPool;
+
+  UserProfile(this._connectionPool);
+
   Future<Map<String, dynamic>> getUserProfile(String username) async {
+    //await _connectionPool.initConnections(); // Ensure the connection pool is initialized
+    MySqlConnection? conn;
+
     try {
-      final conn = await createConnection();
+      conn = await _connectionPool.getConnection();
+      String query = 'SELECT * FROM users WHERE UPPER(username) LIKE UPPER(?)';
+      String usernameValue = '%$username%';
 
-      // Retrieve user information based on the name
-      var results = await conn.query('SELECT * FROM users WHERE username = ?', [username]);
+      final results = await conn.query(query, [usernameValue]);
 
-      await conn.close();
-
-      // If the user is found, return user data
+      print('SELECT * FROM users WHERE UPPER(username) LIKE UPPER(?)');
+      print('Parameters: [$usernameValue]');
+      print('Results: $results');
+      
       if (results.isNotEmpty) {
         var user = results.first;
+        
         var username = user['username'];
         var userEmail = user['email'];
 
@@ -29,20 +39,19 @@ class UserProfile {
     } catch (e) {
       print('Error fetching user profile: $e');
       return {'success': false, 'username': null, 'email': null};
+    } finally {
+      await conn?.close();
     }
   }
 
-  // Check if the provided current password matches the one stored in the database
   Future<bool> checkCurrentPassword(String username, String currentPassword) async {
-    try {
-      final conn = await createConnection();
+    MySqlConnection? conn;
 
-      // Retrieve user information based on the username
+    try {
+      conn = await _connectionPool.getConnection();
+
       var results = await conn.query('SELECT * FROM users WHERE username = ?', [username]);
 
-      await conn.close();
-
-      // If the user is found, compare passwords
       if (results.isNotEmpty) {
         var user = results.first;
         var storedPassword = user['password']; // Replace 'password' with the actual column name
@@ -55,63 +64,65 @@ class UserProfile {
     } catch (e) {
       print('Error checking current password: $e');
       return false;
+    } finally {
+      await conn?.close();
     }
   }
 
-  // Update username and email in the database (username and email)
   Future<bool> updateNameEmail(String currentUsername, String username, String email) async {
-    try {
-      final conn = await createConnection();
+    MySqlConnection? conn;
 
-      // Update user information based on the username
+    try {
+      conn = await _connectionPool.getConnection();
+
       await conn.query(
         'UPDATE users SET username = ?, email = ? WHERE username = ?',
         [username, email, currentUsername],
       );
 
-      await conn.close();
-
       return true; // Update successful
     } catch (e) {
       print('Error updating user profile: $e');
       return false; // Update failed
+    } finally {
+      await conn?.close();
     }
   }
 
-  // Update password in the database
   Future<bool> updatePassword(String currentUsername, String password) async {
-    try {
-      final conn = await createConnection();
+    MySqlConnection? conn;
 
-      // Update user information based on the username
+    try {
+      conn = await _connectionPool.getConnection();
+
       await conn.query('UPDATE users SET password = ? WHERE username = ?', [password, currentUsername]);
 
-      await conn.close();
-
       return true; // Update successful
     } catch (e) {
       print('Error updating user profile: $e');
       return false; // Update failed
+    } finally {
+      await conn?.close();
     }
   }
 
-  // Update the whole user profile in the database (name, email and password)
   Future<bool> updateUserProfile(String currentUsername, String username, String email, String password) async {
-    try {
-      final conn = await createConnection();
+    MySqlConnection? conn;
 
-      // Update user information based on the username
+    try {
+      conn = await _connectionPool.getConnection();
+
       await conn.query(
         'UPDATE users SET username = ?, email = ?, password = ? WHERE username = ?',
         [username, email, password, currentUsername],
       );
 
-      await conn.close();
-
       return true; // Update successful
     } catch (e) {
       print('Error updating user profile: $e');
       return false; // Update failed
+    } finally {
+      await conn?.close();
     }
   }
 }

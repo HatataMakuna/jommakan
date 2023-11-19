@@ -1,11 +1,18 @@
 import 'package:jom_makan/database/db_connection.dart';
+import 'package:mysql1/mysql1.dart';
 
 class Register {
+  final MySqlConnectionPool _connectionPool;
+
+  Register(this._connectionPool);
+
   Future<bool> registerUser({
     required String name,
     required String email,
     required String password,
   }) async {
+    MySqlConnection? conn;
+
     try {
       // Check if the user already exists
       final existingUser = await getUserByEmail(email);
@@ -15,45 +22,39 @@ class Register {
       }
 
       // User doesn't exist, proceed with registration
-      final conn = await createConnection();
+      conn = await _connectionPool.getConnection();
 
-      // Insert new user to the database
+      // Insert new user into the database
       var result = await conn.query(
         'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
         [name, email, password],
       );
 
-      // Close the database connection
-      await conn.close();
-
-      // Check if the insertion was successful
-      if (result.affectedRows == 1) {
-        // User registered successfully
-        return true;
-      } else {
-        // Insertion failed
-        return false;
-      }
+      return result.affectedRows == 1; // Check if the insertion was successful
     } catch (e) {
       // Handle database errors or other exceptions here
       print('Error during registration: $e');
       return false;
+    } finally {
+      // Release the connection back to the pool
+      await conn?.close();
     }
   }
 
   Future<Map<String, dynamic>?> getUserByEmail(String email) async {
-    final conn = await createConnection();
+    MySqlConnection? conn;
 
-    var results = await conn.query('SELECT * FROM users WHERE email = ?', [email]);
+    try {
+      conn = await _connectionPool.getConnection();
 
-    await conn.close();
+      var results = await conn.query('SELECT * FROM users WHERE email = ?', [email]);
 
-    if (results.isNotEmpty) {
-      // User found, return user data as a Map
-      return results.first.fields;
-    } else {
-      // Uesr not found
+      return results.isNotEmpty ? results.first.fields : null;
+    } catch (e) {
+      print('Error fetching user by email: $e');
       return null;
+    } finally {
+      await conn?.close();
     }
   }
 }
