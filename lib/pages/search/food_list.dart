@@ -35,7 +35,6 @@ Widget foodList({
             itemCount: foods.length,
             itemBuilder: (context, index) {
               Map<String, dynamic> food = foods[index];
-              print(food['foodID']);
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 elevation: 5,

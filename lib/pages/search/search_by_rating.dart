@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'search.dart';
 import 'search_results_updater.dart';
 
@@ -49,7 +48,7 @@ abstract class SearchByRating extends State<SearchPage> with SearchResultsUpdate
             ),
             ElevatedButton(
               onPressed: () async {
-                await applyFilter(selectedRating);
+                //await applyFilter(selectedRating);
                 Navigator.pop(context); // Close the dialog
               },
               child: const Text('Apply'),
@@ -60,7 +59,7 @@ abstract class SearchByRating extends State<SearchPage> with SearchResultsUpdate
     );
   }
 
-  Future<void> applyFilter(double selectedRating) async {
+  /* Future<void> applyFilter(double selectedRating) async {
     // Implement your logic to apply the filter
     // Make an HTTP request with the filter value
     final response = await http.get(Uri.parse('http://localhost:3000/get-all-foods?rating=$selectedRating'));
@@ -74,5 +73,5 @@ abstract class SearchByRating extends State<SearchPage> with SearchResultsUpdate
       // Handle errors
       print('Failed to apply filter. Status code: ${response.statusCode}');
     }
-  }
+  } */
 }

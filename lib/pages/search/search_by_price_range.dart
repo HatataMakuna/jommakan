@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'search.dart';
 import 'search_results_updater.dart';
 
@@ -50,7 +49,7 @@ class SearchByPriceRange extends State<SearchPage> with SearchResultsUpdater {
             ),
             ElevatedButton(
               onPressed: () async {
-                await applyFilter(values);
+                //await applyFilter(values);
                 Navigator.pop(context); // Close the dialog
               },
               child: const Text('Apply'),
@@ -61,7 +60,7 @@ class SearchByPriceRange extends State<SearchPage> with SearchResultsUpdater {
     );
   }
 
-  Future<void> applyFilter(RangeValues values) async {
+  /* Future<void> applyFilter(RangeValues values) async {
     // Implement your logic to apply the filter
     final minPrice = values.start.toInt();
     final maxPrice = values.end.toInt();
@@ -78,7 +77,7 @@ class SearchByPriceRange extends State<SearchPage> with SearchResultsUpdater {
       // Handle errors
       print('Failed to apply filter. Status code: ${response.statusCode}');
     }
-  }
+  } */
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);

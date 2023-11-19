@@ -1,6 +1,30 @@
 import 'package:jom_makan/database/db_connection.dart';
 
 class FoodRatings {
+  Future<double> getAverageRatings(int foodID) async {
+    try {
+      var results = await pool.execute("SELECT stars FROM ratings WHERE foodID = :foodID", {"foodID": foodID});
+
+      List<int> ratings = [];
+      int sum = 0;
+      for (final row in results.rows) {
+        sum += row.colByName("stars") as int;
+        print('Current Sum: ' + sum.toString());
+      }
+
+      if (ratings.isEmpty) {
+        return 0.0;
+      }
+
+      double averageRating = sum / ratings.length;
+      print('Avergae Rating: ' + averageRating.toString());
+      return averageRating;
+    } catch (e) {
+      print('Error retrieving ratings: $e');
+      return 0.0;
+    }
+  }
+
   Future<List<int>> getRatingsForFood(int foodID) async {
     try {
       var stmt = await pool.prepare('''

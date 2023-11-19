@@ -152,9 +152,11 @@ class _LoginState extends State<LoginPage> {
     if (loginResult['success']) {
       // Login was successful, get the username
       var username = loginResult['username'];
+      var userID = loginResult['userID'];
 
       // update the user name in the provider
       Provider.of<UserProvider>(context, listen: false).setUserName(username);
+      Provider.of<UserProvider>(context, listen: false).setUserID(userID);
 
       // navigate to the home page
       Navigator.pushReplacementNamed(context, '/home');

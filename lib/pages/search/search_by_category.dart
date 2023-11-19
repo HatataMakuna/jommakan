@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/consts/category_icons.dart';
-import 'package:http/http.dart' as http;
 import 'search.dart';
 import 'search_results_updater.dart';
 
@@ -65,7 +64,8 @@ abstract class SearchByCategory extends State<SearchPage> with SearchResultsUpda
             ),
             ElevatedButton(
               onPressed: () async {
-                await applyFilter(selectedCategories);
+                // Do something
+                //await applyFilter(selectedCategories);
                 Navigator.pop(context); // Close the dialog
               },
               child: const Text('Apply'),
@@ -76,7 +76,7 @@ abstract class SearchByCategory extends State<SearchPage> with SearchResultsUpda
     );
   }
 
-  Future<void> applyFilter(List<String> selectedCategories) async {
+  /* Future<void> applyFilter(List<String> selectedCategories) async {
     // Implement your logic to apply the filter
     // Make an HTTP request with the filter values
     final response = await http.get(Uri.parse('http://localhost:3000/get-all-foods?categories=${selectedCategories.join(',')}'));
@@ -90,5 +90,5 @@ abstract class SearchByCategory extends State<SearchPage> with SearchResultsUpda
       // Handle errors
       print('Failed to apply filter. Status code: ${response.statusCode}');
     }
-  }
+  } */
 }

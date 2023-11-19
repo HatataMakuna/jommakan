@@ -8,24 +8,41 @@ class LoginUser {
     try {
       // Check if the user exists with the given email and password
       var results = await pool.execute(
-        'SELECT username FROM users WHERE email = :email AND password = :password',
+        'SELECT userID, username FROM users WHERE email = :email AND password = :password',
         {
           "email": email,
           "password": password,
         },
       );
 
+      String? userID, userName;
+
       // If the input matches with the database, login success
       if (results.isNotEmpty) {
-        var username = results.first;
-        return {'success': true, 'username': username};
+        for (final row in results.rows) {
+          userID = row.colByName("userID");
+          userName = row.colByName("username");
+        }
+        return {
+          'success': true,
+          'userID': userID,
+          'username': userName,
+        };
       } else {
         // If not, login failed; shows invalid username or password error
-        return {'success': false, 'username': null};
+        return {
+          'success': false,
+          'userID': null,
+          'username': null,
+        };
       }
     } catch (e) {
       print('Error during login: $e');
-      return {'success': false, 'username': null};
+      return {
+        'success': false,
+        'userID': null,
+        'username': null,
+      };
     }
   }
 }
