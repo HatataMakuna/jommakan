@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/server/register.dart';
+import 'package:jom_makan/server/user/register.dart';
 
 //void main() => runApp(const MaterialApp(home: CreateAccount()));
 

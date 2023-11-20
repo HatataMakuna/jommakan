@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
+import 'food_list.dart';
 import 'search_by_price_range.dart';
 import 'search_by_rating.dart';
 import 'search_by_category.dart';
 import 'search_by_location.dart';
+import 'search_results_updater.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -12,15 +15,33 @@ class SearchPage extends StatefulWidget {
   _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
-  List<String> searchResults = []; // List to store search results
+class _SearchPageState extends State<SearchPage> with SearchResultsUpdater {
+  List<Map<String, dynamic>> searchResults = []; // List to store search results
   TextEditingController searchController = TextEditingController();
   late String _searchQuery = '';
 
+  late SearchByCategory _searchByCategory;
+  late SearchByLocation _searchByLocation;
   final SearchByPriceRange _searchByPriceRange = SearchByPriceRange();
-  final SearchByRating _searchByRating = SearchByRating();
-  final SearchByCategory _searchByCategory = SearchByCategory();
-  final SearchByLocation _searchByLocation = SearchByLocation();
+  late SearchByRating _searchByRating;
+
+  void handleSearchResultsUpdate(String responseBody) {
+    // Handle the state update here
+    setState(() {
+      // Parse the JSON response into a list of maps
+      List<dynamic> parsedList = json.decode(responseBody);
+
+      // Convert each map in the list to a Map<String, dynamic>
+      searchResults = parsedList.map((dynamic item) => item as Map<String, dynamic>).toList();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Set the callback function
+    updateSearchResultsCallback = handleSearchResultsUpdate;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +79,18 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            filterButtons(),
             // filter buttons
+            filterButtons(),
+            const SizedBox(height: 16),
+            // food list
+            Expanded(
+              child: searchResults.isEmpty ? foodList() : const Center(
+                child: Text(
+                  'No results found.',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
           ],
         ),
       ),

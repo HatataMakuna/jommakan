@@ -1,12 +1,8 @@
-// TASKS:
-// - Enable the login button when all fields are filled
-// - After click the Login, pass the data to login logic page
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:jom_makan/stores/user_provider.dart';
-import 'package:jom_makan/server/login_user.dart';
+import 'package:jom_makan/server/user/login_user.dart';
 import 'package:jom_makan/components/logo.dart';
 
 //void main() => runApp(MaterialApp(home: LoginPage()));
@@ -156,9 +152,11 @@ class _LoginState extends State<LoginPage> {
     if (loginResult['success']) {
       // Login was successful, get the username
       var username = loginResult['username'];
+      var userID = loginResult['userID'];
 
       // update the user name in the provider
       Provider.of<UserProvider>(context, listen: false).setUserName(username);
+      Provider.of<UserProvider>(context, listen: false).setUserID(userID);
 
       // navigate to the home page
       Navigator.pushReplacementNamed(context, '/home');

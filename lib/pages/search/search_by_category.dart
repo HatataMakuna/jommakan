@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/consts/category_icons.dart';
+import 'search.dart';
+import 'search_results_updater.dart';
 
-class SearchByCategory {
+abstract class SearchByCategory extends State<SearchPage> with SearchResultsUpdater {
   Future<void> showCategoryFilterDialog(BuildContext context) async {
     List<String> selectedCategories = []; // To store the selected categories
 
@@ -61,10 +63,9 @@ class SearchByCategory {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
-                // Do something with the selected categories, e.g., update your filter
-                // ...
-
+              onPressed: () async {
+                // Do something
+                //await applyFilter(selectedCategories);
                 Navigator.pop(context); // Close the dialog
               },
               child: const Text('Apply'),
@@ -74,4 +75,20 @@ class SearchByCategory {
       },
     );
   }
+
+  /* Future<void> applyFilter(List<String> selectedCategories) async {
+    // Implement your logic to apply the filter
+    // Make an HTTP request with the filter values
+    final response = await http.get(Uri.parse('http://localhost:3000/get-all-foods?categories=${selectedCategories.join(',')}'));
+    
+    // Process the response
+    if (response.statusCode == 200) {
+      // Handle the successful response
+      print('Filter applied successfully');
+      updateSearchResults(response.body);
+    } else {
+      // Handle errors
+      print('Failed to apply filter. Status code: ${response.statusCode}');
+    }
+  } */
 }
