@@ -1,7 +1,8 @@
-import '../database/db_connection.dart';
+
+import 'package:jom_makan/database/db_connection.dart';
 
 class promotion {
-  Future<bool> promomtionRegister({
+  Future<bool> promotionRegister({
     required String foodId,
     required String foodName,
 required String foodPrice,
@@ -18,16 +19,18 @@ required String foodDescription,
     //   }
 
       // User doesn't exist, proceed with registration
-      final conn = await createConnection();
+      
 
       // Insert new user to the database
-      var result = await conn.query(
+      var result = await pool.prepare(
         'INSERT INTO users (foodId, foodName, foodPrice, foodPromotion, foodStall, foodDescription) VALUES (?, ?, ?, ?, ?, ?)',
-        [foodId, foodName, foodPrice, foodPromotion, foodStall, foodDescription],
+        
       );
 
+      var results = await result.execute([foodId, foodName, foodPrice, foodPromotion, foodStall, foodDescription]);
       // Close the database connection
-      await conn.close();
+      await result.deallocate();
+
 
       // Check if the insertion was successful
       if (result.affectedRows == 1) {

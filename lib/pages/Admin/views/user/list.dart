@@ -14,6 +14,8 @@ import 'package:jom_makan/server/promotion.dart';
 
 import '../../style/colors.dart';
 
+import 'addPromotion.dart';
+
 class UserList extends AdminView {
   UserList({super.key});
 
@@ -138,15 +140,31 @@ class _UserList extends AdminStateView<UserList> {
   }
 
   @override
-  Widget? buildForLarge(BuildContext context) {
+  Widget buildForLarge(BuildContext context) {
     return LayoutBuilder(builder: (context, size) {
       return Container(
         width: size.maxWidth,
         margin: const EdgeInsets.all(10),
         height: size.maxHeight,
-        child: AdminTable(
-          controller: _controller,
-          fixedHeader: true,
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                 // Navigate to a new page when the button is pressed
+                Navigator.push(
+                 context,
+                MaterialPageRoute(builder: (context) => addPromotion()));
+              },
+              child: Text('Add Promotion'),
+            ),
+            SizedBox(height: 10), // Add some space between button and table
+            Expanded(
+              child: AdminTable(
+                controller: _controller,
+                fixedHeader: true,
+              ),
+            ),
+          ],
         ),
       );
     });
