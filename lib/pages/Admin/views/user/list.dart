@@ -10,6 +10,7 @@ import 'package:jom_makan/pages/Admin/widgets/input/input.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
+import 'package:jom_makan/server/promotion.dart';
 
 import '../../style/colors.dart';
 
@@ -22,11 +23,22 @@ class UserList extends AdminView {
 
 class _UserList extends AdminStateView<UserList> {
   late AdminTableController _controller;
+  final promotion _promotion = promotion();
+
+
+ // Controller for text fields
+  final TextEditingController _foodIdController = TextEditingController();
+  final TextEditingController _foodNameController = TextEditingController();
+  final TextEditingController _foodPriceController = TextEditingController();
+  final TextEditingController _foodPromotionController = TextEditingController();
+  final TextEditingController _foodStallController = TextEditingController();
+  final TextEditingController _foodDescriptionController = TextEditingController();
 
   var itemData = [];
 
   @override
   void initState() {
+    // _fetchPromotion();
     NameRandom nameRandom = NameRandom();
     for (int i = 1; i <= 100; i++) {
       String formattedNumber = 'F${i.toString().padLeft(5, '0')}';
@@ -75,6 +87,20 @@ class _UserList extends AdminStateView<UserList> {
     _controller.setNewData(itemData);
     super.initState();
   }
+
+  // void _fetchPromotion() async{
+  //   var promotionData = await _promotion.getPromotion();
+  //   if (promotionData['success']) {
+  //     setState(() {
+  //       _foodIdController.text = promotionData!['foodId'];
+  //        _foodNameController.text = promotionData['foodName'];
+  //         _foodPriceController.text = promotionData['foodPrice'];
+  //          _foodPromotionController.text = promotionData['foodPromotion'];
+  //           _foodStallController.text = promotionData['foodStall'];
+  //            _foodDescriptionController.text = promotionData['foodDescription'];
+  //     });
+  //   }
+  // }
 
   Widget onItemView(
       BuildContext context, int index, dynamic data, AdminTableItem item) {
