@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import 'search.dart';
-import 'food_list.dart';
+import 'package:jom_makan/pages/search/search.dart';
+import 'package:jom_makan/pages/search/food_list.dart';
 
 mixin SearchResultsUpdater on State<SearchPage> {
   // Define a callback function

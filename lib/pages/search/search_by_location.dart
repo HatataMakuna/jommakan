@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/consts/location_icons.dart';
-import 'search.dart';
-import 'search_results_updater.dart';
+import 'package:jom_makan/pages/search/search.dart';
+import 'package:jom_makan/pages/search/search_results_updater.dart';
 
 abstract class SearchByLocation extends State<SearchPage> with SearchResultsUpdater {
   Future<void> showLocationFilterDialog(BuildContext context) async {

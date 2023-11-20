@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'cart.dart';
-import 'home.dart';
-import 'favourites.dart';
-import 'me.dart';
-import 'rewards.dart';
+import 'package:jom_makan/pages/main/cart.dart';
+import 'package:jom_makan/pages/main/home.dart';
+import 'package:jom_makan/pages/main/favourites.dart';
+import 'package:jom_makan/pages/main/me.dart';
+import 'package:jom_makan/pages/main/rewards.dart';
 
 void main() => runApp(const MaterialApp(home: MainPage()));
 

@@ -1,8 +1,12 @@
+// TODO: Add more comments for this file
+
 import 'dart:math';
+import 'package:jom_makan/database/db_connection.dart';
 import 'package:jom_makan/model/rating.dart';
 
+// To recommend foods according to the user's ratings behaviour
 class RecommendationSystem {
-  final List<Rating> ratings;
+  List<Rating> ratings;
 
   RecommendationSystem({required this.ratings});
 
@@ -76,24 +80,34 @@ class RecommendationSystem {
   }
 }
 
-void main() {
-  // Sample ratings
-  List<Rating> ratings = [
-    Rating(ratingID: 1, foodID: 2, userID: 2, stars: 4),
-    Rating(ratingID: 2, foodID: 3, userID: 5, stars: 4),
-    Rating(ratingID: 3, foodID: 5, userID: 4, stars: 5),
-    Rating(ratingID: 4, foodID: 3, userID: 5, stars: 1),
-    Rating(ratingID: 5, foodID: 5, userID: 4, stars: 5),
-    Rating(ratingID: 6, foodID: 4, userID: 6, stars: 5),
-    Rating(ratingID: 7, foodID: 2, userID: 7, stars: 4),
-    Rating(ratingID: 8, foodID: 4, userID: 7, stars: 5),
-    Rating(ratingID: 9, foodID: 1, userID: 6, stars: 3),
-    Rating(ratingID: 10, foodID: 5, userID: 4, stars: 4),
-  ];
+Future<List<Rating>> getRatingsForRecommendation() async {
+  try {
+    var results = await pool.execute("SELECT ratingID, foodID, userID, stars FROM ratings");
+    List<Rating> ratings = [];
+
+    for (final row in results.rows) {
+      ratings.add(Rating(
+        ratingID: int.parse(row.colByName("ratingID").toString()),
+        foodID: int.parse(row.colByName("foodID").toString()),
+        userID: int.parse(row.colByName("userID").toString()),
+        stars: int.parse(row.colByName("stars").toString()),
+      ));
+    }
+
+    return ratings;
+  } catch (e) {
+    print('Error retrieving list of ratings: $e');
+    return [];
+  }
+}
+
+Future<void> main() async {
+  // Retrieve ratings from database
+  List<Rating> ratings = await getRatingsForRecommendation();
 
   RecommendationSystem recommendationSystem = RecommendationSystem(ratings: ratings);
 
-  int targetUser = 2;
+  int targetUser = 4;
   List<int> recommendedFoods = recommendationSystem.recommendFoods(targetUser);
 
   print('Recommended Foods for User $targetUser: $recommendedFoods');

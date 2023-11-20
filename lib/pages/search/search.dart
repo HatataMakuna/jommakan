@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jom_makan/server/search/search_foods.dart';
-
-import 'food_list.dart';
-import 'search_by_price_range.dart';
-import 'search_by_rating.dart';
-import 'search_by_category.dart';
-import 'search_by_location.dart';
-import 'search_results_updater.dart';
+import 'package:jom_makan/pages/search/food_list.dart';
+import 'package:jom_makan/pages/search/search_by_price_range.dart';
+import 'package:jom_makan/pages/search/search_by_rating.dart';
+import 'package:jom_makan/pages/search/search_by_category.dart';
+import 'package:jom_makan/pages/search/search_by_location.dart';
+import 'package:jom_makan/pages/search/search_results_updater.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});

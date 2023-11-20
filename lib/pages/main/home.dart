@@ -77,13 +77,14 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            const SizedBox(height: 20),
-            _logo.getLogoImage(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+            _logo.getLogoImageWithCustomSize(299, 60),
+            const SizedBox(height: 10),
             categoriesList(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             popularFoods(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+            // you may like
           ],
         ),
       ),
@@ -227,4 +228,5 @@ class _HomePageState extends State<HomePage> {
 
   // You may like
   // recommendation applies here
+  // TODO: Call the function from model/recommendation.dart and display in format similar to popularFoods()
 }

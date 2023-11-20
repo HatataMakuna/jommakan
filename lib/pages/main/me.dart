@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:jom_makan/stores/user_provider.dart';
 
 class MePage extends StatelessWidget {
