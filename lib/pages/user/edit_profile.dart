@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/server/user_profile.dart';
+import 'package:jom_makan/server/user/user_profile.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key, required this.username}) : super(key: key);

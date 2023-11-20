@@ -1,26 +1,24 @@
-import '../database/db_connection.dart';
+import 'package:jom_makan/database/db_connection.dart';
 
 class UserProfile {
   // Get user profile and display name and email in edit profile page
   Future<Map<String, dynamic>> getUserProfile(String username) async {
     try {
-      final conn = await createConnection();
-
       // Retrieve user information based on the name
-      var results = await conn.query('SELECT * FROM users WHERE username = ?', [username]);
-
-      await conn.close();
-
+      var results = await pool.execute('SELECT * FROM users WHERE username = :username', {"username": username});
+      
       // If the user is found, return user data
       if (results.isNotEmpty) {
-        var user = results.first;
-        var username = user['username'];
-        var userEmail = user['email'];
+        String? email;
 
+        for (final row in results.rows) {
+          email = row.colByName("email");
+        }
+        
         return {
           'success': true,
           'username': username,
-          'email': userEmail,
+          'email': email,
         };
       } else {
         // User not found
@@ -35,19 +33,16 @@ class UserProfile {
   // Check if the provided current password matches the one stored in the database
   Future<bool> checkCurrentPassword(String username, String currentPassword) async {
     try {
-      final conn = await createConnection();
-
       // Retrieve user information based on the username
-      var results = await conn.query('SELECT * FROM users WHERE username = ?', [username]);
-
-      await conn.close();
+      var results = await pool.execute('SELECT password FROM users WHERE username = :username', {"username": username});
 
       // If the user is found, compare passwords
       if (results.isNotEmpty) {
-        var user = results.first;
-        var storedPassword = user['password']; // Replace 'password' with the actual column name
-
-        return currentPassword == storedPassword;
+        String? password;
+        for (final row in results.rows) {
+          password = row.colByName("password");
+        }
+        return currentPassword == password;
       } else {
         // User not found
         return false;
@@ -61,15 +56,15 @@ class UserProfile {
   // Update username and email in the database (username and email)
   Future<bool> updateNameEmail(String currentUsername, String username, String email) async {
     try {
-      final conn = await createConnection();
-
       // Update user information based on the username
-      await conn.query(
-        'UPDATE users SET username = ?, email = ? WHERE username = ?',
-        [username, email, currentUsername],
+      await pool.execute(
+        'UPDATE users SET username = :username, email = :email WHERE username = :curusername',
+        {
+          "username": username,
+          "email": email,
+          "curusername": currentUsername,
+        },
       );
-
-      await conn.close();
 
       return true; // Update successful
     } catch (e) {
@@ -81,12 +76,14 @@ class UserProfile {
   // Update password in the database
   Future<bool> updatePassword(String currentUsername, String password) async {
     try {
-      final conn = await createConnection();
-
       // Update user information based on the username
-      await conn.query('UPDATE users SET password = ? WHERE username = ?', [password, currentUsername]);
-
-      await conn.close();
+      await pool.execute(
+        'UPDATE users SET password = :password WHERE username = :curusername',
+        {
+          "password": password,
+          "curusername": currentUsername,
+        },
+      );
 
       return true; // Update successful
     } catch (e) {
@@ -98,15 +95,16 @@ class UserProfile {
   // Update the whole user profile in the database (name, email and password)
   Future<bool> updateUserProfile(String currentUsername, String username, String email, String password) async {
     try {
-      final conn = await createConnection();
-
       // Update user information based on the username
-      await conn.query(
-        'UPDATE users SET username = ?, email = ?, password = ? WHERE username = ?',
-        [username, email, password, currentUsername],
+      await pool.execute(
+        'UPDATE users SET username = :username, email = :email, password = :password WHERE username = :curusername',
+        {
+          "username": username,
+          "email": email,
+          "password": password,
+          "curusername": currentUsername,
+        },
       );
-
-      await conn.close();
 
       return true; // Update successful
     } catch (e) {

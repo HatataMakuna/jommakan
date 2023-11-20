@@ -11,6 +11,7 @@ import 'pages/user/edit_profile.dart';
 import 'pages/user/login.dart';
 import 'pages/user/create_account.dart';
 import 'pages/user/forget_password.dart';
+import 'pages/search/search.dart';
 
 void main() => runApp(const MyApp());
 
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/user/forget-password': (context) => ForgetPasswordPage(),
         '/user/edit-profile': (context) => EditProfile(username: userName.toString()),
         '/home': (context) => const MainPage(),
+        '/search': (context) => const SearchPage(),
       },
     );
   }

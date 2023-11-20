@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'search.dart';
+import 'search_results_updater.dart';
 
-class SearchByRating {
+abstract class SearchByRating extends State<SearchPage> with SearchResultsUpdater {
   Future<void> showRatingFilterDialog(BuildContext context) async {
     double selectedRating = 0; // To store the selected rating
 
@@ -45,10 +47,8 @@ class SearchByRating {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
-                // Do something with the selected rating, e.g., update your filter
-                // ...
-
+              onPressed: () async {
+                //await applyFilter(selectedRating);
                 Navigator.pop(context); // Close the dialog
               },
               child: const Text('Apply'),
@@ -58,4 +58,20 @@ class SearchByRating {
       },
     );
   }
+
+  /* Future<void> applyFilter(double selectedRating) async {
+    // Implement your logic to apply the filter
+    // Make an HTTP request with the filter value
+    final response = await http.get(Uri.parse('http://localhost:3000/get-all-foods?rating=$selectedRating'));
+
+    // Process the response
+    if (response.statusCode == 200) {
+      // Handle the successful response
+      print('Filter applied successfully');
+      updateSearchResults(response.body);
+    } else {
+      // Handle errors
+      print('Failed to apply filter. Status code: ${response.statusCode}');
+    }
+  } */
 }

@@ -1,5 +1,4 @@
 // THIS FILE IS ONLY FOR EASE OF TESTING PURPOSE
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'stores/user_provider.dart'; // Import the UserProvider class
@@ -26,6 +25,7 @@ class MyApp extends StatelessWidget {
     // Schedule the modification after the build phase has completed
     Future.delayed(Duration.zero, () {
       Provider.of<UserProvider>(context, listen: false).setUserName('Testing');
+      Provider.of<UserProvider>(context, listen: false).setUserID(2);
     });
     
     // Access the user name from the provider
