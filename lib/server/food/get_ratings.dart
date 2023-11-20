@@ -8,7 +8,7 @@ class FoodRatings {
       List<int> ratings = [];
       int sum = 0;
       for (final row in results.rows) {
-        sum += row.colByName("stars") as int;
+        sum += int.parse(row.colByName("stars").toString());
         print('Current Sum: ' + sum.toString());
       }
 
@@ -39,14 +39,30 @@ class FoodRatings {
       // Extract and return the ratings
       List<int> ratings = [];
       for (final row in results.rows) {
-        ratings.add(row.colByName("stars") as int);
+        ratings.add(int.parse(row.colByName("stars").toString()));
       }
 
       await stmt.deallocate();
       return ratings;
     } catch (e) {
-      print('Error retrieving ratings: $e');
+      print('Error retrieving ratingss: $e');
       return [];
+    }
+  }
+
+  Future<int> getNumberOfRatings(int foodID) async {
+    try {
+      int noRatings = 0;
+      var results = await pool.execute("SELECT COUNT(stars) FROM ratings WHERE foodID = :foodID", {'foodID': foodID});
+
+      for (final row in results.rows) {
+        noRatings = int.parse(row.colAt(0).toString());
+      }
+
+      return noRatings;
+    } catch (e) {
+      print('Error retrieving number of ratings: $e');
+      return 0;
     }
   }
 

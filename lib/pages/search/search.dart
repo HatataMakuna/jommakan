@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:jom_makan/server/search/search_foods.dart';
 
 import 'food_list.dart';
 import 'search_by_price_range.dart';
@@ -43,6 +44,19 @@ class _SearchPageState extends State<SearchPage> with SearchResultsUpdater {
     updateSearchResultsCallback = handleSearchResultsUpdate;
   }
 
+  void searchFoods() async {
+    try {
+      final searchFoods = SearchFoods();
+      final foods = await searchFoods.getFoods(_searchQuery);
+
+      setState(() {
+        searchResults = foods;
+      });
+    } catch (e) {
+      print('Error searching for foods: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +67,7 @@ class _SearchPageState extends State<SearchPage> with SearchResultsUpdater {
             setState(() {
               _searchQuery = value;
             });
+            searchFoods(); // Call the searchFoods method when the search query changes
           },
           decoration: InputDecoration(
             hintText: 'Search for foods...',

@@ -35,10 +35,7 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cart'),
-        backgroundColor: Colors.white,
-      ),
+      appBar: null,
       body: _buildCartContent(),
     );
   }
@@ -85,11 +82,11 @@ class _CartPageState extends State<CartPage> {
         final cartItem = cartItems[index];
         
         List<String> preferences = [
-          if (cartItem['no_vege'] == 1) 'No Vegeterian',
-          if (cartItem['extra_vege'] == 1) 'Extra Vegeterian',
-          if (cartItem['no_spicy'] == 1) 'No Spicy',
-          if (cartItem['extra_spicy'] == 1) 'Extra Spicy',
-        ];
+          if (int.parse(cartItem['no_vege']) == 1) 'No Vegetarian',
+          if (int.parse(cartItem['extra_vege']) == 1) 'Extra Vegetarian',
+          if (int.parse(cartItem['no_spicy']) == 1) 'No Spicy',
+          if (int.parse(cartItem['extra_spicy']) == 1) 'Extra Spicy',
+        ].where((preference) => preference.isNotEmpty).toList();
 
         return ListTile(
           // leading: image
@@ -100,13 +97,13 @@ class _CartPageState extends State<CartPage> {
           ),
           title: Text(cartItem['food_name'] ?? ''),
           subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Quantity: ${cartItem['quantity'] ?? ''}',
-                textAlign: TextAlign.left,
-              ),
+              Text('Quantity: ${cartItem['quantity'] ?? ''}',),
               const SizedBox(height: 8),
               _buildPreferencesDropdown(preferences),
+              const SizedBox(height: 8),
+              _buildAdditionalNotes(cartItem),
             ],
           ),
           trailing: Text('Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}'),
@@ -116,40 +113,33 @@ class _CartPageState extends State<CartPage> {
   }
 
   Widget _buildPreferencesDropdown(List<String> preferences) {
-    bool isExpanded = false;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Text('Additional Preferences:'),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  isExpanded = !isExpanded;
-                });
-              },
-              child: Visibility(
-                visible: isExpanded,
-                child: const Icon(Icons.expand_less),
-                replacement: const Icon(Icons.expand_more),
-              ),
-            ),
-          ],
-        ),
-        if (isExpanded)
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: preferences.length,
-            itemBuilder: (context, index) {
-              return Text(preferences[index]);
-            },
-          ),
-      ],
-    );
+    if (preferences.isNotEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Additional Preferences:'),
+          for (String preference in preferences)
+            Text(preference),
+        ]
+      );
+    } else {
+      return const SizedBox.shrink(); // Empty container if there are no preferences
+    }
   }
   
+  Widget _buildAdditionalNotes(Map<String, dynamic> cartItem) {
+    if (cartItem['notes'].toString() == 'null' || cartItem['notes'].toString().isEmpty) {
+      return const SizedBox.shrink(); // Empty container if the additional notes is empty or NULL
+    } else {
+      return Column(
+        children: [
+          const Text('Additional Notes:'),
+          Text(cartItem['notes'].toString()),
+        ],
+      );
+    }
+  }
+
   void _checkout() {
     // Implement your checkout logic here
     // For example, you can navigate to a checkout page

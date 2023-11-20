@@ -19,11 +19,12 @@ class SearchFoods {
           stalls ON foods.stallID = stalls.stallID
         WHERE
           UPPER(foods.food_name) LIKE UPPER(?)
+          OR UPPER(foods.food_name) LIKE UPPER(?) ESCAPE '|'
         '''
       );
 
       String searchValue = '%$searchQuery%';
-      var results = await stmt.execute([searchValue]);
+      var results = await stmt.execute([searchValue, '|$searchValue']);
 
       if (results.isNotEmpty) {
         List<Map<String, dynamic>> foods = [];

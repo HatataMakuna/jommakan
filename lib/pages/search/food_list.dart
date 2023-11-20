@@ -5,12 +5,12 @@ import 'package:jom_makan/server/food/get_foods.dart';
 final GetFoods _getFoods = GetFoods();
 
 Widget foodList({
-    String? searchQuery,
-    int? priceRangeMin,
-    int? priceRangeMax,
-    double? minRating,
-    List<String>? selectedLocations,
-    List<String>? selectedCategories,
+  String? searchQuery,
+  int? priceRangeMin,
+  int? priceRangeMax,
+  double? minRating,
+  List<String>? selectedLocations,
+  List<String>? selectedCategories,
 }) {
     return FutureBuilder(
       future: _getFoods.getAllFoods(
@@ -75,12 +75,21 @@ Widget foodList({
                               fontSize: 15,
                             ),
                           ),
-                          Text(
-                            '${food['qty_in_stock']} items remaining',
-                            style: const TextStyle(
-                              fontSize: 15,
+                          if (int.parse(food['qty_in_stock']) == 0)
+                            const Text(
+                              'Out of stock',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 15,
+                              )
+                            )
+                          else
+                            Text(
+                              '${food['qty_in_stock']} items remaining',
+                              style: const TextStyle(
+                                fontSize: 15,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),

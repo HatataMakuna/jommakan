@@ -5,7 +5,7 @@ import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class FoodDetailsPage extends StatefulWidget {
-  final Map<String, dynamic> selectedFood; // Replace this with the actual data type you have
+  final Map<String, dynamic> selectedFood;
 
   const FoodDetailsPage({super.key, required this.selectedFood});
 
@@ -18,6 +18,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
   int quantity = 1;
   String notes = '';
   double averageRating = 0.0; // Initialize averageRating
+  int noRatings = 0;
   List<String> preferences = [];
   double totalPrice = 0.0;
 
@@ -27,6 +28,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
 
     // Call your function to get average ratings directly
     _getAverageRatings();
+    _getNoOfRatings();
     // Calculate initial total price
     _calculateTotalPrice();
   }
@@ -46,6 +48,17 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
       });
     } catch (error) {
       // Handle errors if needed
+      print('Error: $error');
+    }
+  }
+
+  void _getNoOfRatings() async {
+    try {
+      int numberOfRatings = await _foodRatings.getNumberOfRatings(int.parse(widget.selectedFood['foodID']));
+      setState(() {
+        noRatings = numberOfRatings;
+      });
+    } catch (error) {
       print('Error: $error');
     }
   }
@@ -145,9 +158,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
               children: [
                 const Text(
                   'Average Rating: ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.w300),
                 ),
                 Text(
                   averageRating.toStringAsFixed(2),
@@ -158,10 +169,16 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                   ),
                 ),
                 const Text(
-                  '/ 5.00',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                  )
+                  ' / 5.00 from ',
+                  style: TextStyle(fontWeight: FontWeight.w300),
+                ),
+                Text(
+                  noRatings.toString(),
+                  style: const TextStyle(fontWeight: FontWeight.w300),
+                ),
+                const Text(
+                  ' rating(s)',
+                  style: TextStyle(fontWeight: FontWeight.w300),
                 ),
               ],
             ),
@@ -320,21 +337,6 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
 
   void addToCart() async {
     AddToCart addToCart = AddToCart();
-
-    bool noVege = preferences.contains('no vegetarian');
-    bool extraVege = preferences.contains('extra vegetarian');
-    bool noSpicy = preferences.contains('no spicy');
-    bool extraSpicy = preferences.contains('extra spicy');
-    print(noVege);
-    print(extraVege);
-    print(noSpicy);
-    print(extraSpicy);
-
-    // Convert to boolean
-    noVege = (noVege == 1);
-    extraVege = (extraVege == 1);
-    noSpicy = (noSpicy == 1);
-    extraSpicy = (extraSpicy == 1);
 
     bool addToCartResult = await addToCart.addToCart(
       userID: Provider.of<UserProvider>(context, listen: false).userID!, // replace with the actual user ID

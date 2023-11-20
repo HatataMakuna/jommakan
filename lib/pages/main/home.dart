@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/components/logo.dart';
 import 'package:jom_makan/consts/category_icons.dart';
+import 'package:jom_makan/pages/foods/food_details.dart';
+import 'package:jom_makan/server/food/get_foods.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,6 +15,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final Logo _logo = Logo();
+  final GetFoods _getFoods = GetFoods();
+
+  List<Map<String, dynamic>> _randomFoods = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRandomFoods();
+  }
+
+  Future<void> _loadRandomFoods() async {
+    final randomFoods = await _getFoods.getRandomFoods();
+    setState(() {
+      _randomFoods = randomFoods;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,16 +74,16 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             _logo.getLogoImage(),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             categoriesList(),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             popularFoods(),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -149,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                 Icon(Icons.whatshot_rounded),
                 SizedBox(width: 15),
                 Text(
-                  'Popular Foods',
+                  'Trending Foods',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -158,6 +176,49 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             const SizedBox(height: 10),
+            // Display random foods
+            // ignore: sized_box_for_whitespace
+            Container(
+              height: 130,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: _randomFoods.length,
+                itemBuilder: (context, index) {
+                  Map<String, dynamic> food = _randomFoods[index];
+                  return InkWell(
+                    onTap: () {
+                      // Navigate to food details page using food['foodID']
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FoodDetailsPage(selectedFood: food),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: [
+                          // Display food image
+                          Image(
+                            image: AssetImage('images/foods/${food['food_image']}'),
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                          ),
+                          const SizedBox(height: 5),
+                          // Display food name
+                          Text(
+                            food['food_name'],
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    )
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

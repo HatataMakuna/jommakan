@@ -13,7 +13,12 @@ import 'pages/user/create_account.dart';
 import 'pages/user/forget_password.dart';
 import 'pages/search/search.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(
+  ChangeNotifierProvider(
+    create: (context) => UserProvider(),
+    child: const MyApp(),
+  )
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});

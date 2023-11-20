@@ -12,6 +12,7 @@ class GetCart {
           c.extra_vege,
           c.no_spicy,
           c.extra_spicy,
+          c.notes,
           f.food_image,
           f.food_price 
         FROM cart c
@@ -31,6 +32,7 @@ class GetCart {
           'extra_vege': row.colByName("extra_vege"),
           'no_spicy': row.colByName("no_spicy"),
           'extra_spicy': row.colByName("extra_spicy"),
+          'notes': row.colByName("notes"),
           'food_image': row.colByName("food_image"),
           'food_price': row.colByName("food_price"),
         });
