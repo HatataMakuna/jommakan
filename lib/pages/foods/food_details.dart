@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/server/cart/add_to_cart.dart';
 import 'package:jom_makan/server/food/get_ratings.dart';
+import 'package:jom_makan/stores/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class FoodDetailsPage extends StatefulWidget {
   final Map<String, dynamic> selectedFood; // Replace this with the actual data type you have
@@ -319,9 +321,24 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
   void addToCart() async {
     AddToCart addToCart = AddToCart();
 
+    bool noVege = preferences.contains('no vegetarian');
+    bool extraVege = preferences.contains('extra vegetarian');
+    bool noSpicy = preferences.contains('no spicy');
+    bool extraSpicy = preferences.contains('extra spicy');
+    print(noVege);
+    print(extraVege);
+    print(noSpicy);
+    print(extraSpicy);
+
+    // Convert to boolean
+    noVege = (noVege == 1);
+    extraVege = (extraVege == 1);
+    noSpicy = (noSpicy == 1);
+    extraSpicy = (extraSpicy == 1);
+
     bool addToCartResult = await addToCart.addToCart(
-      userID: 1, // replace with the actual user ID
-      foodID: widget.selectedFood['foodID'], // replace with the actual food ID
+      userID: Provider.of<UserProvider>(context, listen: false).userID!, // replace with the actual user ID
+      foodID: int.parse(widget.selectedFood['foodID']), // replace with the actual food ID
       quantity: quantity,
       noVege: preferences.contains('no vegetarian'),
       extraVege: preferences.contains('extra vegetarian'),

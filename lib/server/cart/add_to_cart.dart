@@ -12,6 +12,12 @@ class AddToCart {
     required String notes,
   }) async {
     try {
+      // Map boolean values to 0 or 1
+      int noVegeInt = noVege ? 1 : 0;
+      int extraVegeInt = extraVege ? 1 : 0;
+      int noSpicyInt = noSpicy ? 1 : 0;
+      int extraSpicyInt = extraSpicy ? 1 : 0;
+
       // Insert the cart item into the database
       var result = await pool.execute(
         'INSERT INTO cart (userID, foodID, quantity, no_vege, extra_vege, no_spicy, extra_spicy, notes) '
@@ -20,15 +26,15 @@ class AddToCart {
           "userID": userID,
           "foodID": foodID,
           "quantity": quantity,
-          "noVege": noVege,
-          "extraVege": extraVege,
-          "noSpicy": noSpicy,
-          "extraSpicy": extraSpicy,
+          "noVege": noVegeInt,
+          "extraVege": extraVegeInt,
+          "noSpicy": noSpicyInt,
+          "extraSpicy": extraSpicyInt,
           "notes": notes,
         },
       );
 
-      return result.affectedRows as int == 1; // Check if the insertion was successful
+      return int.parse(result.affectedRows.toString()) == 1; // Check if the insertion was successful
     } catch (e) {
       // Handle database errors or other exceptions here
       print('Error during adding to cart: $e');

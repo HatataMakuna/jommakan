@@ -4,9 +4,11 @@ import 'package:flutter/foundation.dart';
 class UserProvider extends ChangeNotifier {
   String? _userName;
   int? _userID;
+  String? _userRole;
   
   String? get userName => _userName;
   int? get userID => _userID;
+  String? get userRole => _userRole;
 
   void setUserName(String name) {
     _userName = name;
@@ -18,10 +20,16 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setUserRole(String userRole) {
+    _userRole = userRole;
+    notifyListeners();
+  }
+
   void logout() {
     // Clear user information on logout
     _userName = null;
     _userID = null;
+    _userRole = null;
     notifyListeners();
   }
 }
