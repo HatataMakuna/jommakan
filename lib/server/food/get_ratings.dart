@@ -2,30 +2,6 @@ import 'package:jom_makan/database/db_connection.dart';
 import 'package:jom_makan/model/rating.dart';
 
 class FoodRatings {
-  Future<double> getAverageRatings(int foodID) async {
-    try {
-      var results = await pool.execute("SELECT stars FROM ratings WHERE foodID = :foodID", {"foodID": foodID});
-
-      List<int> ratings = [];
-      int sum = 0;
-      for (final row in results.rows) {
-        sum += int.parse(row.colByName("stars").toString());
-        print('Current Sum: ' + sum.toString());
-      }
-
-      if (ratings.isEmpty) {
-        return 0.0;
-      }
-
-      double averageRating = sum / ratings.length;
-      print('Avergae Rating: ' + averageRating.toString());
-      return averageRating;
-    } catch (e) {
-      print('Error retrieving ratings: $e');
-      return 0.0;
-    }
-  }
-
   Future<List<int>> getRatingsForFood(int foodID) async {
     try {
       var stmt = await pool.prepare('''
@@ -103,14 +79,48 @@ class FoodRatings {
       return [];
     }
   }
+
+  Future<List<Map<String, dynamic>>> getUserReviews(int foodID, int userID) async {
+    try {
+      String query = '''
+        SELECT users.username, ratings.stars, ratings.description
+        FROM ratings
+        JOIN users ON ratings.userID = users.userID
+        WHERE ratings.foodID = :foodID
+        ORDER BY ratings.userID = :userID DESC, ratings.date DESC;
+      ''';
+
+      var results = await pool.execute(query, {"foodID": foodID, "userID": userID});
+      List<Map<String, dynamic>> reviews = [];
+
+      for (final row in results.rows) {
+        reviews.add({
+          'username': row.colByName("username"),
+          'stars': row.colByName("stars"),
+          'description': row.colByName("description"),
+        });
+      }
+
+      return reviews;
+    } catch (e) {
+      print('Error retrieving user reviews: $e');
+      return [];
+    }
+  }
 }
 
+/*
+  Database schema:
+  ratings(ratingID, foodID, userID, stars, date, description)
+  users(userID, username, email, password, user_role)
+*/
+
 void main() async {
-    // Example of how to use the SearchFoods
-    final getratings = FoodRatings();
+  // Example of how to use the SearchFoods
+  final getratings = FoodRatings();
 
-    final foods = await getratings.getRatingsForFood(1);
+  final foods = await getratings.getRatingsForFood(1);
 
-    // Print the results
-    print(foods);
+  // Print the results
+  print(foods);
 }

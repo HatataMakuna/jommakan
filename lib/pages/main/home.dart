@@ -51,9 +51,11 @@ class _HomePageState extends State<HomePage> {
     // Pass the recommendd food IDs to the server to get its food details
     final recommendedFoods = await _getFoods.getFoodsByIds(recommendedFoodIDs);
     
-    setState(() {
-      _recommendedFoods = recommendedFoods;
-    });
+    if (mounted) {
+      setState(() {
+        _recommendedFoods = recommendedFoods;
+      });
+    }
   }
 
   @override

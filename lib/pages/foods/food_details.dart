@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/components/get_average_ratings.dart';
+import 'package:jom_makan/pages/foods/food_reviews.dart';
 import 'package:jom_makan/server/cart/add_to_cart.dart';
-import 'package:jom_makan/server/food/get_ratings.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +15,7 @@ class FoodDetailsPage extends StatefulWidget {
 }
 
 class _FoodDetailsPageState extends State<FoodDetailsPage> {
-  final FoodRatings _foodRatings = FoodRatings();
+  final GetAverageRatings _getAvgRatings = GetAverageRatings();
   int quantity = 1;
   String notes = '';
   double averageRating = 0.0; // Initialize averageRating
@@ -29,38 +30,24 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
     // Call your function to get average ratings directly
     _getAverageRatings();
     _getNoOfRatings();
+
     // Calculate initial total price
     _calculateTotalPrice();
   }
 
   // Function to get average ratings and update the state
   void _getAverageRatings() async {
-    try {
-      List<int> ratings = await _foodRatings.getRatingsForFood(
-        int.parse(widget.selectedFood['foodID']),
-      );
-
-      double newAverageRating = _foodRatings.calculateAverageRating(ratings);
-
-      // Update the state with the new average rating
-      setState(() {
-        averageRating = newAverageRating;
-      });
-    } catch (error) {
-      // Handle errors if needed
-      print('Error: $error');
-    }
+    double _rating = await _getAvgRatings.setAverageRating(int.parse(widget.selectedFood['foodID']));
+    setState(() {
+      averageRating = _rating;
+    });
   }
 
   void _getNoOfRatings() async {
-    try {
-      int numberOfRatings = await _foodRatings.getNumberOfRatings(int.parse(widget.selectedFood['foodID']));
-      setState(() {
-        noRatings = numberOfRatings;
-      });
-    } catch (error) {
-      print('Error: $error');
-    }
+    int _noRatings = await _getAvgRatings.setNoRatings(int.parse(widget.selectedFood['foodID']));
+    setState(() {
+      noRatings = _noRatings;
+    });
   }
 
   // Calculate total price based on quantity and food price
@@ -153,34 +140,44 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
               ],
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Average Rating: ',
-                  style: TextStyle(fontWeight: FontWeight.w300),
-                ),
-                Text(
-                  averageRating.toStringAsFixed(2),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.blue,
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FoodReviewsPage(selectedFood: widget.selectedFood),
                   ),
-                ),
-                const Text(
-                  ' / 5.00 from ',
-                  style: TextStyle(fontWeight: FontWeight.w300),
-                ),
-                Text(
-                  noRatings.toString(),
-                  style: const TextStyle(fontWeight: FontWeight.w300),
-                ),
-                const Text(
-                  ' rating(s)',
-                  style: TextStyle(fontWeight: FontWeight.w300),
-                ),
-              ],
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Average Rating: ',
+                    style: TextStyle(fontWeight: FontWeight.w300),
+                  ),
+                  Text(
+                    averageRating.toStringAsFixed(2),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  const Text(
+                    ' / 5.00 from ',
+                    style: TextStyle(fontWeight: FontWeight.w300),
+                  ),
+                  Text(
+                    noRatings.toString(),
+                    style: const TextStyle(fontWeight: FontWeight.w300),
+                  ),
+                  const Text(
+                    ' rating(s)',
+                    style: TextStyle(fontWeight: FontWeight.w300),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
             Row(

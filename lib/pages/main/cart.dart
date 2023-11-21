@@ -1,3 +1,6 @@
+// TODO: Allow user to modify the cart
+// PLANNED: Navigate to food details page with preferences set
+
 import 'package:flutter/material.dart';
 import 'package:jom_makan/server/cart/get_cart.dart';
 import 'package:jom_makan/stores/user_provider.dart';
@@ -14,18 +17,39 @@ class _CartPageState extends State<CartPage> {
   final GetCart _getCart = GetCart();
   List<Map<String, dynamic>> _cartItems = [];
 
+  // for calculate total price
+  double totalPrice = 0.0;
+  bool isNoCutlery = false;
+
   @override
   void initState() {
     super.initState();
     _loadCartItems();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Future<void> _loadCartItems() async {
     try {
       final cartItems = await _getCart.getCart(Provider.of<UserProvider>(context, listen: false).userID!);
-      setState(() {
-        _cartItems = cartItems;
-      });
+
+      // Check if the widget is still mounted before calling setState
+      if (mounted) {
+        setState(() {
+          _cartItems = cartItems;
+
+          // Reset totalPrice to zero before recalculating
+          totalPrice = 0.0;
+
+          // Recalculate totalPrice based on the new cart items
+          for (final cartItem in _cartItems) {
+            totalPrice += int.parse(cartItem['quantity']) * double.parse(cartItem['food_price']);
+          }
+        });
+      }
     } catch (error) {
       print('Error loading cart items: $error');
       // Handle the error as needed
@@ -36,34 +60,46 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: null,
-      body: Padding(
+      body: _initalizeCartPage(),
+    );
+  }
+
+  Widget _initalizeCartPage() {
+    if (_cartItems.isEmpty) {
+      return const Center(child: Text('No items in the cart.'));
+    } else {
+      return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             const SizedBox(height: 10),
             _buildCartContent(),
             const SizedBox(height: 10),
+            _buildTotalPrice(),
+            const SizedBox(height: 10),
+            _buildNoCutleryRequest(),
+            const SizedBox(height: 10),
+            _checkoutButton(),
+            const SizedBox(height: 10),
           ],
         ),
-      ),
-    );
+      );
+    }
   }
 
   Widget _buildCartContent() {
-    if (_cartItems.isEmpty) {
-      return const Center(child: Text('No items in the cart.'));
-    } else {
-      return Card(
+    return Expanded(
+      child: Card(
         //margin: const EdgeInsets.symmetric(vertical: 8),
-        elevation: 5,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
-          side: BorderSide(
-            color: Colors.grey,
-            width: 1,
+          elevation: 5,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+            side: BorderSide(
+              color: Colors.grey,
+              width: 1,
+            ),
           ),
-        ),
-        child: Column(
+          child: Column(
           mainAxisSize: MainAxisSize.min, // Set mainAxisSize to min
           children: [
             const SizedBox(height: 12),
@@ -77,13 +113,13 @@ class _CartPageState extends State<CartPage> {
             const SizedBox(height: 12),
             // ignore: sized_box_for_whitespace
             Container(
-              height: 120, // adjust depend on other column usages
+              height: 250, // adjust depend on other column usages
               child: _buildCartList(_cartItems),
             ),
           ],
         ),
-      );
-    }
+      ),
+    );
   }
 
   Widget _buildCartList(List<Map<String, dynamic>> cartItems) {
@@ -150,6 +186,92 @@ class _CartPageState extends State<CartPage> {
         ],
       );
     }
+  }
+
+  Widget _buildTotalPrice() {
+    return Card(
+      elevation: 5,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.zero,
+        side: BorderSide(
+          color: Colors.grey,
+          width: 1,
+        ),
+      ),
+      child: ListTile(
+        leading: const Text(
+          'Total Price:',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        trailing: Text(
+          'RM ${totalPrice.toStringAsFixed(2)}',
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoCutleryRequest() {
+    return Card(
+      elevation: 5,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.zero,
+        side: BorderSide(
+          color: Colors.grey,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'No Cutlery Request:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Switch(
+                  value: isNoCutlery, // Set the initial value based on user's preference
+                  onChanged: (value) {
+                    setState(() {
+                      isNoCutlery = !isNoCutlery;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'We\'ll let the stall know you request not to provide cutlery. Thanks for reducing single-use plastic.',
+              style: TextStyle(
+                fontSize: 13,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _checkoutButton() {
+    return ElevatedButton(
+      onPressed: _checkout,
+      child: const Text('Checkout'),
+    );
   }
 
   void _checkout() {
