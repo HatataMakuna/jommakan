@@ -1,8 +1,8 @@
 // TODO: Add more comments for this file
 
 import 'dart:math';
-import 'package:jom_makan/database/db_connection.dart';
 import 'package:jom_makan/model/rating.dart';
+import 'package:jom_makan/server/food/get_ratings.dart';
 
 // To recommend foods according to the user's ratings behaviour
 class RecommendationSystem {
@@ -80,30 +80,12 @@ class RecommendationSystem {
   }
 }
 
-Future<List<Rating>> getRatingsForRecommendation() async {
-  try {
-    var results = await pool.execute("SELECT ratingID, foodID, userID, stars FROM ratings");
-    List<Rating> ratings = [];
-
-    for (final row in results.rows) {
-      ratings.add(Rating(
-        ratingID: int.parse(row.colByName("ratingID").toString()),
-        foodID: int.parse(row.colByName("foodID").toString()),
-        userID: int.parse(row.colByName("userID").toString()),
-        stars: int.parse(row.colByName("stars").toString()),
-      ));
-    }
-
-    return ratings;
-  } catch (e) {
-    print('Error retrieving list of ratings: $e');
-    return [];
-  }
-}
-
-Future<void> main() async {
+// Example usage
+Future<void> getRecommendations() async {
+  FoodRatings _foodRatings = FoodRatings();
+  
   // Retrieve ratings from database
-  List<Rating> ratings = await getRatingsForRecommendation();
+  List<Rating> ratings = await _foodRatings.getRatingsForRecommendation();
 
   RecommendationSystem recommendationSystem = RecommendationSystem(ratings: ratings);
 

@@ -17,23 +17,27 @@ class LoginUser {
 
       String? userID, userName;
 
-      // If the input matches with the database, login success
-      if (results.isNotEmpty) {
-        for (final row in results.rows) {
-          userID = row.colByName("userID");
-          userName = row.colByName("username");
-        }
+      for (final row in results.rows) {
+        userID = row.colByName("userID");
+        userName = row.colByName("username");
+        print(userID);
+        print(userName);
+      }
+
+      // If not found or does not match with database, login failed
+      if (userID == null || userName == null) {
+        return {
+          'success': false,
+          'userID': userID,
+          'username': userName,
+        };
+      }
+      // If matches with the database, login succeed
+      else {
         return {
           'success': true,
           'userID': userID,
           'username': userName,
-        };
-      } else {
-        // If not, login failed; shows invalid username or password error
-        return {
-          'success': false,
-          'userID': null,
-          'username': null,
         };
       }
     } catch (e) {

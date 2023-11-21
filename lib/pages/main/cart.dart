@@ -36,7 +36,16 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: null,
-      body: _buildCartContent(),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            _buildCartContent(),
+            const SizedBox(height: 10),
+          ],
+        ),
+      ),
     );
   }
 
@@ -66,7 +75,9 @@ class _CartPageState extends State<CartPage> {
               ),
             ),
             const SizedBox(height: 12),
-            Expanded(
+            // ignore: sized_box_for_whitespace
+            Container(
+              height: 120, // adjust depend on other column usages
               child: _buildCartList(_cartItems),
             ),
           ],
@@ -77,6 +88,7 @@ class _CartPageState extends State<CartPage> {
 
   Widget _buildCartList(List<Map<String, dynamic>> cartItems) {
     return ListView.builder(
+      scrollDirection: Axis.vertical,
       itemCount: cartItems.length,
       itemBuilder: (context, index) {
         final cartItem = cartItems[index];

@@ -1,4 +1,5 @@
 import 'package:jom_makan/database/db_connection.dart';
+import 'package:jom_makan/model/rating.dart';
 
 class FoodRatings {
   Future<double> getAverageRatings(int foodID) async {
@@ -81,15 +82,35 @@ class FoodRatings {
     // Round to 1 decimal place (adjust as needed)
     return double.parse(averageRating.toStringAsFixed(1));
   }
+
+  Future<List<Rating>> getRatingsForRecommendation() async {
+    try {
+      var results = await pool.execute("SELECT ratingID, foodID, userID, stars FROM ratings");
+      List<Rating> ratings = [];
+
+      for (final row in results.rows) {
+        ratings.add(Rating(
+          ratingID: int.parse(row.colByName("ratingID").toString()),
+          foodID: int.parse(row.colByName("foodID").toString()),
+          userID: int.parse(row.colByName("userID").toString()),
+          stars: int.parse(row.colByName("stars").toString()),
+        ));
+      }
+
+      return ratings;
+    } catch (e) {
+      print('Error retrieving list of ratings: $e');
+      return [];
+    }
+  }
 }
 
 void main() async {
     // Example of how to use the SearchFoods
     final getratings = FoodRatings();
 
-    // Replace 'Burger' with your actual search query
     final foods = await getratings.getRatingsForFood(1);
 
-    // Print the results (you can handle them as needed)
+    // Print the results
     print(foods);
 }
