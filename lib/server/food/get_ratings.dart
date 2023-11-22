@@ -107,6 +107,33 @@ class FoodRatings {
       return [];
     }
   }
+
+  // Get current user review
+  Future<Map<String, dynamic>?> getCurrentUserReview(int foodID, int userID) async {
+    try {
+      String query = '''
+        SELECT ratingID, stars, description
+        FROM ratings
+        WHERE foodID = :foodID AND userID = :userID;
+      ''';
+
+      var results = await pool.execute(query, {"foodID": foodID, "userID": userID});
+
+      if (results.rows.isNotEmpty) {
+        final row = results.rows.first;
+        return {
+          'ratingID': row.colByName("ratingID"),
+          'stars': row.colByName("stars"),
+          'description': row.colByName("description"),
+        };
+      }
+
+      return null; // Return null if the user hasn't reviewed the food
+    } catch (e) {
+      print('Error retrieving current user review: $e');
+      return null;
+    }
+  }
 }
 
 /*

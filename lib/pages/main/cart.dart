@@ -52,7 +52,6 @@ class _CartPageState extends State<CartPage> {
       }
     } catch (error) {
       print('Error loading cart items: $error');
-      // Handle the error as needed
     }
   }
 
@@ -154,7 +153,18 @@ class _CartPageState extends State<CartPage> {
               _buildAdditionalNotes(cartItem),
             ],
           ),
-          trailing: Text('Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}'),
+          trailing: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  // Navigate to the food details page for editing
+                }
+              ),
+              const SizedBox(width: 8),
+              Text('Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}'),
+            ],
+          ),
         );
       },
     );

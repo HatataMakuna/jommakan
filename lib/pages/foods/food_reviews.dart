@@ -1,7 +1,6 @@
-// TODO: Allow user to add or modify the review
-
 import 'package:flutter/material.dart';
 import 'package:jom_makan/components/get_average_ratings.dart';
+import 'package:jom_makan/pages/foods/add_or_edit_review.dart';
 import 'package:jom_makan/server/food/get_ratings.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -159,8 +158,21 @@ class _FoodReviewsPageState extends State<FoodReviewsPage> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {
-                // Add a review
+              onPressed: () async {
+                final currentUserReview = await _foodRatings.getCurrentUserReview(
+                  int.parse(widget.selectedFood['foodID']),
+                  Provider.of<UserProvider>(context, listen: false).userID!,
+                );
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddReviewPage(
+                      currentUserReview: currentUserReview,
+                      selectedFood: widget.selectedFood,
+                    ),
+                  ),
+                );
               },
               child: const Text('Add / Modify a review'),
             ),
