@@ -87,87 +87,89 @@ class _CartPageState extends State<CartPage> {
   }
 
   Widget _buildCartContent() {
-    return Expanded(
-      child: Card(
-        //margin: const EdgeInsets.symmetric(vertical: 8),
-          elevation: 5,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-            side: BorderSide(
-              color: Colors.grey,
-              width: 1,
+    return Card(
+      //margin: const EdgeInsets.symmetric(vertical: 8),
+      elevation: 5,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.zero,
+        side: BorderSide(
+          color: Colors.grey,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min, // Set mainAxisSize to min
+        children: [
+          const SizedBox(height: 12),
+          const Text(
+            'Cart List',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          child: Column(
-          mainAxisSize: MainAxisSize.min, // Set mainAxisSize to min
-          children: [
-            const SizedBox(height: 12),
-            const Text(
-              'Cart List',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            // ignore: sized_box_for_whitespace
-            Container(
-              height: 250, // adjust depend on other column usages
-              child: _buildCartList(_cartItems),
-            ),
-          ],
-        ),
+          const SizedBox(height: 12),
+          // ignore: sized_box_for_whitespace
+          Container(
+            height: 250, // adjust depend on other column usages
+            child: _buildCartList(_cartItems),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildCartList(List<Map<String, dynamic>> cartItems) {
     return ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: cartItems.length,
-      itemBuilder: (context, index) {
-        final cartItem = cartItems[index];
-        
-        List<String> preferences = [
-          if (int.parse(cartItem['no_vege']) == 1) 'No Vegetarian',
-          if (int.parse(cartItem['extra_vege']) == 1) 'Extra Vegetarian',
-          if (int.parse(cartItem['no_spicy']) == 1) 'No Spicy',
-          if (int.parse(cartItem['extra_spicy']) == 1) 'Extra Spicy',
-        ].where((preference) => preference.isNotEmpty).toList();
+        scrollDirection: Axis.vertical,
+        itemCount: cartItems.length,
+        itemBuilder: (context, index) {
+          final cartItem = cartItems[index];
+          
+          List<String> preferences = [
+            if (int.parse(cartItem['no_vege']) == 1) 'No Vegetarian',
+            if (int.parse(cartItem['extra_vege']) == 1) 'Extra Vegetarian',
+            if (int.parse(cartItem['no_spicy']) == 1) 'No Spicy',
+            if (int.parse(cartItem['extra_spicy']) == 1) 'Extra Spicy',
+          ].where((preference) => preference.isNotEmpty).toList();
 
-        return ListTile(
-          // leading: image
-          leading: Image(
-            image: AssetImage('images/foods/' + cartItem['food_image']),
-            width: 100,
-            height: 100,
-          ),
-          title: Text(cartItem['food_name'] ?? ''),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Quantity: ${cartItem['quantity'] ?? ''}',),
-              const SizedBox(height: 8),
-              _buildPreferencesDropdown(preferences),
-              const SizedBox(height: 8),
-              _buildAdditionalNotes(cartItem),
-            ],
-          ),
-          trailing: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  // Navigate to the food details page for editing
-                }
+          return ListTile(
+            // leading: image
+            leading: Image(
+              image: AssetImage('images/foods/' + cartItem['food_image']),
+              width: 100,
+              height: 100,
+            ),
+            title: Text(cartItem['food_name'] ?? ''),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Quantity: ${cartItem['quantity'] ?? ''}',),
+                const SizedBox(height: 8),
+                _buildPreferencesDropdown(preferences),
+                const SizedBox(height: 8),
+                _buildAdditionalNotes(cartItem),
+              ],
+            ),
+            // ignore: sized_box_for_whitespace
+            trailing: Container(
+              width: 150,
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () {
+                      // Navigate to the food details page for editing
+                    }
+                  ),
+                  const SizedBox(width: 8),
+                  Text('Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}'),
+                ],
               ),
-              const SizedBox(width: 8),
-              Text('Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}'),
-            ],
-          ),
-        );
-      },
-    );
+            ),
+          );
+        },
+      );
   }
 
   Widget _buildPreferencesDropdown(List<String> preferences) {
