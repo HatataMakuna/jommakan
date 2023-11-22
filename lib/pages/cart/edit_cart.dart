@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:jom_makan/server/cart/modify_remove_cart.dart';
 
 class EditCartPage extends StatefulWidget {
-  final Map<String, dynamic> selectedFood;
   final Map<String, dynamic> cartItem; // selected cart item
 
-  const EditCartPage({
-    super.key,
-    required this.selectedFood,
-    required this.cartItem,
-  });
+  const EditCartPage({super.key, required this.cartItem});
 
   @override
   _EditCartPageState createState() => _EditCartPageState();
@@ -18,7 +13,6 @@ class EditCartPage extends StatefulWidget {
 class _EditCartPageState extends State<EditCartPage> {
   int quantity = 1;
   String notes = '';
-  int noRatings = 0;
   List<String> preferences = [];
   double totalPrice = 0.0;
   bool isModifySuccess = false;
@@ -29,26 +23,28 @@ class _EditCartPageState extends State<EditCartPage> {
   @override
   void initState() {
     super.initState();
-    quantity = widget.cartItem['quantity'];
 
-    // preferences list: if yes, tick the related checkbox
-    preferences = [
-      if (int.parse(widget.cartItem['no_vege']) == 1) 'No Vegetarian',
-      if (int.parse(widget.cartItem['extra_vege']) == 1) 'Extra Vegetarian',
-      if (int.parse(widget.cartItem['no_spicy']) == 1) 'No Spicy',
-      if (int.parse(widget.cartItem['extra_spicy']) == 1) 'Extra Spicy',
-    ].where((preference) => preference.isNotEmpty).toList();
+    setState(() {
+      quantity = int.parse(widget.cartItem['quantity']);
 
-    if (widget.cartItem['notes'] != null) {
-      notes = widget.cartItem['notes'];
-    }
+      preferences = [
+        if (int.parse(widget.cartItem['no_vege']) == 1) 'no vegetarian',
+        if (int.parse(widget.cartItem['extra_vege']) == 1) 'extra vegetarian',
+        if (int.parse(widget.cartItem['no_spicy']) == 1) 'no spicy',
+        if (int.parse(widget.cartItem['extra_spicy']) == 1) 'extra spicy',
+      ].where((preference) => preference.isNotEmpty).toList();
+
+      if (widget.cartItem['notes'].toString().isNotEmpty) {
+        notes = widget.cartItem['notes'].toString();
+      }
+    });
 
     _calculateTotalPrice();
   }
 
   void _calculateTotalPrice() {
     setState(() {
-      totalPrice = quantity * double.parse(widget.selectedFood['food_price']);
+      totalPrice = quantity * double.parse(widget.cartItem['food_price']);
     });
   }
 
@@ -77,7 +73,7 @@ class _EditCartPageState extends State<EditCartPage> {
               Container(
                 constraints: const BoxConstraints.expand(height: 250),
                 child: Image(
-                  image: AssetImage('images/foods/' + widget.selectedFood['food_image']),
+                  image: AssetImage('images/foods/' + widget.cartItem['food_image']),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -111,7 +107,8 @@ class _EditCartPageState extends State<EditCartPage> {
               const SizedBox(height: 16),
               buildAdditionalNotesTextField(),
               const SizedBox(height: 16),
-              // modify cart - remove cart
+              modifyCartItemButton(),
+              removeItemFromCartButton(),
             ],
           )
         )
@@ -138,7 +135,7 @@ class _EditCartPageState extends State<EditCartPage> {
               children: [
                 Flexible(
                   child: Text(
-                    '${widget.selectedFood['food_name']} - ${widget.selectedFood['stall_name']}',
+                    '${widget.cartItem['food_name']} - ${widget.cartItem['stall_name']}',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -158,7 +155,7 @@ class _EditCartPageState extends State<EditCartPage> {
                   ),
                 ),
                 Text(
-                  double.parse(widget.selectedFood['food_price']).toStringAsFixed(2),
+                  double.parse(widget.cartItem['food_price']).toStringAsFixed(2),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -261,18 +258,23 @@ class _EditCartPageState extends State<EditCartPage> {
   }
 
   Widget buildCheckbox(String title, String preference) {
+    bool isChecked = preferences.contains(preference);
+    //print(isChecked);
+
     return Row(
       children: [
         Checkbox(
-          value: preferences.contains(preference),
+          value: isChecked,
           onChanged: (bool? value) {
-            setState(() {
-              if (value != null && value) {
-                preferences.add(preference);
-              } else {
-                preferences.remove(preference);
-              }
-            });
+            if (value != null) {
+              setState(() {
+                if (value) {
+                  preferences.add(preference);
+                } else {
+                  preferences.remove(preference);
+                }
+              });
+            }
           },
         ),
         const SizedBox(width: 5),

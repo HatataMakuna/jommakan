@@ -2,6 +2,7 @@
 // PLANNED: Navigate to food details page with preferences set
 
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/cart/edit_cart.dart';
 import 'package:jom_makan/server/cart/get_cart.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -160,6 +161,12 @@ class _CartPageState extends State<CartPage> {
                     icon: const Icon(Icons.edit),
                     onPressed: () {
                       // Navigate to the food details page for editing
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditCartPage(cartItem: cartItem),
+                        ),
+                      );
                     }
                   ),
                   const SizedBox(width: 8),

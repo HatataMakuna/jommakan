@@ -14,9 +14,11 @@ class GetCart {
           c.extra_spicy,
           c.notes,
           f.food_image,
-          f.food_price 
+          f.food_price,
+          s.stall_name 
         FROM cart c
         JOIN foods f ON c.foodID = f.foodID
+        JOIN stalls s ON f.stallID = s.stallID
         WHERE c.userID = :userID
       ''';
       var results = await pool.execute(query, {"userID": userID});
