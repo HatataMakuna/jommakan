@@ -19,6 +19,7 @@ class _EditCartPageState extends State<EditCartPage> {
   bool isRemovalSuccess = false;
 
   final ModifyRemoveCart _modifyRemoveCart = ModifyRemoveCart();
+  final TextEditingController _notesController = TextEditingController();
 
   @override
   void initState() {
@@ -34,8 +35,8 @@ class _EditCartPageState extends State<EditCartPage> {
         if (int.parse(widget.cartItem['extra_spicy']) == 1) 'extra spicy',
       ].where((preference) => preference.isNotEmpty).toList();
 
-      if (widget.cartItem['notes'].toString().isNotEmpty) {
-        notes = widget.cartItem['notes'].toString();
+      if (widget.cartItem['notes'] != null) {
+        _notesController.text = widget.cartItem['notes'];
       }
     });
 
@@ -284,16 +285,15 @@ class _EditCartPageState extends State<EditCartPage> {
   }
 
   Widget buildAdditionalNotesTextField() {
+    
+    //notesController.text = widget.cartItem['notes'].toString();
+
     return TextField(
+      controller: _notesController,
       decoration: const InputDecoration(
         labelText: 'Additional Notes (optional)',
         hintText: 'Add special instructions...',
       ),
-      onChanged: (value) {
-        setState(() {
-          notes = value;
-        });
-      },
     );
   }
 
@@ -322,7 +322,7 @@ class _EditCartPageState extends State<EditCartPage> {
                       cartID: int.parse(widget.cartItem['cartID']),
                       newQuantity: quantity,
                       newPreferences: preferences,
-                      newNotes: notes
+                      newNotes: _notesController.text,
                     );
 
                     showModifyCartStatus();
@@ -406,6 +406,8 @@ class _EditCartPageState extends State<EditCartPage> {
                     isRemovalSuccess = await _modifyRemoveCart.removeFromCart(
                       cartID: int.parse(widget.cartItem['cartID'])
                     );
+
+                    showRemoveCartStatus();
                   },
                 ),
               ],
