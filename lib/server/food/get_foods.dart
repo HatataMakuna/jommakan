@@ -2,29 +2,19 @@ import 'package:jom_makan/database/db_connection.dart';
 
 class GetFoods {
   Future<List<Map<String, dynamic>>> getAllFoods({
-    String? searchQuery,
-    int? priceRangeMin,
-    int? priceRangeMax,
-    double? minRating,
-    List<String>? selectedLocations,
-    List<String>? selectedCategories,
+    String? searchQuery, int? priceRangeMin, int? priceRangeMax,
+    double? minRating, List<String>? selectedLocations, List<String>? selectedCategories,
   }) async {
     try {
       // Build the SQL query based on parameters
       String query = '''
         SELECT
-          foods.foodID,
-          foods.food_name,
-          stalls.stall_name,
-          foods.food_price,
-          foods.qty_in_stock,
-          foods.food_image
-        FROM
-          foods
-        JOIN
-          stalls ON foods.stallID = stalls.stallID
-        WHERE
-          UPPER(foods.food_name) LIKE UPPER(?)
+          foods.foodID, foods.food_name, stalls.stall_name, 
+          foods.food_price, foods.qty_in_stock, foods.food_image, 
+          
+        FROM foods
+        JOIN stalls ON foods.stallID = stalls.stallID
+        WHERE UPPER(foods.food_name) LIKE UPPER(?)
       ''';
 
       var stmt = await pool.prepare(query);
@@ -56,46 +46,6 @@ class GetFoods {
       return foods;
     } catch (e) {
       print('Error fetching foods: $e');
-      return [];
-    }
-  }
-
-  // To get 3 random foods
-  Future<List<Map<String, dynamic>>> getRandomFoods() async {
-    try {
-      String query = '''
-        SELECT
-          foods.foodID,
-          foods.food_name,
-          stalls.stall_name,
-          foods.food_price,
-          foods.qty_in_stock,
-          foods.food_image
-        FROM
-          foods
-        JOIN
-          stalls ON foods.stallID = stalls.stallID
-        ORDER BY RAND() LIMIT 3
-      ''';
-
-      var results = await pool.execute(query);
-
-      List<Map<String, dynamic>> randomFoods = [];
-
-      for (final row in results.rows) {
-        randomFoods.add({
-          'foodID': row.colByName("foodID"),
-          'food_name': row.colByName("food_name"),
-          'stall_name': row.colByName("stall_name"),
-          'food_price': row.colByName("food_price"),
-          'qty_in_stock': row.colByName("qty_in_stock"),
-          'food_image': row.colByName("food_image"),
-        });
-      }
-
-      return randomFoods;
-    } catch (e) {
-      print('Error fetching random foods: $e');
       return [];
     }
   }

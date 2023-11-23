@@ -1,6 +1,3 @@
-// TODO: Allow user to modify the cart
-// PLANNED: Navigate to food details page with preferences set
-
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/cart/edit_cart.dart';
 import 'package:jom_makan/server/cart/get_cart.dart';
@@ -293,6 +290,7 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
+  // TODO: Do something with the checkout logic; possibly need to merge
   void _checkout() {
     // Implement your checkout logic here
     // For example, you can navigate to a checkout page

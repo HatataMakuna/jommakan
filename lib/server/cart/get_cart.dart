@@ -5,17 +5,8 @@ class GetCart {
     try {
       String query = '''
         SELECT
-          c.cartID,
-          f.food_name,
-          c.quantity,
-          c.no_vege,
-          c.extra_vege,
-          c.no_spicy,
-          c.extra_spicy,
-          c.notes,
-          f.food_image,
-          f.food_price,
-          s.stall_name 
+          c.cartID, f.food_name, c.quantity, c.no_vege, c.extra_vege, c.no_spicy, 
+          c.extra_spicy, c.notes, f.food_image, f.food_price, s.stall_name 
         FROM cart c
         JOIN foods f ON c.foodID = f.foodID
         JOIN stalls s ON f.stallID = s.stallID

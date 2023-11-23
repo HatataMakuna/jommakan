@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jom_makan/components/get_average_ratings.dart';
 import 'package:jom_makan/pages/foods/food_reviews.dart';
 import 'package:jom_makan/server/cart/add_to_cart.dart';
+import 'package:jom_makan/server/views/update_views.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -27,12 +28,19 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
   void initState() {
     super.initState();
 
-    // Call your function to get average ratings directly
+    // Update view count once a user enters the specific food details
+    _updateViewCount();
+
+    // To get average ratings directly
     _getAverageRatings();
     _getNoOfRatings();
 
     // Calculate initial total price
     _calculateTotalPrice();
+  }
+
+  void _updateViewCount() {
+    UpdateViews.updateViewCount(int.parse(widget.selectedFood['foodID']));
   }
 
   // Function to get average ratings and update the state

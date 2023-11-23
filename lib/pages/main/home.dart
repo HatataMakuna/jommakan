@@ -5,6 +5,7 @@ import 'package:jom_makan/model/rating.dart';
 import 'package:jom_makan/model/recommendation.dart';
 import 'package:jom_makan/pages/foods/food_details.dart';
 import 'package:jom_makan/server/food/get_foods.dart';
+import 'package:jom_makan/server/food/get_popular_foods.dart';
 import 'package:jom_makan/server/food/get_ratings.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,23 +20,26 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final Logo _logo = Logo();
   final GetFoods _getFoods = GetFoods();
+  final GetPopularFoods _getPopularFoods = GetPopularFoods();
   final FoodRatings _foodRatings = FoodRatings();
 
-  List<Map<String, dynamic>> _randomFoods = [];
+  List<Map<String, dynamic>> _popularFoods = [];
   List<Map<String, dynamic>> _recommendedFoods = [];
 
   @override
   void initState() {
     super.initState();
-    _loadRandomFoods();
+    _loadPopularFoods();
     _loadRecommendations();
   }
 
-  Future<void> _loadRandomFoods() async {
-    final randomFoods = await _getFoods.getRandomFoods();
-    setState(() {
-      _randomFoods = randomFoods;
-    });
+  Future<void> _loadPopularFoods() async {
+    final popularFoods = await _getPopularFoods.getPopularFoods();
+    if (mounted) {
+      setState(() {
+        _popularFoods = popularFoods;
+      });
+    }
   }
 
   Future<void> _loadRecommendations() async {
@@ -209,9 +213,9 @@ class _HomePageState extends State<HomePage> {
               height: 130,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: _randomFoods.length,
+                itemCount: _popularFoods.length,
                 itemBuilder: (context, index) {
-                  Map<String, dynamic> food = _randomFoods[index];
+                  Map<String, dynamic> food = _popularFoods[index];
                   return InkWell(
                     onTap: () {
                       // Navigate to food details page using food['foodID']
