@@ -19,7 +19,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.5 <4.0.0'
+  sdk: '>=2.18.2 <3.0.0'
+  # sdk: '>=3.0.5 <4.0.0'
   # '>=2.12.0 <3.0.0'
   # '>=3.0.5 <4.0.0'
 
@@ -32,29 +33,83 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  book_my_seat: ^1.0.1
     # flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  book_my_seat: ^1.0.1
+  flutter_svg: ^1.1.6
+  
+  qr_flutter: ^4.1.0
   
   provider: ^6.1.1
+  logger: ^2.0.2+1
+  go_router: ^12.1.1
+  responsive_framework: ^0.2.0
+  fluttericon: ^2.0.0
+  copy_with_extension: ^5.0.4
+  linked_scroll_controller: ^0.2.0
+  tuple: ^2.0.2
+  http: ^0.13.3
+  # geolocator: 
+  # google_maps_flutter:
+  get: ^4.6.5
+  flutter_screenutil: ^5.9.0
+  get_storage: ^2.1.1
+  easy_localization: ^3.0.3
+  loading_indicator: ^3.1.1
+  geocoding: ^2.1.1
+  google_maps_flutter: ^2.5.0
+  mapbox_gl: ^0.14.0
+  geolocator: ^10.1.0
+  permission_handler: ^11.0.1
+  connectivity_plus: ^5.0.1
+  persistent_bottom_nav_bar: ^5.0.2
+  image_picker: ^1.0.4
+  dio: ^5.3.3
+  dartz: ^0.10.1
+  pin_code_fields: ^8.0.1
+  lottie: ^2.6.0
+  google_fonts: ^4.0.4
+  cached_network_image: ^3.3.0
+  flutter_rating_bar: ^4.0.1
+  readmore: ^2.2.0
+  flutter_switch: ^0.3.2
+  bloc_pattern: ^3.0.1
+  # flutter_masked_text: ^0.8.0
+  font_awesome_flutter: ^10.6.0
+
+
+  google_fonts: ^4.0.4
+  flutter_svg: ^1.1.6
+  fl_chart: ^0.62.0
+  provider: ^6.0.5
+  intl: ^0.18.1
+  syncfusion_flutter_charts: ^23.1.44
+  auto_route: ^7.8.1
+  get: ^4.6.5
+  percent_indicator: ^4.2.3
+  eva_icons_flutter: ^3.1.0
+  flutter_staggered_grid_view: ^0.7.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  #   simple_animations: ^1.3.3
+  # page_transition: ^1.1.4
+  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: <2.0.0
+  flutter_lints: ^2.0.0
 
   # MariaDB/MySQL package
   mysql_client: ^0.0.27
-
-  flutter_rating_bar: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -74,6 +129,7 @@ flutter:
 
   assets:
     - images/
+    - assets/
     - images/foods/
 
   # An image asset can refer to one or more resolution-specific "variants", see
