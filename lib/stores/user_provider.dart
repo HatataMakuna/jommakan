@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-// Class to hold user information
+// Class to hold current user information
 class UserProvider extends ChangeNotifier {
   String? _userName;
   int? _userID;
