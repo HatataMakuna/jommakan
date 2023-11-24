@@ -9,6 +9,7 @@ import 'package:jom_makan/pages/user/edit_profile.dart';
 import 'package:jom_makan/pages/user/forget_password.dart';
 import 'package:jom_makan/pages/user/login.dart';
 import 'package:jom_makan/pages/search/search.dart';
+import 'package:jom_makan/pages/rider/rider_info.dart';
 
 void main() => runApp(
   ChangeNotifierProvider(
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/user/forget-password': (context) => ForgetPasswordPage(),
         '/user/edit-profile': (context) => EditProfile(username: userName.toString()),
         '/user/order-history': (context) => const OrderHistoryPage(),
+        '/rider/rider-info': (context) => const RiderInfo(),
         '/home': (context) => const MainPage(),
         '/search': (context) => const SearchPage(),
       },

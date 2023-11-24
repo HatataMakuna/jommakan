@@ -181,7 +181,10 @@ class _CartPageState extends State<CartPage> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Additional Preferences:'),
+          const Text(
+            'Additional Preferences:',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           for (String preference in preferences)
             Text(preference),
         ]
@@ -196,8 +199,12 @@ class _CartPageState extends State<CartPage> {
       return const SizedBox.shrink(); // Empty container if the additional notes is empty or NULL
     } else {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Additional Notes:'),
+          const Text(
+            'Additional Notes:',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           Text(cartItem['notes'].toString()),
         ],
       );
@@ -271,11 +278,18 @@ class _CartPageState extends State<CartPage> {
           ),
           const Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text(
-              'We\'ll let the stall know you request not to provide cutlery. Thanks for reducing single-use plastic.',
-              style: TextStyle(
-                fontSize: 13,
-              ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    'We\'ll let the stall know you request not to provide cutlery. Thanks for reducing single-use plastic.',
+                    style: TextStyle(
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

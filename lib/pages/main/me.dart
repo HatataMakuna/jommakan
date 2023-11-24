@@ -39,9 +39,13 @@ class MePage extends StatelessWidget {
                 // Light blue buttons
                 _buildButton(context, 'Edit profile', 0xFFC2EAFF),
                 _buildButton(context, 'Order history', 0xFFC2EAFF),
+                
+                // Light yellow buttons
+                _buildButton(context, 'Rider info', 0xFFFFE5BA),
+
                 /* _buildButton(context, 'Pick up order', 0xFFC2EAFF),
                 _buildButton(context, 'Edit Review', 0xFFC2EAFF),
-                // Light yellow buttons
+                
                 _buildButton(context, 'My Rewards', 0xFFFFE5BA),
                 _buildButton(context, 'My Favourites', 0xFFFFE5BA), */
                 // Light red buttons
@@ -65,6 +69,9 @@ class MePage extends StatelessWidget {
           }
           else if (label == 'Order history') {
             Navigator.of(context).pushNamed('/user/order-history');
+          }
+          else if (label == 'Rider info') {
+            Navigator.of(context).pushNamed('/rider/rider-info');
           }
           else if (label == 'Logout') {
             // Show logout confirmation dialog
