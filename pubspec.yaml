@@ -33,6 +33,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  book_my_seat: ^1.0.1
     # flutter
 
   # The following adds the Cupertino Icons font to your application.
@@ -81,6 +82,18 @@ dependencies:
   font_awesome_flutter: ^10.6.0
 
 
+  google_fonts: ^4.0.4
+  flutter_svg: ^1.1.6
+  fl_chart: ^0.62.0
+  provider: ^6.0.5
+  intl: ^0.18.1
+  syncfusion_flutter_charts: ^23.1.44
+  auto_route: ^7.8.1
+  get: ^4.6.5
+  percent_indicator: ^4.2.3
+  eva_icons_flutter: ^3.1.0
+  flutter_staggered_grid_view: ^0.7.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -93,7 +106,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: <2.0.0
+  flutter_lints: ^2.0.0
 
   # MariaDB/MySQL package
   mysql_client: ^0.0.27
