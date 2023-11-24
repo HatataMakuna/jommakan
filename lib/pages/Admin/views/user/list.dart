@@ -1,5 +1,5 @@
-import 'dart:math';
 
+import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
@@ -25,7 +25,7 @@ class UserList extends AdminView {
 
 class _UserList extends AdminStateView<UserList> {
   late AdminTableController _controller;
-  final promotion _promotion = promotion();
+  final Promotion _promotion = Promotion();
 
 
  // Controller for text fields
@@ -36,74 +36,137 @@ class _UserList extends AdminStateView<UserList> {
   final TextEditingController _foodStallController = TextEditingController();
   final TextEditingController _foodDescriptionController = TextEditingController();
 
+  
   var itemData = [];
+  final Promotion promo = Promotion();
+  List<Map<String, dynamic>> _promoItems = [];
 
-  @override
+    @override
   void initState() {
-    // _fetchPromotion();
-    NameRandom nameRandom = NameRandom();
-    for (int i = 1; i <= 100; i++) {
-      String formattedNumber = 'F${i.toString().padLeft(5, '0')}';
-    print(formattedNumber);
-      itemData.add({
-        'id': formattedNumber,
-        'name': nameRandom.getFoodName(),
-        'six': "RM ${Random().nextInt(20)}",
-        'addr': '四川省成都市',
-        'id_type': "身份证",
-        'reg_time': DateTime.now().toIso8601String(),
-        'id_number': '123111111111111112',
-        'phone': '18090555563',
-        'course':"${Random().nextInt(20)}",
-        'ip': '127.0.0.1'
-      });
-    }
-    _controller = AdminTableController(items: [
-      AdminTableItem(
-          itemView: onItemView,
-          width: 100,
-          label: "Food ID",
-          prop: 'id',
-          fixed: FixedDirection.left),
-      AdminTableItem(
-          itemView: onItemView, width: 150, label: "Food Name", prop: 'name'),
-      AdminTableItem(
-          itemView: onItemView, width: 100, label: "Price", prop: 'six'),
-      AdminTableItem(
-          itemView: onItemView, width: 100, label: "Has Been Apply", prop: 'course'),
-      AdminTableItem(
-          itemView: onItemView, width: 200, label: "户籍", prop: 'addr'),
-      AdminTableItem(
-          itemView: onItemView, width: 200, label: "注册时间", prop: 'reg_time'),
-      AdminTableItem(
-          itemView: onItemView, width: 100, label: "身份证证件类型", prop: 'id_type'),
-      AdminTableItem(
-          itemView: onItemView, width: 200, label: "身份证件号码", prop: 'id_number'),
-      AdminTableItem(
-          itemView: onItemView, width: 100, label: "手机号码", prop: 'phone'),
-      AdminTableItem(
-          itemView: onItemView, width: 100, label: "登录IP", prop: 'ip'),
-      AdminTableItem(
-          itemView: onItemView, width: 100, label: "操作",fixed: FixedDirection.right,prop: 'action'),
-    ]);
-    _controller.setNewData(itemData);
     super.initState();
+    _getData();
   }
 
-  // void _fetchPromotion() async{
-  //   var promotionData = await _promotion.getPromotion();
-  //   if (promotionData['success']) {
-  //     setState(() {
-  //       _foodIdController.text = promotionData!['foodId'];
-  //        _foodNameController.text = promotionData['foodName'];
-  //         _foodPriceController.text = promotionData['foodPrice'];
-  //          _foodPromotionController.text = promotionData['foodPromotion'];
-  //           _foodStallController.text = promotionData['foodStall'];
-  //            _foodDescriptionController.text = promotionData['foodDescription'];
-  //     });
-  //   }
+  void _getData() async {
+    try {
+      final data = await promo.getPromotionData();
+
+      setState(() {
+        _promoItems = data;
+
+        // Move the logic inside setState after _promoItems has been updated
+        NameRandom nameRandom = NameRandom();
+
+        for (int i = 0; i < _promoItems.length; i++) {
+          String foodNameCorrect = 'foodName: ${_promoItems[i]['foodName']}';
+          print('Food Name: ' + foodNameCorrect);
+
+          itemData.add({
+            'foodId': _promoItems[i]['foodID'],
+            'foodName': _promoItems[i]['foodName'],
+            'foodPrice': _promoItems[i]['foodPrice'],
+            'foodPromotion': _promoItems[i]['foodPromotion'],
+            'foodStall': _promoItems[i]['foodStall'],
+            'foodDescription': _promoItems[i]['foodDescription'],
+          });
+        }
+
+        _controller = AdminTableController(items: [
+          AdminTableItem(
+              itemView: onItemView,
+              width: 100,
+              label: "Food ID",
+              prop: 'foodId',
+              fixed: FixedDirection.left),
+          AdminTableItem(
+            itemView: onItemView,
+            width: 150,
+            label: "Food Name",
+            prop: 'foodName',
+          ),
+          AdminTableItem(
+              itemView: onItemView,
+              width: 100,
+              label: "Food Price",
+              prop: 'foodPrice'),
+          AdminTableItem(
+              itemView: onItemView,
+              width: 200,
+              label: "Food Promotion",
+              prop: 'foodPromotion'),
+          AdminTableItem(
+              itemView: onItemView,
+              width: 200,
+              label: "Food Stall",
+              prop: 'foodStall'),
+          AdminTableItem(
+              itemView: onItemView,
+              width: 100,
+              label: "Food Description",
+              prop: 'foodDescription'),
+          AdminTableItem(
+              itemView: onItemView,
+              width: 100,
+              label: "操作",
+              fixed: FixedDirection.right,
+              prop: 'action'),
+        ]);
+        _controller.setNewData(itemData);
+      });
+    } catch (e) {
+      print('Error loading promotion data: $e');
+    }
+  }
+
+
+  // Widget _buildPromotionList(List<Map<String, dynamic>> promotionData) {
+  //   return ListView.builder(
+  //     itemCount: promotionData.length,
+  //     itemBuilder: (context, index) {
+  //       final cartItem = promotionData[index];
+
+
+  //       return ListTile(
+  //         // leading: image
+  //         leading: Image(
+  //           image: AssetImage('images/foods/' + cartItem['food_image']),
+  //           width: 100,
+  //           height: 100,
+  //         ),
+  //         title: Text(cartItem['food_name'] ?? ''),
+  //         subtitle: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Text('Quantity: ${cartItem['quantity'] ?? ''}',),
+  //             const SizedBox(height: 8),
+  //             _buildPreferencesDropdown(preferences),
+  //             const SizedBox(height: 8),
+  //             _buildAdditionalNotes(cartItem),
+  //           ],
+  //         ),
+  //         trailing: Text('Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}'),
+  //       );
+  //     },
+  //   );
   // }
 
+  
+  Future<void> _promotionDisplay() async {
+    try {
+      final Promotion = await _promotion.getPromotionData();
+      setState(promotionData) {
+        _foodIdController.text = promotionData['foodId'];
+         _foodNameController.text = promotionData['foodName'];
+          _foodPriceController.text = promotionData['foodPrice'];
+           _foodPromotionController.text = promotionData['foodPromotion'];
+            _foodStallController.text = promotionData['foodStall'];
+             _foodDescriptionController.text = promotionData['foodDescription'];
+      };
+    }catch (error) {
+      print('Error loading cart items: $error');
+      // Handle the error as needed
+  }
+  }
   Widget onItemView(
       BuildContext context, int index, dynamic data, AdminTableItem item) {
     if (index == -1) {
@@ -122,8 +185,17 @@ class _UserList extends AdminStateView<UserList> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Check",style: TextStyle(color: Colors.blueAccent,fontSize: 15),),
-              Container(width: 1,margin: const EdgeInsets.only(left:10,right: 10,top: 10,bottom: 10),color: Colors.black12,),
+              GestureDetector(
+        onTap: () {
+          // Call the function to delete the item at index
+          _deleteItem(index);
+        },
+        child: const Text(
+          "Delete",
+          style: TextStyle(color: Colors.red, fontSize: 15),
+        ),
+      ),
+      const SizedBox(width: 10),
               const Text("More",style: TextStyle(color: Colors.blueAccent,fontSize: 15),),
             ],
           ),
@@ -138,6 +210,37 @@ class _UserList extends AdminStateView<UserList> {
       );
     }
   }
+
+ // Function to delete the item at the specified index
+  void _deleteItem(int index) {
+    setState(() {
+       if (index >= 0 && index < _promoItems.length) {
+      // Remove the item from the _promoItems list
+      var deletedItem = _promoItems.removeAt(index);
+print('deleteItem:  + $deletedItem');
+
+      // for (int i = 0; i < _promoItems.length; i++) {
+       
+      // Remove the item from the itemData list
+      itemData.removeWhere((item) =>
+          item['foodId'] == deletedItem['foodID'] &&
+          item['foodName'] == deletedItem['foodName'] &&
+          item['foodPrice'] == deletedItem['foodPrice'] &&
+          item['foodPromotion'] == deletedItem['foodPromotion'] &&
+          item['foodStall'] == deletedItem['foodStall'] &&
+          item['foodDescription'] == deletedItem['foodDescription']);
+       
+       // Delete the item from the database
+      _promotion.deletePromotion(deletedItem['foodID']);
+
+
+      // Update the table controller with the new data
+      _controller.setNewData(itemData);
+      }
+    });
+  }
+
+  
 
   @override
   Widget buildForLarge(BuildContext context) {

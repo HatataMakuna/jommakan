@@ -52,13 +52,33 @@ dependencies:
   linked_scroll_controller: ^0.2.0
   tuple: ^2.0.2
   http: ^0.13.3
-  geolocator: 
-  google_maps_flutter:
+  # geolocator: 
+  # google_maps_flutter:
   get: ^4.6.5
   flutter_screenutil: ^5.9.0
   get_storage: ^2.1.1
   easy_localization: ^3.0.3
   loading_indicator: ^3.1.1
+  geocoding: ^2.1.1
+  google_maps_flutter: ^2.5.0
+  mapbox_gl: ^0.14.0
+  geolocator: ^10.1.0
+  permission_handler: ^11.0.1
+  connectivity_plus: ^5.0.1
+  persistent_bottom_nav_bar: ^5.0.2
+  image_picker: ^1.0.4
+  dio: ^5.3.3
+  dartz: ^0.10.1
+  pin_code_fields: ^8.0.1
+  lottie: ^2.6.0
+  google_fonts: ^4.0.4
+  cached_network_image: ^3.3.0
+  flutter_rating_bar: ^4.0.1
+  readmore: ^2.2.0
+  flutter_switch: ^0.3.2
+  bloc_pattern: ^3.0.1
+  # flutter_masked_text: ^0.8.0
+  font_awesome_flutter: ^10.6.0
 
 
 dev_dependencies:

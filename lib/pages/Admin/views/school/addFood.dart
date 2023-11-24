@@ -1,35 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/server/promotion.dart';
-import 'package:jom_makan/server/promotion.dart';
+
+import '../../../../server/food/food.dart';
 
 //void main() => runApp(const MaterialApp(home: CreateAccount()));
 
-class addPromotion extends StatefulWidget {
-  const addPromotion({super.key});
+class addFood extends StatefulWidget {
+  const addFood({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _promotionState();
+    return _addFoodState();
   }
 }
 
-class _promotionState extends State<addPromotion> {
-   final TextEditingController _foodIdController = TextEditingController();
+class _addFoodState extends State<addFood> {
+   final TextEditingController _foodIDController = TextEditingController();
   final TextEditingController _foodNameController = TextEditingController();
+  final TextEditingController _stallIDController = TextEditingController();
+  final TextEditingController _mainCategoryController = TextEditingController();
+  final TextEditingController _subCategoryController = TextEditingController();
   final TextEditingController _foodPriceController = TextEditingController();
-  final TextEditingController _foodPromotionController = TextEditingController();
-  final TextEditingController _foodStallController = TextEditingController();
-  final TextEditingController _foodDescriptionController = TextEditingController();
+  final TextEditingController _qtyInStockController = TextEditingController();
+  final TextEditingController _foodImageController = TextEditingController();
   bool isTyping = false;
   bool _showPassword = false;
-  final Promotion _registerPromotion = Promotion(); // Instantiate Register (server-side) class
+  final Food _registerFood = Food(); // Instantiate Register (server-side) class
   bool _isRegistering = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Promotion'),
+        title: const Text('Create Food'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -37,27 +40,31 @@ class _promotionState extends State<addPromotion> {
           },
         ),
       ),
-      body: addPromotionForm(),
+      body: addFoodForm(),
     );
   }
 
-  Widget addPromotionForm() {
+  Widget addFoodForm() {
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            foodIdField(),
+            foodIDField(),
             const SizedBox(height: 20),
             foodNameField(),
             const SizedBox(height: 20),
+            stallIDField(),
+            const SizedBox(height: 20),
+            mainCategoryField(),
+            const SizedBox(height: 20),
+            subCategoryField(),
+            const SizedBox(height: 20),
             foodPriceField(),
             const SizedBox(height: 20),
-            foodPromotionField(),
+            qtyInStockField(),
             const SizedBox(height: 20),
-            foodStallField(),
-            const SizedBox(height: 20),
-            foodDescriptionField(),
+            foodImageField(),
             const SizedBox(height: 20),
             registerButton(),
             // text fields
@@ -68,9 +75,9 @@ class _promotionState extends State<addPromotion> {
   }
 
   // Text Fields
-  Widget foodIdField() {
+  Widget foodIDField() {
     return TextField(
-      controller: _foodIdController,
+      controller: _foodIDController,
       decoration: const InputDecoration(labelText: 'FoodId'),
     );
   }
@@ -82,6 +89,27 @@ class _promotionState extends State<addPromotion> {
     );
   }
 
+  Widget stallIDField() {
+    return TextField(
+      controller: _stallIDController,
+      decoration: const InputDecoration(labelText: 'StallID'),
+    );
+  }
+
+  Widget mainCategoryField() {
+    return TextField(
+      controller: _mainCategoryController,
+      decoration: const InputDecoration(labelText: 'MainCategory'),
+    );
+  }
+
+  Widget subCategoryField() {
+    return TextField(
+      controller: _subCategoryController,
+      decoration: const InputDecoration(labelText: 'SubCategory'),
+    );
+  }
+
   Widget foodPriceField() {
     return TextField(
       controller: _foodPriceController,
@@ -89,24 +117,17 @@ class _promotionState extends State<addPromotion> {
     );
   }
 
-  Widget foodPromotionField() {
+  Widget qtyInStockField() {
     return TextField(
-      controller: _foodPromotionController,
-      decoration: const InputDecoration(labelText: 'FoodPromotion'),
+      controller: _qtyInStockController,
+      decoration: const InputDecoration(labelText: 'qtyInStock'),
     );
   }
 
-  Widget foodStallField() {
+  Widget foodImageField() {
     return TextField(
-      controller: _foodStallController,
-      decoration: const InputDecoration(labelText: 'FoodStall'),
-    );
-  }
-
-  Widget foodDescriptionField() {
-    return TextField(
-      controller: _foodDescriptionController,
-      decoration: const InputDecoration(labelText: 'FoodDescription'),
+      controller: _foodImageController,
+      decoration: const InputDecoration(labelText: 'FoodImage'),
     );
   }
 
@@ -193,7 +214,7 @@ class _promotionState extends State<addPromotion> {
                   child: const Text('Register'),
                   onPressed: () {
                     Navigator.of(context).pop(); // Close the dialog
-                    promotionRegister(); // Call the registerUser function
+                    foodRegister(); // Call the registerUser function
                   }
                 )
               ]
@@ -273,25 +294,29 @@ class _promotionState extends State<addPromotion> {
 
   // Check whether the registration form has any empty fields
   bool _hasEmptyFields() {
-    return _foodIdController.text.isEmpty || 
+    return _foodIDController.text.isEmpty || 
       _foodNameController.text.isEmpty ||
+      _stallIDController.text.isEmpty ||
+      _mainCategoryController.text.isEmpty ||
+      _subCategoryController.text.isEmpty ||
       _foodPriceController.text.isEmpty ||
-      _foodPromotionController.text.isEmpty ||
-      _foodStallController.text.isEmpty ||
-      _foodDescriptionController.text.isEmpty;
+      _qtyInStockController.text.isEmpty ||
+      _foodImageController.text.isEmpty;
   }
 
   // Passing the data to "server/register.dart" for performing the server-side script
-  void promotionRegister() async {
-    String foodId = _foodIdController.text;
+  void foodRegister() async {
+    String foodId = _foodIDController.text;
     String foodName = _foodNameController.text;
+    String stallID = _stallIDController.text;
+    String mainCategory = _mainCategoryController.text;
+    String subCategory = _subCategoryController.text;
     String foodPrice = _foodPriceController.text;
-    String foodPromotion = _foodPromotionController.text;
-    String foodStall = _foodStallController.text;
-    String foodDescription = _foodDescriptionController.text;
+    String qtyInStock = _qtyInStockController.text;
+    String foodImage = _foodImageController.text;
 
-    bool registrationResult = await _registerPromotion.promotionRegister(
-      foodId: foodId, foodName: foodName, foodPrice: foodPrice, foodPromotion: foodPromotion, foodStall: foodStall, foodDescription: foodDescription,
+    bool registrationResult = await _registerFood.foodRegister(
+      foodID: foodId, food_name: foodName, stallID: stallID, main_category: mainCategory, sub_category: subCategory, food_price: foodPrice, qty_in_stock: qtyInStock, food_image: foodImage,
     );
 
     if (registrationResult) {

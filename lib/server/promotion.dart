@@ -1,7 +1,7 @@
 
 import 'package:jom_makan/database/db_connection.dart';
 
-class promotion {
+class Promotion {
   Future<bool> promotionRegister({
     required String foodId,
     required String foodName,
@@ -22,47 +22,72 @@ required String foodDescription,
       
 
       // Insert new user to the database
-      var result = await pool.prepare(
-        'INSERT INTO users (foodId, foodName, foodPrice, foodPromotion, foodStall, foodDescription) VALUES (?, ?, ?, ?, ?, ?)',
+      var result = await pool.execute(
+        'INSERT INTO promotion (foodId, foodName, foodPrice, foodPromotion, foodStall, foodDescription)'
+        ' VALUES (:foodId, :foodName, :foodPrice, :foodPromotion, :foodStall, :foodDescription)',
+
+        {
+          "foodId": foodId,
+          "foodName": foodName,
+          "foodPrice": foodPrice,
+          "foodPromotion": foodPromotion,
+          "foodStall": foodStall,
+          "foodDescription": foodDescription,
+        },
         
       );
 
-      var results = await result.execute([foodId, foodName, foodPrice, foodPromotion, foodStall, foodDescription]);
-      // Close the database connection
-      await result.deallocate();
-
 
       // Check if the insertion was successful
-      if (result.affectedRows == 1) {
-        // User registered successfully
-        return true;
-      } else {
-        // Insertion failed
-        return false;
+      return int.parse(result.affectedRows.toString()) == 1;
       }
+
+      
+Future<bool> deletePromotion(String foodId) async {
+    try {
+      // Execute the delete query
+      var result = await pool.execute(
+        'DELETE FROM promotion WHERE foodId = :foodId',
+        {"foodId": foodId},
+      );
+
+      // Check if the deletion was successful
+      return int.parse(result.affectedRows.toString()) == 1;
+    } catch (e) {
+      // Handle database errors or other exceptions here
+      print('Error during deletion of the Promotion: $e');
+      return false;
+    }
+  }
+
     // } catch (e) {
     //   // Handle database errors or other exceptions here
     //   print('Error during generate the Promotion: $e');
     //   return false;
     // }
 
+Future<List<Map<String, dynamic>>> getPromotionData() async {
+    
+
+    // var results = await pool.execute('SELECT * FROM promotion');
+var results = await pool.execute('SELECT * FROM promotion');
+  
+
+    List<Map<String, dynamic>> promotion = [];
+
+        for (final row in results.rows) {
+          promotion.add({
+            'foodID': row.colByName("foodID"),
+            'foodName': row.colByName("foodName"),
+            'foodPrice': row.colByName("foodPrice"),
+            'foodPromotion': row.colByName("foodPromotion"),
+            'foodStall': row.colByName("foodStall"),
+            'foodDescription': row.colByName("foodDescription"),
+          });
+        }
+
+return promotion;
+  }
 
     
   }
-
-  Future<Map<String, dynamic>?> getPromotion() async {
-    final conn = await createConnection();
-
-    var results = await conn.query('SELECT * FROM promotion');
-
-    await conn.close();
-
-    if (results.isNotEmpty) {
-      // User found, return user data as a Map
-      return results.first.fields;
-    } else {
-      // Uesr not found
-      return null;
-    }
-  }
-}
