@@ -1,4 +1,4 @@
-import 'package:jom_makan/server/food/get_ratings.dart';
+import 'package:jom_makan/server/rating/get_ratings.dart';
 
 class GetAverageRatings {
   final FoodRatings _foodRatings = FoodRatings();

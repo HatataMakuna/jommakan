@@ -2,6 +2,7 @@
 // THE OFFICIAL ROUTES PAGE
 
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/order/order_history.dart';
 import 'package:provider/provider.dart';
 import 'package:jom_makan/stores/user_provider.dart'; // Import the UserProvider class
 import 'package:jom_makan/pages/main/main_page.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         '/user/create-account': (context) => const CreateAccount(),
         '/user/forget-password': (context) => ForgetPasswordPage(),
         '/user/edit-profile': (context) => EditProfile(username: userName.toString()),
+        '/user/order-history': (context) => const OrderHistoryPage(),
         '/home': (context) => const MainPage(),
         '/search': (context) => const SearchPage(),
       },

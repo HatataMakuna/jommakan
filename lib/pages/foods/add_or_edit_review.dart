@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:jom_makan/server/food/add_modify_review.dart';
+import 'package:jom_makan/server/rating/add_modify_review.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/components/get_average_ratings.dart';
 import 'package:jom_makan/pages/foods/add_or_edit_review.dart';
-import 'package:jom_makan/server/food/get_ratings.dart';
+import 'package:jom_makan/server/rating/get_ratings.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';

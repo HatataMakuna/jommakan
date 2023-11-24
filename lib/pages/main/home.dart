@@ -6,7 +6,7 @@ import 'package:jom_makan/model/recommendation.dart';
 import 'package:jom_makan/pages/foods/food_details.dart';
 import 'package:jom_makan/server/food/get_foods.dart';
 import 'package:jom_makan/server/food/get_popular_foods.dart';
-import 'package:jom_makan/server/food/get_ratings.dart';
+import 'package:jom_makan/server/rating/get_ratings.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
