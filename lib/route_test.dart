@@ -1,14 +1,14 @@
 // THIS FILE IS ONLY FOR EASE OF TESTING PURPOSE
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/order/order_history.dart';
 import 'package:provider/provider.dart';
-import 'stores/user_provider.dart'; // Import the UserProvider class
-
-import 'pages/main/main_page.dart';
-import 'pages/user/create_account.dart';
-import 'pages/user/edit_profile.dart';
-import 'pages/user/forget_password.dart';
-import 'pages/user/login.dart';
-import 'pages/search/search.dart';
+import 'package:jom_makan/stores/user_provider.dart'; // Import the UserProvider class
+import 'package:jom_makan/pages/main/main_page.dart';
+import 'package:jom_makan/pages/user/create_account.dart';
+import 'package:jom_makan/pages/user/edit_profile.dart';
+import 'package:jom_makan/pages/user/forget_password.dart';
+import 'package:jom_makan/pages/user/login.dart';
+import 'package:jom_makan/pages/search/search.dart';
 
 void main() => runApp(
   ChangeNotifierProvider(
@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
         '/user/create-account': (context) => const CreateAccount(),
         '/user/forget-password': (context) => ForgetPasswordPage(),
         '/user/edit-profile': (context) => EditProfile(username: userName.toString()),
+        '/user/order-history': (context) => const OrderHistoryPage(),
         '/home': (context) => const MainPage(),
         '/search': (context) => const SearchPage(),
       },

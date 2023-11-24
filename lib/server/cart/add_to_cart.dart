@@ -34,7 +34,7 @@ class AddToCart {
         },
       );
 
-      return int.parse(result.affectedRows.toString()) == 1; // Check if the insertion was successful
+      return result.affectedRows.toInt() == 1; // Check if the insertion was successful
     } catch (e) {
       // Handle database errors or other exceptions here
       print('Error during adding to cart: $e');

@@ -1,16 +1,14 @@
 import 'package:jom_makan/database/db_connection.dart';
 
 class GetFoods {
-  Future<List<Map<String, dynamic>>> getAllFoods({
-    String? searchQuery,
-    int? priceRangeMin,
-    int? priceRangeMax,
-    double? minRating,
-    List<String>? selectedLocations,
-    List<String>? selectedCategories,
-  }) async {
+  // for recommendationded foods' use
+  Future<List<Map<String, dynamic>>> getFoodsByIds(List<int> foodIds) async {
     try {
-      // Build the SQL query based on parameters
+      if (foodIds.isEmpty) {
+        return []; // If the list is empty, return an empty list of foods
+      }
+
+      // Build the SQL query to retrieve foods by food IDs
       String query = '''
         SELECT
           foods.foodID,
@@ -24,17 +22,13 @@ class GetFoods {
         JOIN
           stalls ON foods.stallID = stalls.stallID
         WHERE
-          UPPER(foods.food_name) LIKE UPPER(?)
+          foods.foodID IN (${foodIds.map((_) => '?').join(', ')})
       ''';
 
       var stmt = await pool.prepare(query);
 
-      // Use '%' in the query to match any substring of the food name
-      String searchValue = searchQuery ?? '';
-      searchValue = '%$searchValue%';
-
-      // Execute the SQL query
-      var results = await stmt.execute([searchValue]);
+      // Execute the SQL query with the list of food IDs
+      var results = await stmt.execute(foodIds);
 
       // Extract and return the list of foods
       List<Map<String, dynamic>> foods = [];
@@ -49,13 +43,13 @@ class GetFoods {
           'food_image': row.colByName("food_image"),
         });
       }
-      
+
       // Deallocate prepared statement
       await stmt.deallocate();
 
       return foods;
     } catch (e) {
-      print('Error fetching foods: $e');
+      print('Error fetching foods by IDs: $e');
       return [];
     }
   }

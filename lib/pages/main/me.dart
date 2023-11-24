@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:jom_makan/stores/user_provider.dart';
 
 class MePage extends StatelessWidget {
@@ -40,11 +39,11 @@ class MePage extends StatelessWidget {
                 // Light blue buttons
                 _buildButton(context, 'Edit profile', 0xFFC2EAFF),
                 _buildButton(context, 'Order history', 0xFFC2EAFF),
-                _buildButton(context, 'Pick up order', 0xFFC2EAFF),
+                /* _buildButton(context, 'Pick up order', 0xFFC2EAFF),
                 _buildButton(context, 'Edit Review', 0xFFC2EAFF),
                 // Light yellow buttons
                 _buildButton(context, 'My Rewards', 0xFFFFE5BA),
-                _buildButton(context, 'My Favourites', 0xFFFFE5BA),
+                _buildButton(context, 'My Favourites', 0xFFFFE5BA), */
                 // Light red buttons
                 _buildButton(context, 'Logout', 0xFFFFEFEF),
               ],
@@ -63,6 +62,9 @@ class MePage extends StatelessWidget {
           if (label == 'Edit profile') {
             // Navigate to edit profile page
             Navigator.of(context).pushNamed('/user/edit-profile');
+          }
+          else if (label == 'Order history') {
+            Navigator.of(context).pushNamed('/user/order-history');
           }
           else if (label == 'Logout') {
             // Show logout confirmation dialog

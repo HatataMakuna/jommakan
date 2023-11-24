@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:jom_makan/server/user/login_user.dart';
 import 'package:jom_makan/components/logo.dart';
@@ -148,11 +147,12 @@ class _LoginState extends State<LoginPage> {
 
     // Call the loginUser function from LoginUser class
     var loginResult = await _loginUser.loginUser(email: email, password: password);
+    print(loginResult);
 
     if (loginResult['success']) {
       // Login was successful, get the username
       var username = loginResult['username'];
-      var userID = loginResult['userID'];
+      var userID = int.parse(loginResult['userID']);
 
       // update the user name in the provider
       Provider.of<UserProvider>(context, listen: false).setUserName(username);

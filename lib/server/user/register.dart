@@ -9,6 +9,7 @@ class Register {
     try {
       // Check if the user already exists
       final existingUser = await getUserByEmail(email);
+      print('Existing user: ' + existingUser.toString());
       if (existingUser) {
         // User with this email already exists, registration failed
         return false;
@@ -25,7 +26,7 @@ class Register {
         },
       );
 
-      return result.affectedRows as int == 1; // Check if the insertion was successful
+      return result.affectedRows.toInt() == 1; // Check if the insertion was successful
     } catch (e) {
       // Handle database errors or other exceptions here
       print('Error during registration: $e');
@@ -35,12 +36,19 @@ class Register {
 
   Future<bool> getUserByEmail(String email) async {
     try {
-      var results = await pool.execute('SELECT * FROM users WHERE email = :email', {"email": email});
+      var results = await pool.execute('SELECT email FROM users WHERE email = :email', {"email": email});
 
-      if (results.isNotEmpty) {
-        return true;
-      } else {
+      String? existingEmail;
+
+      for (final row in results.rows) {
+        existingEmail = row.colAt(0);
+      }
+      print('Email checking: ' + existingEmail.toString());
+
+      if (existingEmail == null) {
         return false;
+      } else {
+        return true;
       }
     } catch (e) {
       print('Error fetching user by email: $e');

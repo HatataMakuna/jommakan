@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/components/get_average_ratings.dart';
+import 'package:jom_makan/pages/foods/food_reviews.dart';
 import 'package:jom_makan/server/cart/add_to_cart.dart';
-import 'package:jom_makan/server/food/get_ratings.dart';
+import 'package:jom_makan/server/views/update_views.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class FoodDetailsPage extends StatefulWidget {
-  final Map<String, dynamic> selectedFood; // Replace this with the actual data type you have
+  final Map<String, dynamic> selectedFood;
 
   const FoodDetailsPage({super.key, required this.selectedFood});
 
@@ -14,10 +16,11 @@ class FoodDetailsPage extends StatefulWidget {
 }
 
 class _FoodDetailsPageState extends State<FoodDetailsPage> {
-  final FoodRatings _foodRatings = FoodRatings();
+  final GetAverageRatings _getAvgRatings = GetAverageRatings();
   int quantity = 1;
   String notes = '';
   double averageRating = 0.0; // Initialize averageRating
+  int noRatings = 0;
   List<String> preferences = [];
   double totalPrice = 0.0;
 
@@ -25,29 +28,34 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
   void initState() {
     super.initState();
 
-    // Call your function to get average ratings directly
+    // Update view count once a user enters the specific food details
+    _updateViewCount();
+
+    // To get average ratings directly
     _getAverageRatings();
+    _getNoOfRatings();
+
     // Calculate initial total price
     _calculateTotalPrice();
   }
 
+  void _updateViewCount() {
+    UpdateViews.updateViewCount(int.parse(widget.selectedFood['foodID']));
+  }
+
   // Function to get average ratings and update the state
   void _getAverageRatings() async {
-    try {
-      List<int> ratings = await _foodRatings.getRatingsForFood(
-        int.parse(widget.selectedFood['foodID']),
-      );
+    double _rating = await _getAvgRatings.setAverageRating(int.parse(widget.selectedFood['foodID']));
+    setState(() {
+      averageRating = _rating;
+    });
+  }
 
-      double newAverageRating = _foodRatings.calculateAverageRating(ratings);
-
-      // Update the state with the new average rating
-      setState(() {
-        averageRating = newAverageRating;
-      });
-    } catch (error) {
-      // Handle errors if needed
-      print('Error: $error');
-    }
+  void _getNoOfRatings() async {
+    int _noRatings = await _getAvgRatings.setNoRatings(int.parse(widget.selectedFood['foodID']));
+    setState(() {
+      noRatings = _noRatings;
+    });
   }
 
   // Calculate total price based on quantity and food price
@@ -140,30 +148,44 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
               ],
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Average Rating: ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w300,
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FoodReviewsPage(selectedFood: widget.selectedFood),
                   ),
-                ),
-                Text(
-                  averageRating.toStringAsFixed(2),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.blue,
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Average Rating: ',
+                    style: TextStyle(fontWeight: FontWeight.w300),
                   ),
-                ),
-                const Text(
-                  '/ 5.00',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                  )
-                ),
-              ],
+                  Text(
+                    averageRating.toStringAsFixed(2),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  const Text(
+                    ' / 5.00 from ',
+                    style: TextStyle(fontWeight: FontWeight.w300),
+                  ),
+                  Text(
+                    noRatings.toString(),
+                    style: const TextStyle(fontWeight: FontWeight.w300),
+                  ),
+                  const Text(
+                    ' rating(s)',
+                    style: TextStyle(fontWeight: FontWeight.w300),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -320,21 +342,6 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
 
   void addToCart() async {
     AddToCart addToCart = AddToCart();
-
-    bool noVege = preferences.contains('no vegetarian');
-    bool extraVege = preferences.contains('extra vegetarian');
-    bool noSpicy = preferences.contains('no spicy');
-    bool extraSpicy = preferences.contains('extra spicy');
-    print(noVege);
-    print(extraVege);
-    print(noSpicy);
-    print(extraSpicy);
-
-    // Convert to boolean
-    noVege = (noVege == 1);
-    extraVege = (extraVege == 1);
-    noSpicy = (noSpicy == 1);
-    extraSpicy = (extraSpicy == 1);
 
     bool addToCartResult = await addToCart.addToCart(
       userID: Provider.of<UserProvider>(context, listen: false).userID!, // replace with the actual user ID
