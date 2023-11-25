@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "cw_fyp_2pt0" "\0"
+            VALUE "FileDescription", "jommakan" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "cw_fyp_2pt0" "\0"
+            VALUE "InternalName", "jommakan" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "cw_fyp_2pt0.exe" "\0"
-            VALUE "ProductName", "cw_fyp_2pt0" "\0"
+            VALUE "OriginalFilename", "jommakan.exe" "\0"
+            VALUE "ProductName", "jommakan" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
