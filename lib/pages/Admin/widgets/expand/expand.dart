@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/admin/views/menu_title.dart';
 
-import '../../config/logger.dart';
-
+// ignore: must_be_immutable
 class AdminExpand extends StatefulWidget {
   bool expand;
   final Widget child;
@@ -28,8 +26,8 @@ class _AdminExpand extends State<AdminExpand>
     with SingleTickerProviderStateMixin {
   static final Animatable<double> _easeInTween =
       CurveTween(curve: Curves.easeIn);
-  static final Animatable<double> _halfTween =
-      Tween<double>(begin: 0.0, end: 0.25);
+  //static final Animatable<double> _halfTween =
+  //    Tween<double>(begin: 0.0, end: 0.25);
   static final Animatable<double> _opacity = Tween<double>(begin: 0.0, end: 1.0);
 
   late AnimationController _controller;

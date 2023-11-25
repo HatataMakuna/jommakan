@@ -56,11 +56,11 @@ class _PaymentPageState extends State<PaymentPage> {
                 );
 
                 // Update the selected payment method
-                if (selectedMethod != null) {
-                  setState(() {
-                    selectedPaymentMethod = selectedMethod;
-                  });
-                }
+                //if (selectedMethod != null) {
+                setState(() {
+                  selectedPaymentMethod = selectedMethod;
+                });
+                //}
               },
               child: Text(
                 selectedPaymentMethod.isNotEmpty

@@ -6,10 +6,8 @@ class PlaceOrder {
   final ClearCart _clearCart = ClearCart();
 
   Future<bool> placeOrder({
-    required int userID,
-    required bool noCutlery,
-    required String payment,
-    required List<Map<String, dynamic>> cartItems,
+    required int userID, required bool noCutlery,
+    required String payment, required List<Map<String, dynamic>> cartItems,
   }) async {
     String formattedDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
 

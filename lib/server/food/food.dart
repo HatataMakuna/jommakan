@@ -4,7 +4,7 @@ class Food {
   // add food to database
   Future<bool> foodRegister({
     required String foodName, required int stallID,
-    required int mainCategory, required int subCategory, required String foodPrice,
+    required int mainCategory, required int subCategory, required double foodPrice,
     required int qtyInStock, required String foodImage,
   }) async{
     try {

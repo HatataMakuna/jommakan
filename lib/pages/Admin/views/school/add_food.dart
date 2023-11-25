@@ -206,7 +206,9 @@ class _AddFoodState extends State<AddFood> {
     String foodImage = _foodImageController.text;
 
     bool registrationResult = await _registerFood.foodRegister(
-      foodID: foodId, food_name: foodName, stallID: stallID, main_category: mainCategory, sub_category: subCategory, food_price: foodPrice, qty_in_stock: qtyInStock, food_image: foodImage,
+      foodName: foodName, stallID: int.parse(stallID),
+      mainCategory: int.parse(mainCategory), subCategory: int.parse(subCategory),
+      foodPrice: double.parse(foodPrice), qtyInStock: int.parse(qtyInStock), foodImage: foodImage,
     );
 
     if (registrationResult) {
