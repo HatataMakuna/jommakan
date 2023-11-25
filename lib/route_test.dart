@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const MainPage(), // Change this to which page you want the testing process to start with
         '/user/login': (context) => const LoginPage(),
         '/user/create-account': (context) => const CreateAccount(),
-        '/user/forget-password': (context) => ForgetPasswordPage(),
+        '/user/forget-password': (context) => const ForgetPasswordPage(),
         '/user/edit-profile': (context) => EditProfile(username: userName.toString()),
         '/user/order-history': (context) => const OrderHistoryPage(),
         '/rider/rider-info': (context) => const RiderInfo(),

@@ -283,7 +283,7 @@ class AdminRouter {
 
 
 extension AdminString on String {
-  bool eq(dynamic? d) {
+  bool eq(dynamic d) {
     if (d == null) {
       return false;
     }

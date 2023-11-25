@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
-  runApp(PreOrderPage());
+  runApp(const PreOrderPage());
 }
 
 class PreOrderPage extends StatefulWidget {
@@ -42,11 +42,7 @@ class _PreOrderPageState extends State<PreOrderPage> {
   Future<void> _selectPreOrderTime(BuildContext context) async {
     try {
       final currentWorldTime = await _getCurrentWorldTime();
-
-      final TimeOfDay? picked = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
+      final TimeOfDay? picked = await showTimePickerDialog();
 
       if (picked != null) {
         final DateTime selectedDateTime = DateTime(
@@ -62,23 +58,7 @@ class _PreOrderPageState extends State<PreOrderPage> {
             selectedTime = "${picked.hour}:${picked.minute} ${picked.period.toString().split('.')[1]}";
           });
         } else {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Invalid Time'),
-                content: Text('Please select a time after the current time.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
+          _showInvalidTime();
         }
       }
     } catch (e) {
@@ -101,6 +81,33 @@ class _PreOrderPageState extends State<PreOrderPage> {
         },
       );
     }
+  }
+
+  Future<TimeOfDay?> showTimePickerDialog() async {
+    return await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+  }
+
+  void _showInvalidTime() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Invalid Time'),
+          content: const Text('Please select a time after the current time.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      }
+    );
   }
 
   @override

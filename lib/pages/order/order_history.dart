@@ -8,7 +8,7 @@ class OrderHistoryPage extends StatefulWidget {
   const OrderHistoryPage({super.key});
 
   @override
-  State<OrderHistoryPage> createState() => _OrderHistoryPageState();
+  State<StatefulWidget> createState() => _OrderHistoryPageState();
 }
 
 class _OrderHistoryPageState extends State<OrderHistoryPage> {
