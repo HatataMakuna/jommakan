@@ -1,6 +1,6 @@
 //import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/admin/style/base_style.dart';
+import 'package:jom_makan/pages/Admin/style/base_style.dart';
 
 enum BorderType { top, left, right, bottom, all }
 
