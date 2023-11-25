@@ -46,7 +46,6 @@ class GetFoods {
 
       // Deallocate prepared statement
       await stmt.deallocate();
-
       return foods;
     } catch (e) {
       print('Error fetching foods by IDs: $e');

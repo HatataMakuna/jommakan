@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/Admin/views/menu_title.dart';
+import 'package:jom_makan/pages/admin/views/menu_title.dart';
 
 import '../../config/logger.dart';
 

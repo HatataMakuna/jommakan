@@ -139,9 +139,7 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
           ),
-          const SizedBox(
-            height: 15,
-          ),
+          const SizedBox(height: 15),
           RawMaterialButton(
             onPressed: _captureAndSavePng,
             fillColor: AppColors.primaryColor,

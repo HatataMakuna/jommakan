@@ -1,6 +1,7 @@
 import 'package:jom_makan/database/db_connection.dart';
 
 class GetAllFoods {
+  // get foods from database (initialise in search page)
   Future<List<Map<String, dynamic>>> getAllFoods() async {
     try {
       String query = '''

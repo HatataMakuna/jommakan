@@ -3,25 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Pre-order and Automation Time',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: PreOrderPage(),
-    );
-  }
+  runApp(PreOrderPage());
 }
 
 class PreOrderPage extends StatefulWidget {
+  const PreOrderPage({super.key});
+
   @override
-  _PreOrderPageState createState() => _PreOrderPageState();
+  State<PreOrderPage> createState() => _PreOrderPageState();
 }
 
 class _PreOrderPageState extends State<PreOrderPage> {
@@ -98,14 +87,14 @@ class _PreOrderPageState extends State<PreOrderPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('Failed to load current world time.'),
+            title: const Text('Error'),
+            content: const Text('Failed to load current world time.'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -118,10 +107,10 @@ class _PreOrderPageState extends State<PreOrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pre-order and Automation Time'),
+        title: const Text('Pre-order and Automation Time'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -129,33 +118,30 @@ class _PreOrderPageState extends State<PreOrderPage> {
               onPressed: () {
                 (context);
               },
-              child: Text('Order Now'),
+              child: const Text('Order Now'),
             ),
-            SizedBox(height: 16,),
-                        Divider(),
-
-            Text(
+            const SizedBox(height: 16,),
+            const Divider(),
+            const Text(
               'Select Pre-order Time:',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 _selectPreOrderTime(context);
               },
-              child: Text('Select Time'),
+              child: const Text('Select Time'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Selected Time: $selectedTime',
-              style: TextStyle(
-                fontSize: 16,
-              ),
+              style: const TextStyle(fontSize: 16),
             ),
-            Spacer(),
+            const Spacer(),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -168,21 +154,21 @@ class _PreOrderPageState extends State<PreOrderPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Automation Time Estimate'),
+                        title: const Text('Automation Time Estimate'),
                         content: Text(estimatedAutomationTime),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: Text('OK'),
+                            child: const Text('OK'),
                           ),
                         ],
                       );
                     },
                   );
                 },
-                child: Text('Estimate Automation Time'),
+                child: const Text('Estimate Automation Time'),
               ),
             ),
           ],

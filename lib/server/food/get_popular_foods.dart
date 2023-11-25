@@ -1,6 +1,7 @@
 import 'package:jom_makan/database/db_connection.dart';
 
 class GetPopularFoods {
+  // get 3 most viewed foods
   Future<List<Map<String, dynamic>>> getPopularFoods() async {
     try {
       var results = await pool.execute('''

@@ -2,12 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:jom_makan/pages/Admin/store/name_random.dart';
-import 'package:jom_makan/pages/Admin/views/base_views.dart';
-import 'package:jom_makan/pages/Admin/widgets/button/style.dart';
-import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
-import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
-import 'package:jom_makan/pages/Admin/widgets/tag/tag.dart';
+import 'package:jom_makan/pages/admin/store/name_random.dart';
+import 'package:jom_makan/pages/admin/views/base_views.dart';
+import 'package:jom_makan/pages/admin/widgets/button/style.dart';
+import 'package:jom_makan/pages/admin/widgets/table/controller.dart';
+import 'package:jom_makan/pages/admin/widgets/table/table_item.dart';
+import 'package:jom_makan/pages/admin/widgets/tag/tag.dart';
 
 import '../../style/colors.dart';
 import '../../widgets/table/table.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/Admin/style/colors.dart';
-import 'package:jom_makan/pages/Admin/widgets/input/style.dart';
+import 'package:jom_makan/pages/admin/style/colors.dart';
+import 'package:jom_makan/pages/admin/widgets/input/style.dart';
 
 class AdminInput extends StatefulWidget {
   final BoxDecoration? decoration;

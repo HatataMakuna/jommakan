@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:jom_makan/pages/Admin/views/base_views.dart';
-import 'package:jom_makan/pages/Admin/views/school/addFood.dart';
-import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
-import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
+import 'package:jom_makan/pages/admin/views/base_views.dart';
+import 'package:jom_makan/pages/admin/views/school/add_food.dart';
+import 'package:jom_makan/pages/admin/widgets/table/controller.dart';
+import 'package:jom_makan/pages/admin/widgets/table/table_item.dart';
 import 'package:jom_makan/server/food/food.dart';
 
-import '../../style/colors.dart';
-import '../../widgets/table/table.dart';
+import 'package:jom_makan/pages/Admin/style/colors.dart';
+import 'package:jom_makan/pages/Admin/widgets/table/table.dart';
 
 class SchoolView extends AdminView {
   SchoolView({super.key});
@@ -23,6 +22,7 @@ class _SchoolView extends AdminStateView<SchoolView> {
   var itemData = [];
   final Food foodDisplay = Food();
   List<Map<String, dynamic>> _foodItems = [];
+
   @override
   void initState() {
     super.initState();
@@ -35,8 +35,6 @@ class _SchoolView extends AdminStateView<SchoolView> {
 
       setState(() {
         _foodItems = data;
-
-        
 
         for (int i = 0; i < _foodItems.length; i++) {
           String foodNameCorrect = 'foodName: ${_foodItems[i]['foodName']}';
@@ -100,7 +98,6 @@ class _SchoolView extends AdminStateView<SchoolView> {
               width: 200,
               label: "Food Image",
               prop: 'foodImage'),
-          
           AdminTableItem(
               itemView: schoolItemView,
               width: 100,
@@ -146,9 +143,9 @@ class _SchoolView extends AdminStateView<SchoolView> {
         ),
       ),
       const SizedBox(width: 10),
-              const Text("更多",
-                style: TextStyle(color: Colors.blueAccent, fontSize: 15),),
-            ],
+        const Text("更多",
+          style: TextStyle(color: Colors.blueAccent, fontSize: 15),),
+        ],
           ),
         );
       }
@@ -164,14 +161,13 @@ class _SchoolView extends AdminStateView<SchoolView> {
     }
   }
 
-
   // Function to delete the item at the specified index
   void _deleteItem(int index) {
     setState(() {
        if (index >= 0 && index < _foodItems.length) {
       // Remove the item from the _promoItems list
       var deletedItem = _foodItems.removeAt(index);
-print('deleteItem:  + $deletedItem');
+      print('deleteItem:  + $deletedItem');
 
       // for (int i = 0; i < _promoItems.length; i++) {
        
@@ -196,8 +192,6 @@ print('deleteItem:  + $deletedItem');
     });
   }
 
-
-  
   @override
   Widget? buildForLarge(BuildContext context) {
     return LayoutBuilder(builder: (context, size) {
@@ -209,14 +203,14 @@ print('deleteItem:  + $deletedItem');
           children: [
             ElevatedButton(
               onPressed: () {
-                 // Navigate to a new page when the button is pressed
                 Navigator.push(
-                 context,
-                MaterialPageRoute(builder: (context) => addFood()));
+                  context,
+                  MaterialPageRoute(builder: (context) => const AddFood())
+                );
               },
-              child: Text('Add Food'),
+              child: const Text('Add Food'),
             ),
-            SizedBox(height: 10), // Add some space between button and table
+            const SizedBox(height: 10), // Add some space between button and table
             Expanded(
               child: AdminTable(
                 controller: schoolController,

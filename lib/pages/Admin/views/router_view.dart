@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:jom_makan/pages/Admin/style/colors.dart';
-import 'package:jom_makan/pages/Admin/views/base_views.dart';
-import 'package:jom_makan/pages/Admin/views/title.dart';
-import 'package:jom_makan/pages/Admin/widgets/menu/nav_menu.dart';
-import 'package:jom_makan/pages/Admin/widgets/menu/nav_menu_define.dart';
+import 'package:jom_makan/pages/admin/style/colors.dart';
+import 'package:jom_makan/pages/admin/views/base_views.dart';
+import 'package:jom_makan/pages/admin/views/title.dart';
+import 'package:jom_makan/pages/admin/widgets/menu/nav_menu.dart';
+import 'package:jom_makan/pages/admin/widgets/menu/nav_menu_define.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
