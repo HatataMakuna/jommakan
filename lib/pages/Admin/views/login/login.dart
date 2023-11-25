@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/admin/style/colors.dart';
-import 'package:jom_makan/pages/admin/widgets/button/style.dart';
-import 'package:jom_makan/pages/admin/widgets/input/input.dart';
+import 'package:jom_makan/pages/Admin/style/colors.dart';
+import 'package:jom_makan/pages/Admin/widgets/button/style.dart';
+import 'package:jom_makan/pages/Admin/widgets/input/input.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../widgets/button/button.dart';

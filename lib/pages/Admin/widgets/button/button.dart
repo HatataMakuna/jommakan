@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/admin/widgets/button/style.dart';
+import 'package:jom_makan/pages/Admin/widgets/button/style.dart';
 import 'package:fluttericon/fontelico_icons.dart';
 
 import '../../style/colors.dart';

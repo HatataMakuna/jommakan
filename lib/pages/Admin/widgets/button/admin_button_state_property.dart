@@ -1,4 +1,4 @@
-import 'package:jom_makan/pages/admin/widgets/button/style.dart';
+import 'package:jom_makan/pages/Admin/widgets/button/style.dart';
 
 typedef AdminButtonPropertyResolver<T> = T Function(
     Set<AdminButtonType> states);
