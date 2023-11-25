@@ -7,7 +7,7 @@ class EditCartPage extends StatefulWidget {
   const EditCartPage({super.key, required this.cartItem});
 
   @override
-  _EditCartPageState createState() => _EditCartPageState();
+  State<StatefulWidget> createState() => _EditCartPageState();
 }
 
 class _EditCartPageState extends State<EditCartPage> {
@@ -74,7 +74,7 @@ class _EditCartPageState extends State<EditCartPage> {
               Container(
                 constraints: const BoxConstraints.expand(height: 250),
                 child: Image(
-                  image: AssetImage('images/foods/' + widget.cartItem['food_image']),
+                  image: AssetImage('images/foods/${widget.cartItem['food_image']}'),
                   fit: BoxFit.cover,
                 ),
               ),

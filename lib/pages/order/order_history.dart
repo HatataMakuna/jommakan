@@ -124,7 +124,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image(
-                        image: AssetImage('images/foods/' + orderItem['food_image']),
+                        image: AssetImage('images/foods/${orderItem['food_image']}'),
                         width: 100,
                         height: 100,
                       ),

@@ -40,7 +40,7 @@ class OrderDetailsPage extends StatelessWidget {
               Container(
                 constraints: const BoxConstraints.expand(height: 250),
                 child: Image(
-                  image: AssetImage('images/foods/' + selectedOrderItem['food_image']),
+                  image: AssetImage('images/foods/${selectedOrderItem['food_image']}'),
                   fit: BoxFit.cover,
                 ),
               ),

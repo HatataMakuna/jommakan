@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/server/user/check_user_exists.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({super.key});
@@ -8,6 +9,7 @@ class ForgetPasswordPage extends StatefulWidget {
 }
 
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
+  final CheckUserExists _checkUserExists = CheckUserExists();
   final TextEditingController _emailController = TextEditingController();
   bool _isButtonEnabled = false;
 
@@ -75,8 +77,30 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   }
 
   // TODO: Do something with reset password
-  void _resetPassword() {
-    // handle the logic to reset the password
-    print('Resetting password for email: ${_emailController.text}');
+  void _resetPassword() async {
+    bool isExists = await _checkUserExists.checkUser(email: _emailController.text);
+    _loadUserExistsResult(isExists);
+  }
+
+  void _loadUserExistsResult(bool isExists) {
+    if (isExists) {
+      // Navigate to reset password page
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Sorry'),
+            content: const Text('The email you provided does not exist in our database.'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          );
+        }
+      );
+    }
   }
 }

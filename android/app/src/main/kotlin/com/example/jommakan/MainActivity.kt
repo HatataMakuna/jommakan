@@ -1,4 +1,4 @@
-package com.example.cw_fyp_2pt0
+package com.example.jommakan
 
 import io.flutter.embedding.android.FlutterActivity
 

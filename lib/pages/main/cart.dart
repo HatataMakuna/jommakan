@@ -134,7 +134,7 @@ class _CartPageState extends State<CartPage> {
           return ListTile(
             // leading: image
             leading: Image(
-              image: AssetImage('images/foods/' + cartItem['food_image']),
+              image: AssetImage('images/foods/${cartItem['food_image']}'),
               width: 100,
               height: 100,
             ),
