@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/admin/style/colors.dart';
-import 'package:jom_makan/pages/admin/widgets/loading/style.dart';
+import 'package:jom_makan/pages/Admin/style/colors.dart';
+import 'package:jom_makan/pages/Admin/widgets/loading/style.dart';
 
 class LoadingView extends StatelessWidget {
   final Widget child;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/admin/router/router_info.dart';
+import 'package:jom_makan/pages/Admin/router/router_info.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
 void main() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/admin/widgets/expand/expand.dart';
-import 'package:jom_makan/pages/admin/widgets/menu/nav_menu_define.dart';
+import 'package:jom_makan/pages/Admin/widgets/expand/expand.dart';
+import 'package:jom_makan/pages/Admin/widgets/menu/nav_menu_define.dart';
 
 import '../../router/router_info.dart';
 import '../../style/colors.dart';
