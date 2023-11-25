@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MaterialApp(home: ForgetPasswordPage()));
-
 class ForgetPasswordPage extends StatefulWidget {
+  const ForgetPasswordPage({super.key});
+
   @override
-  _ForgetPasswordPageState createState() => _ForgetPasswordPageState();
+  State<StatefulWidget> createState() => _ForgetPasswordPageState();
 }
 
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
@@ -74,6 +74,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
     );
   }
 
+  // TODO: Do something with reset password
   void _resetPassword() {
     // handle the logic to reset the password
     print('Resetting password for email: ${_emailController.text}');

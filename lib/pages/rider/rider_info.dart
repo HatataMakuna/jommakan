@@ -9,7 +9,7 @@ class RiderInfo extends StatefulWidget {
   const RiderInfo({super.key});
 
   @override
-  _RiderInfoState createState() => _RiderInfoState();
+  State<StatefulWidget> createState() => _RiderInfoState();
 }
 
 class _RiderInfoState extends State<RiderInfo> {

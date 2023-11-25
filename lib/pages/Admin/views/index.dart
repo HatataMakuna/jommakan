@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/Admin/style/colors.dart';
-import 'package:jom_makan/pages/Admin/views/base_views.dart';
-import 'package:jom_makan/pages/Admin/widgets/loading/loading.dart';
-import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
-import 'package:jom_makan/pages/Admin/widgets/table/table.dart';
-import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
+import 'package:jom_makan/pages/admin/style/colors.dart';
+import 'package:jom_makan/pages/admin/views/base_views.dart';
+import 'package:jom_makan/pages/admin/widgets/table/controller.dart';
+import 'package:jom_makan/pages/admin/widgets/table/table.dart';
+import 'package:jom_makan/pages/admin/widgets/table/table_item.dart';
 
 class IndexView extends AdminView {
   IndexView({super.key});
@@ -16,7 +15,7 @@ class IndexView extends AdminView {
 class _IndexView extends AdminStateView<IndexView> {
   late AdminTableController<dynamic> controller;
 
-  Widget itemView(BuildContext context, int index, dynamic? data,
+  Widget itemView(BuildContext context, int index, dynamic data,
       AdminTableItem<dynamic> tableItem) {
     if (index == -1) {
       return Container(

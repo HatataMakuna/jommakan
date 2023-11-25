@@ -3,6 +3,8 @@ import 'package:jom_makan/pages/FoodDelivery/paymentMain.dart';
 
 
 class PaymentPage extends StatefulWidget {
+  const PaymentPage({super.key});
+
   @override
   _PaymentPageState createState() => _PaymentPageState();
 }
@@ -16,14 +18,14 @@ class _PaymentPageState extends State<PaymentPage> {
       appBar: AppBar(
         title: selectedPaymentMethod.isNotEmpty
             ? Text('Selected Payment Method: $selectedPaymentMethod')
-            : Text('Select Payment Method'),
+            : const Text('Select Payment Method'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
+            const Text(
               'Order Summary',
               style: TextStyle(
                 fontSize: 20,
@@ -33,16 +35,16 @@ class _PaymentPageState extends State<PaymentPage> {
             // Add widgets to display order summary here
             // ...
 
-            Divider(),
+            const Divider(),
 
-            Text(
+            const Text(
               'Payment Method',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () async {
                 // Navigate to PaymentMethodPage and wait for result
@@ -54,11 +56,11 @@ class _PaymentPageState extends State<PaymentPage> {
                 );
 
                 // Update the selected payment method
-                if (selectedMethod != null) {
-                  setState(() {
-                    selectedPaymentMethod = selectedMethod;
-                  });
-                }
+                //if (selectedMethod != null) {
+                setState(() {
+                  selectedPaymentMethod = selectedMethod;
+                });
+                //}
               },
               child: Text(
                 selectedPaymentMethod.isNotEmpty
@@ -67,7 +69,7 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
             ),
 
-            Divider(),
+            const Divider(),
 
             // Display a button with the selected payment method
             if (selectedPaymentMethod.isNotEmpty)
@@ -80,7 +82,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 child: Text('Make Payment with $selectedPaymentMethod'),
               ),
 
-            Spacer(),
+            const Spacer(),
           ],
         ),
       ),
