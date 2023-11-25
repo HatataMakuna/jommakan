@@ -80,13 +80,13 @@ class _NavMenuItem extends State<NavMenuItem>
     // 获取层级
     switch (widget.level) {
       case 1:
-        widget.itemStyle ??= AdminColors().get().navMenuItemStyle;
+        widget.itemStyle ??= AdminColors().get().navMenuItemStyle as NavMenuItemStyle?;
         break;
       case 2:
-        widget.itemStyle ??= AdminColors().get().navMenuItemStyle2;
+        widget.itemStyle ??= AdminColors().get().navMenuItemStyle2 as NavMenuItemStyle?;
         break;
       default:
-        widget.itemStyle ??= AdminColors().get().navMenuItemStyle3;
+        widget.itemStyle ??= AdminColors().get().navMenuItemStyle3 as NavMenuItemStyle?;
         break;
     }
 
