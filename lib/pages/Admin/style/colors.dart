@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/Admin/widgets/loading/style.dart';
+import 'package:jom_makan/pages/admin/widgets/loading/style.dart';
 
 import '../widgets/button/admin_button_state_property.dart';
 import '../widgets/button/style.dart';

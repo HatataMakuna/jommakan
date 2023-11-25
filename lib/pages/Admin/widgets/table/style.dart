@@ -1,13 +1,13 @@
-import 'package:copy_with_extension/copy_with_extension.dart';
+//import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/Admin/style/base_style.dart';
+import 'package:jom_makan/pages/admin/style/base_style.dart';
 
 enum BorderType { top, left, right, bottom, all }
 
 typedef OnStripe = Color Function(int index);
 
 class AdminTableStyle extends BaseStyle {
-  // 斑马线
+  // zebra style
   final OnStripe? stripe;
   final bool border;
   final Color borderColor;

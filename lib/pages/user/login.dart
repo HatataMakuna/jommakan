@@ -10,9 +10,7 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return _LoginState();
-  }
+  State<StatefulWidget> createState() => _LoginState();
 }
 
 class _LoginState extends State<LoginPage> {

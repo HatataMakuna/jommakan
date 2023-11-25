@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/Admin/router/router_info.dart';
-import 'package:jom_makan/pages/Admin/views/breadcrumb.dart';
-import 'package:jom_makan/pages/Admin/widgets/button/button.dart';
-import 'package:jom_makan/pages/Admin/widgets/button/style.dart';
+import 'package:jom_makan/pages/admin/router/router_info.dart';
+import 'package:jom_makan/pages/admin/views/breadcrumb.dart';
+import 'package:jom_makan/pages/admin/widgets/button/button.dart';
+import 'package:jom_makan/pages/admin/widgets/button/style.dart';
 
 import '../style/colors.dart';
 

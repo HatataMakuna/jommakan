@@ -1,14 +1,17 @@
+import 'package:intl/intl.dart';
 import 'package:jom_makan/database/db_connection.dart';
 
 class AddOrModifyReview {
   Future<bool> addReview(int foodID, int userID, double stars, String description) async {
+    String formattedDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
+
     try {
       var stmt = await pool.prepare('''
         INSERT INTO ratings (foodID, userID, stars, date, description) 
-        VALUES (?, ?, ?, NOW(), ?)
+        VALUES (?, ?, ?, ?, ?)
       ''');
 
-      var result = await stmt.execute([foodID, userID, stars.toInt(), description]);
+      var result = await stmt.execute([foodID, userID, stars.toInt(), formattedDate, description]);
 
       await stmt.deallocate();
       return result.affectedRows.toInt() == 1;

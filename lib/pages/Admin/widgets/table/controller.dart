@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
+import 'package:jom_makan/pages/admin/widgets/table/table_item.dart';
 
 class AdminTableController<T> extends ChangeNotifier {
   List<T> _data = [];

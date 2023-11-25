@@ -1,20 +1,12 @@
-
-import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/widgets.dart';
-import 'package:jom_makan/pages/Admin/store/name_random.dart';
-import 'package:jom_makan/pages/Admin/views/base_views.dart';
-import 'package:jom_makan/pages/Admin/views/filter_view.dart';
-import 'package:jom_makan/pages/Admin/widgets/input/input.dart';
-import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
-import 'package:jom_makan/pages/Admin/widgets/table/table.dart';
-import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
+//import 'package:jom_makan/pages/admin/store/name_random.dart';
+import 'package:jom_makan/pages/admin/views/base_views.dart';
+import 'package:jom_makan/pages/admin/views/user/add_promotion.dart';
+import 'package:jom_makan/pages/admin/widgets/table/controller.dart';
+import 'package:jom_makan/pages/admin/widgets/table/table.dart';
+import 'package:jom_makan/pages/admin/widgets/table/table_item.dart';
 import 'package:jom_makan/server/promotion.dart';
-
-import '../../style/colors.dart';
-
-import 'addPromotion.dart';
+import 'package:jom_makan/pages/Admin/style/colors.dart';
 
 class UserList extends AdminView {
   UserList({super.key});
@@ -27,8 +19,7 @@ class _UserList extends AdminStateView<UserList> {
   late AdminTableController _controller;
   final Promotion _promotion = Promotion();
 
-
- // Controller for text fields
+  // Controller for text fields
   final TextEditingController _foodIdController = TextEditingController();
   final TextEditingController _foodNameController = TextEditingController();
   final TextEditingController _foodPriceController = TextEditingController();
@@ -36,7 +27,6 @@ class _UserList extends AdminStateView<UserList> {
   final TextEditingController _foodStallController = TextEditingController();
   final TextEditingController _foodDescriptionController = TextEditingController();
 
-  
   var itemData = [];
   final Promotion promo = Promotion();
   List<Map<String, dynamic>> _promoItems = [];
@@ -55,7 +45,7 @@ class _UserList extends AdminStateView<UserList> {
         _promoItems = data;
 
         // Move the logic inside setState after _promoItems has been updated
-        NameRandom nameRandom = NameRandom();
+        //NameRandom nameRandom = NameRandom();
 
         for (int i = 0; i < _promoItems.length; i++) {
           String foodNameCorrect = 'foodName: ${_promoItems[i]['foodName']}';
@@ -117,55 +107,22 @@ class _UserList extends AdminStateView<UserList> {
       print('Error loading promotion data: $e');
     }
   }
-
-
-  // Widget _buildPromotionList(List<Map<String, dynamic>> promotionData) {
-  //   return ListView.builder(
-  //     itemCount: promotionData.length,
-  //     itemBuilder: (context, index) {
-  //       final cartItem = promotionData[index];
-
-
-  //       return ListTile(
-  //         // leading: image
-  //         leading: Image(
-  //           image: AssetImage('images/foods/' + cartItem['food_image']),
-  //           width: 100,
-  //           height: 100,
-  //         ),
-  //         title: Text(cartItem['food_name'] ?? ''),
-  //         subtitle: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             Text('Quantity: ${cartItem['quantity'] ?? ''}',),
-  //             const SizedBox(height: 8),
-  //             _buildPreferencesDropdown(preferences),
-  //             const SizedBox(height: 8),
-  //             _buildAdditionalNotes(cartItem),
-  //           ],
-  //         ),
-  //         trailing: Text('Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}'),
-  //       );
-  //     },
-  //   );
-  // }
-
   
   Future<void> _promotionDisplay() async {
     try {
-      final Promotion = await _promotion.getPromotionData();
+      //final promotion = await _promotion.getPromotionData();
       setState(promotionData) {
         _foodIdController.text = promotionData['foodId'];
-         _foodNameController.text = promotionData['foodName'];
-          _foodPriceController.text = promotionData['foodPrice'];
-           _foodPromotionController.text = promotionData['foodPromotion'];
-            _foodStallController.text = promotionData['foodStall'];
-             _foodDescriptionController.text = promotionData['foodDescription'];
-      };
-    }catch (error) {
+        _foodNameController.text = promotionData['foodName'];
+        _foodPriceController.text = promotionData['foodPrice'];
+        _foodPromotionController.text = promotionData['foodPromotion'];
+        _foodStallController.text = promotionData['foodStall'];
+        _foodDescriptionController.text = promotionData['foodDescription'];
+      }
+    } catch (error) {
       print('Error loading cart items: $error');
       // Handle the error as needed
-  }
+    }
   }
   Widget onItemView(
       BuildContext context, int index, dynamic data, AdminTableItem item) {
@@ -256,11 +213,11 @@ print('deleteItem:  + $deletedItem');
                  // Navigate to a new page when the button is pressed
                 Navigator.push(
                  context,
-                MaterialPageRoute(builder: (context) => addPromotion()));
+                MaterialPageRoute(builder: (context) => AddPromotion()));
               },
-              child: Text('Add Promotion'),
+              child: const Text('Add Promotion'),
             ),
-            SizedBox(height: 10), // Add some space between button and table
+            const SizedBox(height: 10), // Add some space between button and table
             Expanded(
               child: AdminTable(
                 controller: _controller,

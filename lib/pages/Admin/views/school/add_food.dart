@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/server/promotion.dart';
+import 'package:jom_makan/server/food/food.dart';
 
-import '../../../../server/food/food.dart';
 
-//void main() => runApp(const MaterialApp(home: CreateAccount()));
-
-class addFood extends StatefulWidget {
-  const addFood({super.key});
+class AddFood extends StatefulWidget {
+  const AddFood({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return _addFoodState();
-  }
+  _AddFoodState createState() => _AddFoodState();
 }
 
-class _addFoodState extends State<addFood> {
+class _AddFoodState extends State<AddFood> {
    final TextEditingController _foodIDController = TextEditingController();
   final TextEditingController _foodNameController = TextEditingController();
   final TextEditingController _stallIDController = TextEditingController();
@@ -24,9 +19,7 @@ class _addFoodState extends State<addFood> {
   final TextEditingController _qtyInStockController = TextEditingController();
   final TextEditingController _foodImageController = TextEditingController();
   bool isTyping = false;
-  bool _showPassword = false;
-  final Food _registerFood = Food(); // Instantiate Register (server-side) class
-  bool _isRegistering = false;
+  final Food _registerFood = Food();
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +43,6 @@ class _addFoodState extends State<addFood> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            foodIDField(),
-            const SizedBox(height: 20),
             foodNameField(),
             const SizedBox(height: 20),
             stallIDField(),
@@ -75,12 +66,12 @@ class _addFoodState extends State<addFood> {
   }
 
   // Text Fields
-  Widget foodIDField() {
+  /* Widget foodIDField() {
     return TextField(
       controller: _foodIDController,
       decoration: const InputDecoration(labelText: 'FoodId'),
     );
-  }
+  } */
 
   Widget foodNameField() {
     return TextField(
@@ -131,71 +122,11 @@ class _addFoodState extends State<addFood> {
     );
   }
 
-  // Widget emailField() {
-  //   return TextField(
-  //     controller: _emailController,
-  //     decoration: InputDecoration(
-  //       labelText: 'Email (someone@example.com)',
-  //       errorText: _emailErrorText(),
-  //     ),
-  //     onChanged: (value) => _validateEmail(value),
-  //   );
-  // }
-
-  // Widget passwordField() {
-  //   return TextField(
-  //     controller: _passwordController,
-  //     decoration: InputDecoration(
-  //       labelText: 'Password (minimum 8 characters)',
-  //       errorText: _passwordErrorText(),
-        
-  //       // "Show Password" icon
-  //       suffixIcon: IconButton(
-  //         icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility),
-  //         onPressed: () {
-  //           setState(() {
-  //             _showPassword = !_showPassword;
-  //           });
-  //         },
-  //       ),
-  //     ),
-  //     onChanged: (value) => _validatePassword(value),
-  //     obscureText: !_showPassword, // Hide or show password based on _showPassword value
-  //   );
-  // }
-
-  // Widget repeatPasswordField() {
-  //   return TextField(
-  //     controller: _repeatPasswordController,
-  //     decoration: InputDecoration(
-  //       labelText: 'Repeat Password',
-  //       errorText: _repeatPasswordErrorText(),
-        
-  //       // "Show Password" icon
-  //       suffixIcon: IconButton(
-  //         icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility),
-  //         onPressed: () {
-  //           setState(() {
-  //             _showPassword = !_showPassword;
-  //           });
-  //         },
-  //       ),
-  //     ),
-  //     onChanged: (value) => _validateRepeatPassword(value),
-  //     obscureText: !_showPassword, // Hide or show password based on _showPassword value
-  //   );
-  // }
-
   // Register Button
   Widget registerButton() {
     return ElevatedButton(
       // Disable the button if there are errors or empty fields
       onPressed: () {
-        // Set the registration status to true before showing the dialog
-        setState(() {
-          _isRegistering = true;
-        });
-
         // confirm register
         showDialog(
           context: context,
@@ -251,47 +182,6 @@ class _addFoodState extends State<addFood> {
     });
   }
 
-  // // Error Messages
-  // String? _emailErrorText() {
-  //   final text = _emailController.value.text;
-  //   if (text.isEmpty) {
-  //     return null;
-  //   } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$').hasMatch(text)) {
-  //     return 'Please enter a valid email';
-  //   }
-  //   return null;
-  // }
-
-  // String? _passwordErrorText() {
-  //   final text = _passwordController.value.text;
-  //   if (text.isEmpty) {
-  //     return null;
-  //   } else if (text.length < 8) {
-  //     return 'Password too short';
-  //   }
-  //   return null;
-  // }
-
-  // String? _repeatPasswordErrorText() {
-  //   if (_isRegistering) {
-  //     final textToCompare = _passwordController.value.text;
-  //     final inputText = _repeatPasswordController.value.text;
-  //     if (inputText != textToCompare) {
-  //       return 'Password does not match';
-  //     } else {
-  //       return null;
-  //     }
-  //   }
-  //   return null;
-  // }
-
-  // // Check whether the registration form has any errors
-  // bool _hasErrors() {
-  //   return _emailErrorText() != null ||
-  //     _passwordErrorText() != null ||
-  //     _repeatPasswordErrorText() != null;
-  // }
-
   // Check whether the registration form has any empty fields
   bool _hasEmptyFields() {
     return _foodIDController.text.isEmpty || 
@@ -316,7 +206,9 @@ class _addFoodState extends State<addFood> {
     String foodImage = _foodImageController.text;
 
     bool registrationResult = await _registerFood.foodRegister(
-      foodID: foodId, food_name: foodName, stallID: stallID, main_category: mainCategory, sub_category: subCategory, food_price: foodPrice, qty_in_stock: qtyInStock, food_image: foodImage,
+      foodName: foodName, stallID: int.parse(stallID),
+      mainCategory: int.parse(mainCategory), subCategory: int.parse(subCategory),
+      foodPrice: double.parse(foodPrice), qtyInStock: int.parse(qtyInStock), foodImage: foodImage,
     );
 
     if (registrationResult) {
@@ -339,10 +231,6 @@ class _addFoodState extends State<addFood> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                // Reset the registration status when canceling
-                setState(() {
-                  _isRegistering = false;
-                });
                 Navigator.of(context).pop();
               },
               child: const Text('OK'),

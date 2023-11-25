@@ -6,9 +6,7 @@ class EditProfile extends StatefulWidget {
   final String username;
 
   @override
-  State<StatefulWidget> createState() {
-    return _EditProfileState();
-  }
+  State<StatefulWidget> createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {

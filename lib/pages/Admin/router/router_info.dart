@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/Admin/views/course/list.dart';
-import 'package:jom_makan/pages/Admin/views/router_view.dart';
-import 'package:jom_makan/pages/Admin/views/school/list.dart';
-import 'package:jom_makan/pages/Admin/views/user/list.dart';
+import 'package:jom_makan/pages/admin/views/course/list.dart';
+import 'package:jom_makan/pages/admin/views/router_view.dart';
+import 'package:jom_makan/pages/admin/views/school/list.dart';
+import 'package:jom_makan/pages/admin/views/user/list.dart';
 
 import 'package:go_router/go_router.dart';
-import 'package:jom_makan/pages/Admin/views/index.dart';
-import 'package:jom_makan/pages/Admin/views/login/login.dart';
+import 'package:jom_makan/pages/admin/views/index.dart';
+import 'package:jom_makan/pages/admin/views/login/login.dart';
 
 typedef OnRouteView = Widget Function(
     BuildContext context, GoRouterState state);
@@ -283,7 +283,7 @@ class AdminRouter {
 
 
 extension AdminString on String {
-  bool eq(dynamic? d) {
+  bool eq(dynamic d) {
     if (d == null) {
       return false;
     }

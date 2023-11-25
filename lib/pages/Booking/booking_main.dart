@@ -3,20 +3,15 @@ import 'dart:io';
 
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/Booking/styles.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-
-import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 
-import '../main/main_page.dart';
-
 void main() {
-  runApp(const MyApp());
+  runApp(const BookSeatPage());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class BookSeatPage extends StatelessWidget {
+  const BookSeatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,45 +35,39 @@ class BusLayout extends StatefulWidget {
 class _BusLayoutState extends State<BusLayout> {
   Set<SeatNumber> selectedSeats = {};
 
-String qrCodeData = ''; // Add this variable to store the QR code image URL
+  String qrCodeData = ''; // Add this variable to store the QR code image URL
 
-Future<void> generateQRCode(Set<SeatNumber> selectedSeats) async {
-  final List<Map<String, int>> seatsList = selectedSeats
-      .map((seat) => {'rowI': seat.rowI, 'colI': seat.colI})
-      .toList();
+  Future<void> generateQRCode(Set<SeatNumber> selectedSeats) async {
+    final List<Map<String, int>> seatsList = selectedSeats
+        .map((seat) => {'rowI': seat.rowI, 'colI': seat.colI})
+        .toList();
 
-  final response = await http.post(
-    Uri.parse('http://127.0.0.1:5000/generate_qr'),
-    // Uri.parse('http://your-flask-server-ip:5000/generate_qr'),
-    headers: <String, String>{
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode(<String, dynamic>{
-      'data': seatsList,
-    }),
-  );
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:5000/generate_qr'),
+      // Uri.parse('http://your-flask-server-ip:5000/generate_qr'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'data': seatsList,
+      }),
+    );
 
-  if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
 
-    // Debug print the response body
-    print('Server response body: ${response.body}');
-    // Assume the Flask server returns the QR code image URL in the response
+      // Debug print the response body
+      print('Server response body: ${response.body}');
+      // Assume the Flask server returns the QR code image URL in the response
 
-    final File file = File('assets/example.png');
-    
-    
+      final File file = File('assets/example.png');
       setState(() {
         qrCodeData = jsonDecode(response.body)['qrCodeData'].toString();
       });
-  } else {
-    // Handle errors
-    print('Failed to generate QR code: ${response.statusCode}');
+    } else {
+      // Handle errors
+      print('Failed to generate QR code: ${response.statusCode}');
+    }
   }
-}
-
-  // function to display qr code
-
-
 
   @override
   Widget build(BuildContext context) {
