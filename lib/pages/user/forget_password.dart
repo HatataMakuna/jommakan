@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/user/reset_password.dart';
 import 'package:jom_makan/server/user/check_user_exists.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
@@ -76,7 +77,6 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
     );
   }
 
-  // TODO: Do something with reset password
   void _resetPassword() async {
     bool isExists = await _checkUserExists.checkUser(email: _emailController.text);
     _loadUserExistsResult(isExists);
@@ -84,7 +84,12 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
 
   void _loadUserExistsResult(bool isExists) {
     if (isExists) {
-      // Navigate to reset password page
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResetPassword(email: _emailController.text),
+        ),
+      );
     } else {
       showDialog(
         context: context,

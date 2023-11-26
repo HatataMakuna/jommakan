@@ -42,12 +42,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _loadRecommendations() async {
+  void _loadRecommendations() async {
     List<Rating> ratings = await _foodRatings.getRatingsForRecommendation();
     RecommendationSystem recommendationSystem = RecommendationSystem(ratings: ratings);
 
     // Get user ID from the store
-    int? userID = Provider.of<UserProvider>(context, listen: false).userID;
+    int? userID = _getUserID();
 
     // Generate list of recommended food IDs
     List<int> recommendedFoodIDs = recommendationSystem.recommendFoods(userID!);
@@ -60,6 +60,10 @@ class _HomePageState extends State<HomePage> {
         _recommendedFoods = recommendedFoods;
       });
     }
+  }
+
+  int? _getUserID() {
+    return Provider.of<UserProvider>(context, listen: false).userID;
   }
 
   @override

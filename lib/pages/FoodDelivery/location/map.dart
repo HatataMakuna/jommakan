@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/foodDelivery/const/themeColor.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -29,8 +28,8 @@ class _LocationState extends State<Location> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Themes.color,
-        title: Text('Track Your Order'),
+        backgroundColor: const Color(0xfffeb324),
+        title: const Text('Track Your Order'),
       ),
       body: Center(
         child: Container(

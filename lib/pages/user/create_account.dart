@@ -157,11 +157,11 @@ class _CreateAccountState extends State<CreateAccount> {
           },
         );
       },
-      child: const Text('Register Now'),
       style: ElevatedButton.styleFrom(
         elevation: 5, // Set the elevation (depth) of the button
         shadowColor: Colors.black, // Set the shadow color
       ),
+      child: const Text('Register Now'),
     );
   }
 

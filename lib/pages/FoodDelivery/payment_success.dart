@@ -2,14 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/FoodDelivery/location/map.dart';
-import 'package:jom_makan/pages/foodDelivery/const/themeColor.dart';
 import 'package:jom_makan/pages/foodDelivery/widgets/profile_tile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PaymentSuccessPage extends StatefulWidget {
   @override
   PaymentSuccessPageState createState() {
-    return new PaymentSuccessPageState();
+    return PaymentSuccessPageState();
   }
 }
 
@@ -122,13 +121,13 @@ class PaymentSuccessPageState extends State<PaymentSuccessPage> {
                   clipBehavior: Clip.antiAlias,
                   elevation: 0.0,
                   color: Colors.grey.shade300,
-                  child: ListTile(
+                  child: const ListTile(
                     leading: Icon(
                       FontAwesomeIcons.ccVisa,
-                      color: Themes.color,
+                      color: Color(0xfffeb324),
                     ),
-                    title: const Text("Credit/Debit Card"),
-                    subtitle: const Text("PNB Card ending ***6"),
+                    title: Text("Credit/Debit Card"),
+                    subtitle: Text("PNB Card ending ***6"),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -137,7 +136,7 @@ class PaymentSuccessPageState extends State<PaymentSuccessPage> {
                     height: 40.0,
                     width: 220,
                     decoration: BoxDecoration(
-                      color: Themes.color,
+                      color: const Color(0xfffeb324),
                       borderRadius: BorderRadius.circular(25.0),
                     ),
                     child: const Center(

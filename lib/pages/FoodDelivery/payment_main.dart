@@ -1,9 +1,11 @@
+// TODO: Payment methods link to paymentPage.dart then return here after selecting one method
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/FoodDelivery/address.dart';
 import 'creditPayment.dart';
 
-void main() => runApp(MyApp());
+//void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+/* class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,13 +16,15 @@ class MyApp extends StatelessWidget {
       home: PaymentPage(selectedPaymentMethod: '', selectedAddress: ''), // Initially set to empty strings
     );
   }
-}
+} */
 
 class PaymentPage extends StatelessWidget {
-  final String selectedPaymentMethod;
-  final String selectedAddress;
+  String selectedPaymentMethod = '';
+  String selectedAddress = '';
+  final List<Map<String, dynamic>> cartItems;
 
-  PaymentPage({required this.selectedPaymentMethod, required this.selectedAddress});
+  PaymentPage({super.key, required this.cartItems});
+  //PaymentPage({required this.selectedPaymentMethod, required this.selectedAddress});
 
   IconData getPaymentMethodIcon() {
     switch (selectedPaymentMethod) {
@@ -70,7 +74,7 @@ class PaymentPage extends StatelessWidget {
   }
 
   void navigateToAddressPage(BuildContext context) async {
-    final result = await Navigator.push(
+    /* final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => AddressPage(initialAddress: selectedAddress),
@@ -81,7 +85,7 @@ class PaymentPage extends StatelessWidget {
       // Update the selected address if the user has chosen a new address
       // You can also perform any other necessary actions here
       print('Selected Address: $result');
-    }
+    } */
   }
 
   @override
@@ -96,22 +100,21 @@ class PaymentPage extends StatelessWidget {
                   Text('Selected Payment Method: $selectedPaymentMethod'),
                 ],
               )
-            : Text('Selected Payment Method: None'),
+            : const Text('Selected Payment Method: None'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-
-            Text(
+            const Text(
               'Delivery Address',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Row(
               children: [
                 Expanded(
@@ -121,7 +124,7 @@ class PaymentPage extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: const Icon(Icons.edit),
                   onPressed: () {
                     // Navigate to the AddressPage when the edit icon is pressed
                     navigateToAddressPage(context);
@@ -129,30 +132,25 @@ class PaymentPage extends StatelessWidget {
                 ),
               ],
             ),
-
-            Divider(),
-
-
-            Text(
+            const Divider(),
+            const Text(
               'Order Summary',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            // Add widgets to display order summary here
+            // TODO: Add widgets to display order summary here
             // ...
-
-            Divider(),
-
-            Text(
+            const Divider(),
+            const Text(
               'Payment Method',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -165,16 +163,13 @@ class PaymentPage extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(getPaymentMethodIcon()),
-                  SizedBox(width: 8),
-                  Text('Select Payment Method'),
+                  const SizedBox(width: 8),
+                  const Text('Select Payment Method'),
                 ],
               ),
             ),
-
-            Divider(),
-
-            Spacer(),
-
+            const Divider(),
+            const Spacer(),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -223,7 +218,7 @@ class PaymentMethodPage extends StatelessWidget {
                       String selectedPaymentMethod = paymentMethods[index];
                       print('Selected Payment Method: $selectedPaymentMethod');
 
-                      Navigator.push(
+                      /* Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => PaymentPage(
@@ -231,7 +226,7 @@ class PaymentMethodPage extends StatelessWidget {
                             selectedAddress: '',
                           ),
                         ),
-                      );
+                      ); */
                     },
                   );
                 },
@@ -245,74 +240,6 @@ class PaymentMethodPage extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 child: Text('Cancel'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class AddressPage extends StatefulWidget {
-  final String initialAddress;
-
-  AddressPage({required this.initialAddress});
-
-  @override
-  _AddressPageState createState() => _AddressPageState();
-}
-
-class _AddressPageState extends State<AddressPage> {
-  late TextEditingController addressController;
-
-  @override
-  void initState() {
-    super.initState();
-    addressController = TextEditingController(text: widget.initialAddress);
-  }
-
-  void saveAddress(BuildContext context) {
-    // Pass the edited address back to the previous screen
-    Navigator.pop(context, addressController.text);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Edit Address'),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Enter Your Address',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 16),
-            TextField(
-              controller: addressController,
-              maxLines: 3,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Address',
-              ),
-            ),
-            Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Save the address and update the state in the PaymentPage
-                  saveAddress(context);
-                },
-                child: Text('Save Address'),
               ),
             ),
           ],

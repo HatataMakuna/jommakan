@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/FoodDelivery/paymentMain.dart';
+import 'package:jom_makan/pages/FoodDelivery/payment_main.dart';
 
 
 class PaymentPage extends StatefulWidget {

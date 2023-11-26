@@ -25,17 +25,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Schedule the modification after the build phase has completed
-    /* Future.delayed(Duration.zero, () {
+    Future.delayed(Duration.zero, () {
       Provider.of<UserProvider>(context, listen: false).setUserName('Testing');
       Provider.of<UserProvider>(context, listen: false).setUserID(1);
       Provider.of<UserProvider>(context, listen: false).setUserRole('User');
-    }); */
+    });
 
-    Future.delayed(Duration.zero, () {
+    /* Future.delayed(Duration.zero, () {
       Provider.of<UserProvider>(context, listen: false).setUserName('Jm_admin');
       Provider.of<UserProvider>(context, listen: false).setUserID(2);
       Provider.of<UserProvider>(context, listen: false).setUserRole('Admin');
-    });
+    }); */
     
     // Access the user name from the provider
     String? userName = Provider.of<UserProvider>(context).userName;
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // user
-        '/user/home': (context) => const MainPage(), // Change this to which page you want the testing process to start with
+        '/': (context) => const MainPage(), // Change this to which page you want the testing process to start with
         '/user/login': (context) => const LoginPage(),
         '/user/create-account': (context) => const CreateAccount(),
         '/user/forget-password': (context) => const ForgetPasswordPage(),
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
         '/search': (context) => const SearchPage(),
 
         // admin
-        '/': (context) => const AdminMainPage(),
+        '/admin': (context) => const AdminMainPage(),
       },
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/components/get_average_ratings.dart';
+import 'package:jom_makan/components/rating/get_average_ratings.dart';
 import 'package:jom_makan/pages/foods/food_reviews.dart';
 import 'package:jom_makan/server/cart/add_to_cart.dart';
 import 'package:jom_makan/server/views/update_views.dart';
