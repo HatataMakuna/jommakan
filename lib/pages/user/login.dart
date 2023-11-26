@@ -153,7 +153,7 @@ class _LoginState extends State<LoginPage> {
       var userID = int.parse(loginResult['userID']);
       var userrole = loginResult['user_role'];
 
-      sendUserDetailsToProvider(username, userID, userrole);
+      sendUserDetailsToProvider(username, userID, userrole, email);
       navigateToUserPortal(userrole);
     } else {
       // Login failed, show an error message
@@ -166,10 +166,11 @@ class _LoginState extends State<LoginPage> {
     }
   }
 
-  void sendUserDetailsToProvider(String username, int userID, String userrole) {
+  void sendUserDetailsToProvider(String username, int userID, String userrole, String email) {
     Provider.of<UserProvider>(context, listen: false).setUserName(username);
     Provider.of<UserProvider>(context, listen: false).setUserID(userID);
     Provider.of<UserProvider>(context, listen: false).setUserRole(userrole);
+    Provider.of<UserProvider>(context, listen: false).setUserEmail(email);
   }
 
   void navigateToUserPortal(String userrole) {

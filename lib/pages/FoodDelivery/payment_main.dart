@@ -55,12 +55,12 @@ class PaymentPage extends StatelessWidget {
   void handlePayment(BuildContext context) {
     switch (selectedPaymentMethod) {
       case 'Credit Card':
-        Navigator.push(
+        /* Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => CreditCardPage(),
           ),
-        );
+        ); */
         break;
       case 'PayPal':
         print('Processing PayPal payment...');

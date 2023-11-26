@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/FoodDelivery/address.dart';
 import 'package:jom_makan/pages/FoodDelivery/creditPayment.dart';
 import 'package:jom_makan/pages/FoodDelivery/payment_methods.dart';
+import 'package:jom_makan/pages/FoodDelivery/payment_success.dart';
+import 'package:jom_makan/stores/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class PaymentPage extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
   final bool noCutlery;
-  String selectedPaymentMethod;
+  //String selectedPaymentMethod;
 
-  PaymentPage({
-    super.key, required this.cartItems, required this.noCutlery,
-    required this.selectedPaymentMethod
-  });
+  const PaymentPage({super.key, required this.cartItems, required this.noCutlery});
 
   @override
   State<StatefulWidget> createState() => _PaymentPageState();
@@ -59,24 +59,26 @@ class _PaymentPageState extends State<PaymentPage> {
     }
   }
 
-  void handlePayment(BuildContext context) {
+  void handlePayment() {
     switch (selectedPaymentMethodNotifier.value) {
       case 'Debit/Credit card':
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CreditCardPage(),
+            builder: (context) => CreditCardPage(
+              noCutlery: widget.noCutlery, cartItems: widget.cartItems, totalPrice: totalPrice
+            ),
           ),
         );
         break;
       case 'E-wallet':
-        print('Processing e-wallet payment...');
+        navigateToProcessPaymentPage();
         break;
       case 'Cash On Delivery':
-        print('Processing cash payment...');
+        navigateToProcessPaymentPage();
         break;
       default:
-        navigateToPaymentMethodPage(context);
+        navigateToPaymentMethodPage();
         //print('Please select a payment method');
     }
   }
@@ -148,9 +150,7 @@ class _PaymentPageState extends State<PaymentPage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    handlePayment(context);
-                  },
+                  onPressed: () => handlePayment(),
                   child: Text(getPaymentButtonLabel()),
                 ),
               ),
@@ -196,7 +196,7 @@ class _PaymentPageState extends State<PaymentPage> {
               icon: const Icon(Icons.edit),
               onPressed: () {
                 // Navigate to the AddressPage when the edit icon is pressed
-                navigateToAddressPage(context);
+                navigateToAddressPage();
               },
             ),
           ],
@@ -366,7 +366,7 @@ class _PaymentPageState extends State<PaymentPage> {
         ),
         const SizedBox(height: 8),
         ElevatedButton(
-          onPressed: () => navigateToPaymentMethodPage(context),
+          onPressed: () => navigateToPaymentMethodPage(),
           child: const Row(
             children: [
               Icon(Icons.local_atm),
@@ -380,7 +380,7 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   // Navigations
-  void navigateToAddressPage(BuildContext context) async {
+  void navigateToAddressPage() async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -396,7 +396,7 @@ class _PaymentPageState extends State<PaymentPage> {
     }
   }
 
-  void navigateToPaymentMethodPage(BuildContext context) async {
+  void navigateToPaymentMethodPage() async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const PaymentMethodPage()),
@@ -408,5 +408,17 @@ class _PaymentPageState extends State<PaymentPage> {
         //paymentMethod = result;
       });
     }
+  }
+
+  void navigateToProcessPaymentPage() async {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => PaymentSuccessPage(
+        userID: Provider.of<UserProvider>(context, listen: false).userID!,
+        noCutlery: widget.noCutlery,
+        cartItems: widget.cartItems,
+        paymentMethod: selectedPaymentMethodNotifier.value,
+        totalPrice: totalPrice
+      ),
+    ));
   }
 }

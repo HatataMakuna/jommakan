@@ -329,7 +329,6 @@ class _CartPageState extends State<CartPage> {
                   context,
                   MaterialPageRoute(builder: (context) => PaymentPage(
                     cartItems: _cartItems, noCutlery: isNoCutlery,
-                    selectedPaymentMethod: '',
                   )),
                 );
               },

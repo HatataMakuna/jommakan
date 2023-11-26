@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
       Provider.of<UserProvider>(context, listen: false).setUserName('Testing');
       Provider.of<UserProvider>(context, listen: false).setUserID(1);
       Provider.of<UserProvider>(context, listen: false).setUserRole('User');
+      Provider.of<UserProvider>(context, listen: false).setUserEmail('testing@tarc.edu.my');
     });
 
     /* Future.delayed(Duration.zero, () {
