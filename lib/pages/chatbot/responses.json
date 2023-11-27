@@ -1,0 +1,37 @@
+{
+    "responses": [
+      {
+        "trigger": "hello",
+        "response": "Hi there! Welcome to our food ordering service. How can I assist you today?"
+      },
+      {
+        "trigger": "how are you",
+        "response": "I am a chatbot designed to help you with your food orders. Thanks for asking!"
+      },
+      {
+        "trigger": "menu",
+        "response": "Sure, let me help you explore our menu. You can type 'show me the menu' to see our available dishes."
+      },
+      {
+        "trigger": "order status",
+        "response": "To check your order status, you can type 'track my order'."
+      },
+      {
+        "trigger": "delivery time",
+        "response": "Delivery times may vary based on your location. You can check the estimated delivery time during checkout."
+      },
+      {
+        "trigger": "payment methods",
+        "response": "We accept various payment methods, including credit cards, e-wallets, and cash on delivery."
+      },
+      {
+        "trigger": "help",
+        "response": "If you need assistance, feel free to ask! You can inquire about the menu, track your order, or ask for help with any issues."
+      },
+      {
+        "trigger": "default",
+        "response": "I'm sorry, but I didn't understand that. If you have a specific question, please ask, and I'll do my best to assist you!"
+      }
+    ]
+}
+  
