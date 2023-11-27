@@ -1,9 +1,3 @@
-// TODO: Use flutter_map package
-
-/*
-[ERROR:flutter/runtime/dart_vm_initializer.cc(41)] Unhandled Exception: PlatformException(UNKNOWN_ERROR, The specified service does not exist as an installed service., null, null)
-#0      MethodChannelGeolocator.getCurrentPosition
-*/
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -32,11 +26,15 @@ class _LocationState extends State<Location> {
   @override
   void initState() {
     super.initState();
-    Geolocator.getCurrentPosition().then((currloc) {
+    // requires location
+    /* Geolocator.getCurrentPosition().then((currloc) {
       setState(() {
         currentLocation = currloc;
         mapToggle = true;
       });
+    }); */
+    setState(() {
+      mapToggle = true;
     });
   }
 
@@ -55,16 +53,17 @@ class _LocationState extends State<Location> {
           child: mapToggle
               ? FlutterMap(
                 options: MapOptions(
-                  center: LatLng(
+                  center: LatLng(3.216, 101.727),/* currentLocation != null ? LatLng(
                     currentLocation.latitude,
                     currentLocation.longitude
-                  ),
-                  zoom: 19.0,
+                  ) : LatLng(0.0, 0.0) */
+                  zoom: 17.0,
+                  minZoom: 5.0,
                 ),
                 children: [
                   TileLayer(
                     urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'dev.fleaflet.flutter_map.example',
+                    userAgentPackageName: 'com.example.app',
                   ),
                 ],
               )
