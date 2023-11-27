@@ -4,6 +4,7 @@ import 'package:jom_makan/pages/Admin/views/base_views.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
+import 'package:jom_makan/server/food/food.dart';
 
 class IndexView extends AdminView {
   IndexView({super.key});
@@ -15,67 +16,129 @@ class IndexView extends AdminView {
 class _IndexView extends AdminStateView<IndexView> {
   late AdminTableController<dynamic> controller;
 
+
+var itemData = [];
+  final Food foodDisplay = Food();
+  List<Map<String, dynamic>> _foodItems = [];
+
+   @override
+  void initState() {
+    super.initState();
+    controller = AdminTableController<dynamic>(items: []);
+    _getData();
+  }
+
+  
   Widget itemView(BuildContext context, int index, dynamic data,
-      AdminTableItem<dynamic> tableItem) {
+      AdminTableItem<dynamic> item) {
     if (index == -1) {
       return Container(
         alignment: Alignment.center,
-        child: Text(tableItem.label,style: TextStyle(color: AdminColors().get().secondaryColor),),
+        child: Text(item.label,style: TextStyle(color: AdminColors().get().secondaryColor),),
       );
     } else {
       return Container(
         alignment: Alignment.center,
-        child: Text("测试内容:$index",style: TextStyle(color: AdminColors().get().secondaryColor)),
+        child: Text(
+          "${controller.ofData(index)[item.prop!]}",
+          style: TextStyle(color: AdminColors()
+              .get()
+              .secondaryColor),
+        ),
       );
     }
   }
 
   @override
-  void initState() {
+  void _getData() async {
+    try {
+      final data = await foodDisplay.getFoodData();
+
+      setState(() {
+        _foodItems = data;
+
+       // Sort the _foodItems list by the 'views' column in descending order
+      _foodItems.sort((a, b) =>int.parse(b['views'].toString()).compareTo(int.parse(a['views'].toString())));
+
+      itemData = _foodItems.map((item) {
+        return {
+          'foodID': item['foodID'],
+          'foodName': item['food_name'],
+          'stallID': item['stallID'],
+          'mainCategory': item['main_category'],
+          'subCategory': item['sub_category'],
+          'foodPrice': item['food_price'],
+          'qtyInStock': item['qty_in_stock'],
+          'foodImage': item['food_image'],
+          'views': item['views'],
+        };
+      }).toList();
+
+        
+
+
     controller = AdminTableController(items: [
       AdminTableItem<dynamic>(
           itemView: itemView,
-          width: 100,
-          label: "标题1",
-          fixed: FixedDirection.right),
+          width: 130,
+           label: "Food ID",
+              prop: 'foodID',
+          ),
+          AdminTableItem<dynamic>(
+            itemView: itemView,
+            width: 200,
+            label: "Food Name",
+            prop: 'foodName',
+            fixed: FixedDirection.left
+          ),
       AdminTableItem<dynamic>(
-          itemView: itemView,
-          width: 100,
-          label: "标题2",
-          fixed: FixedDirection.left),
-      AdminTableItem<dynamic>(itemView: itemView, width: 100, label: "标题3"),
-      AdminTableItem<dynamic>(itemView: itemView, width: 100, label: "标题4"),
-      AdminTableItem<dynamic>(itemView: itemView, width: 0, label: "标题5"),
-    ]);
-    controller.setNewData([
-      {'name': 'A'},
-      {'name': 'B'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'},
-      {'name': 'C'}
-    ]);
-    super.initState();
+            itemView: itemView,
+            width: 150,
+            label: "Stall ID",
+            prop: 'stallID',
+          ),
+          AdminTableItem<dynamic>(
+            itemView: itemView,
+            width: 150,
+            label: "Main Category",
+            prop: 'mainCategory',
+          ),
+          AdminTableItem<dynamic>(
+            itemView: itemView,
+            width: 150,
+            label: "Sub Category",
+            prop: 'subCategory',
+          ),
+          AdminTableItem<dynamic>(
+              itemView: itemView,
+              width: 100,
+              label: "Food Price",
+              prop: 'foodPrice'),
+          AdminTableItem<dynamic>(
+              itemView: itemView,
+              width: 200,
+              label: "Quantity",
+              prop: 'qtyInStock'),
+          AdminTableItem<dynamic>(
+              itemView: itemView,
+              width: 200,
+              label: "Food Image",
+              prop: 'foodImage'),
+          AdminTableItem<dynamic>(
+              itemView: itemView,
+              width: 200,
+              label: "View",
+              fixed: FixedDirection.right,
+              prop: 'views'),
+        ]);
+    controller.setNewData(itemData);
+     });
+    } catch (e) {
+      print('Error loading View data: $e');
+    }
   }
+    
+  
 
   @override
   Widget? buildForLarge(BuildContext context) {

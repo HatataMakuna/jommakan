@@ -5,7 +5,7 @@ class Food {
   Future<bool> foodRegister({
     required String foodName, required int stallID,
     required int mainCategory, required int subCategory, required double foodPrice,
-    required int qtyInStock, required String foodImage,
+    required int qtyInStock, required String foodImage, 
   }) async{
     try {
       var result = await pool.execute(
@@ -67,6 +67,7 @@ class Food {
           'food_price': row.colByName("food_price"),
           'qty_in_stock': row.colByName("qty_in_stock"),
           'food_image': row.colByName("food_image"),
+          'views': row.colByName("views"),
         });
       }
       return food;
@@ -74,5 +75,23 @@ class Food {
       print("Error while retrieving foods: $e");
       return [];
     }
-  }    
+  }  
+  
+  Future<bool> updateQuantity(String foodID, int newQuantity) async {
+    try {
+      var result = await pool.execute(
+        'UPDATE foods SET qty_in_stock = :newQuantity WHERE foodID = :foodID',
+        {
+          "newQuantity": newQuantity,
+          "foodID": foodID,
+        },
+      );
+
+      return result.affectedRows.toInt() == 1;
+    } catch (e) {
+      print('Error while updating quantity: $e');
+      return false;
+    }
+  }
 }
+

@@ -78,7 +78,7 @@ class _AdminButton extends State<AdminButton> {
 
   @override
   Widget build(BuildContext context) {
-    Object buttonStyle = widget.buttonStyle ??
+    AdminButtonStyle buttonStyle = widget.buttonStyle ??
         AdminColors().get().buttonStyle.resolveOne(widget.buttonType);
     internalStatesController.update(
         MaterialState.focused, myFocus.hasPrimaryFocus);

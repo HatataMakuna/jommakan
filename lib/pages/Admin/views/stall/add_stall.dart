@@ -1,82 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jom_makan/server/promotion.dart';
+import 'package:jom_makan/server/renewStall/renew.dart';
 
-class AddPromotion extends StatefulWidget {
-  const AddPromotion({super.key});
+class AddStall extends StatefulWidget {
+  const AddStall({super.key});
 
   @override
-  State<StatefulWidget> createState() => _PromotionState();
+  State<StatefulWidget> createState() => _RenewStallState();
 }
 
-class _PromotionState extends State<AddPromotion> {
-   late TextEditingController _foodIdController = TextEditingController();
-  late TextEditingController _foodNameController = TextEditingController();
-  late TextEditingController _foodPriceController = TextEditingController();
-  late TextEditingController _foodPromotionController = TextEditingController();
-  late TextEditingController _datePromotionController = TextEditingController();
-  late TextEditingController _quantityController = TextEditingController();
-  late TextEditingController _foodStallController = TextEditingController();
-  late TextEditingController _foodDescriptionController = TextEditingController();
+class _RenewStallState extends State<AddStall> {
+   late TextEditingController _stallIDController = TextEditingController();
+  late TextEditingController _stallNameController = TextEditingController();
+  late TextEditingController _canteenController = TextEditingController();
   late bool isTyping = false;
-  late Promotion _registerPromotion = Promotion();
+  late Renew _registerRenew = Renew();
   late String _errorMessage;
 
 
  @override
   void initState() {
     super.initState();
-    _foodIdController = TextEditingController();
-    _foodNameController = TextEditingController();
-    _foodPriceController = TextEditingController();
-    _foodPromotionController = TextEditingController();
-    _datePromotionController = TextEditingController();
-    _quantityController = TextEditingController();
-    _foodStallController = TextEditingController();
-    _foodDescriptionController = TextEditingController();
+    _stallIDController = TextEditingController();
+    _stallNameController = TextEditingController();
+    _canteenController = TextEditingController();
     isTyping = false;
-    _registerPromotion = Promotion();
+    _registerRenew = Renew();
     _errorMessage = '';
   }
 
-  
-   Future<void> _selectDateAndTime(BuildContext context) async {
-    DateTime? selectedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 1),
-    );
-     if (selectedDate != null) {
-      // ignore: use_build_context_synchronously
-      TimeOfDay? selectedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-
-      if (selectedTime != null) {
-        DateTime selectedDateTime = DateTime(
-          selectedDate.year,
-          selectedDate.month,
-          selectedDate.day,
-          selectedTime.hour,
-          selectedTime.minute,
-        );
-
-        setState(() {
-          _datePromotionController.text =
-              DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
-          _errorMessage = ''; // Clear any previous error messages
-        });
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Promotion'),
+        title: const Text('Renew Stall Information'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -84,32 +43,23 @@ class _PromotionState extends State<AddPromotion> {
           },
         ),
       ),
-      body: addPromotionForm(),
+      body: renewStallForm(),
     );
   }
 
-  Widget addPromotionForm() {
+  Widget renewStallForm() {
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            foodIdField(),
+            stallIDField(),
             const SizedBox(height: 20),
-            foodNameField(),
+            stallNameField(),
             const SizedBox(height: 20),
-            foodPriceField(),
+            canteenField(),
             const SizedBox(height: 20),
-            foodPromotionField(),
-            const SizedBox(height: 20),
-            datePromotionField(),
-            const SizedBox(height: 20),
-            quantityField(),
-            const SizedBox(height: 20),
-            foodStallField(),
-            const SizedBox(height: 20),
-            foodDescriptionField(),
-            const SizedBox(height: 20),
+            
             registerButton(),
             // text fields
           ],
@@ -119,78 +69,28 @@ class _PromotionState extends State<AddPromotion> {
   }
 
   // Text Fields
-  Widget foodIdField() {
+  Widget stallIDField() {
     return TextField(
-      controller: _foodIdController,
-      decoration: const InputDecoration(labelText: 'FoodId'),
+      controller: _stallIDController,
+      decoration: const InputDecoration(labelText: 'Stall ID'),
     );
   }
 
-  Widget foodNameField() {
+  Widget stallNameField() {
     return TextField(
-      controller: _foodNameController,
-      decoration: const InputDecoration(labelText: 'FoodName'),
+      controller: _stallNameController,
+      decoration: const InputDecoration(labelText: 'Stall Name'),
     );
   }
 
-  Widget foodPriceField() {
+  Widget canteenField() {
     return TextField(
-      controller: _foodPriceController,
-      decoration: const InputDecoration(labelText: 'FoodPrice'),
+      controller: _canteenController,
+      decoration: const InputDecoration(labelText: 'Canteen'),
     );
   }
 
-  Widget foodPromotionField() {
-    return TextField(
-      controller: _foodPromotionController,
-      decoration: const InputDecoration(labelText: 'FoodPromotion'),
-    );
-  }
-
-  @override
-  Widget datePromotionField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          controller: _datePromotionController,
-          decoration: InputDecoration(labelText: 'Date Promotion'),
-          readOnly: true,
-          onTap: () => _selectDateAndTime(context),
-        ),
-        if (_errorMessage.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              _errorMessage,
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-      ],
-    );
-  }
-
-
-  Widget quantityField() {
-    return TextField(
-      controller: _quantityController,
-      decoration: const InputDecoration(labelText: 'Quantity'),
-    );
-  }
-
-  Widget foodStallField() {
-    return TextField(
-      controller: _foodStallController,
-      decoration: const InputDecoration(labelText: 'FoodStall'),
-    );
-  }
-
-  Widget foodDescriptionField() {
-    return TextField(
-      controller: _foodDescriptionController,
-      decoration: const InputDecoration(labelText: 'FoodDescription'),
-    );
-  }
+  
 
   // Widget emailField() {
   //   return TextField(
@@ -270,7 +170,7 @@ class _PromotionState extends State<AddPromotion> {
                   child: const Text('Register'),
                   onPressed: () {
                     Navigator.of(context).pop(); // Close the dialog
-                    promotionRegister(); // Call the registerUser function
+                    renewRegister(); // Call the registerUser function
                   }
                 )
               ]
@@ -350,27 +250,19 @@ class _PromotionState extends State<AddPromotion> {
 
   // Check whether the registration form has any empty fields
   bool _hasEmptyFields() {
-    return _foodIdController.text.isEmpty || 
-      _foodNameController.text.isEmpty ||
-      _foodPriceController.text.isEmpty ||
-      _foodPromotionController.text.isEmpty ||
-      _foodStallController.text.isEmpty ||
-      _foodDescriptionController.text.isEmpty;
+    return _stallIDController.text.isEmpty || 
+      _stallNameController.text.isEmpty ||
+      _canteenController.text.isEmpty;
   }
 
   // Passing the data to "server/register.dart" for performing the server-side script
-  void promotionRegister() async {
-    String foodId = _foodIdController.text;
-    String foodName = _foodNameController.text;
-    String foodPrice = _foodPriceController.text;
-    String foodPromotion = _foodPromotionController.text;
-    DateTime datePromotion = DateTime.parse(_datePromotionController.text);
-    int quantity = _quantityController.hashCode;
-    String foodStall = _foodStallController.text;
-    String foodDescription = _foodDescriptionController.text;
+  void renewRegister() async {
+    String stallID = _stallIDController.text;
+    String stallName = _stallNameController.text;
+    String canteen = _canteenController.text;
 
-    bool registrationResult = await _registerPromotion.promotionRegister(
-      foodId: foodId, foodName: foodName, foodPrice: foodPrice, foodPromotion: foodPromotion, datePromotion: datePromotion, quantity: quantity, foodStall: foodStall, foodDescription: foodDescription,
+    bool registrationResult = await _registerRenew.renewRegister(
+      stallID: stallID, stallName: stallName, canteen: canteen,
     );
 
     if (registrationResult) {

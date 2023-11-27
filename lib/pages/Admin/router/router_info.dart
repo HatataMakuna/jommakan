@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/Admin/views/course/list.dart';
 import 'package:jom_makan/pages/Admin/views/router_view.dart';
 import 'package:jom_makan/pages/Admin/views/school/list.dart';
+import 'package:jom_makan/pages/Admin/views/school/list2.dart';
+import 'package:jom_makan/pages/Admin/views/stall/renewStall.dart';
 import 'package:jom_makan/pages/Admin/views/user/list.dart';
 
 import 'package:go_router/go_router.dart';
@@ -138,7 +140,7 @@ final menuRoute = [
         path: 'major',
         name: 'school_major',
         title: 'Stock Check',
-        onRouteView: (context, state) => SchoolView(),
+        onRouteView: (context, state) => StockView(key: state.pageKey),
       )
     ],
   ),
@@ -201,13 +203,13 @@ final menuRoute = [
   RouteInfo(
     path: '/data-center',
     name: 'data_center',
-    title: 'History',
+    title: 'Admin Renew System',
     children: [
       RouteInfo(
         path: 'question',
         name: 'data_center_question',
-        title: '题库',
-        onRouteView: (context, state) => SchoolView(),
+        title: 'Renew Stall',
+        onRouteView: (context, state) => RenewStallView(),
       ),
       RouteInfo(
         path: 'video',

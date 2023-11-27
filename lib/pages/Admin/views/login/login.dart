@@ -56,8 +56,8 @@ class _LoginView extends AdminStateView<LoginView> {
                           height: double.infinity,
                           color: AdminColors().get().primaryBackgroundColor,
                           child: const Text(
-                            "Flutter Admin",
-                            style: TextStyle(color: Colors.white, fontSize: 24),
+                            "TARUMT Canteen Admin",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                         ),
                       )),
@@ -81,7 +81,7 @@ class _LoginView extends AdminStateView<LoginView> {
                                   margin: const EdgeInsets.only(
                                       left: 40, right: 40),
                                   child: AdminInput(
-                                    hintText: "请输入邮箱",
+                                    hintText: "Please Enter Admin Email",
                                     left: Container(
                                       margin: const EdgeInsets.only(left: 20),
                                       child: const Icon(
@@ -98,7 +98,7 @@ class _LoginView extends AdminStateView<LoginView> {
                                       left: 40, right: 40, top: 20),
                                   child: AdminInput(
                                     password: true,
-                                    hintText: "请输入密码",
+                                    hintText: "Please Enter the Password",
                                     left: Container(
                                       margin: const EdgeInsets.only(left: 20),
                                       child: const Icon(
@@ -118,7 +118,7 @@ class _LoginView extends AdminStateView<LoginView> {
                                     onTop: () {
                                       context.pushNamed('Index');
                                     },
-                                    text: "登录",
+                                    text: "Login",
                                   ),
                                 )
                               ],

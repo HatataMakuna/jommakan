@@ -8,14 +8,14 @@ import 'package:jom_makan/server/food/food.dart';
 import 'package:jom_makan/pages/Admin/style/colors.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table.dart';
 
-class SchoolView extends AdminView {
-  SchoolView({super.key});
+class StockView extends AdminView {
+  StockView({super.key});
 
   @override
-  State<StatefulWidget> createState() => _SchoolView();
+  State<StatefulWidget> createState() => _StockView();
 }
 
-class _SchoolView extends AdminStateView<SchoolView> {
+class _StockView extends AdminStateView<StockView> {
   late AdminTableController schoolController;
   late AdminTableController courseController;
 
@@ -26,7 +26,7 @@ class _SchoolView extends AdminStateView<SchoolView> {
   @override
   void initState() {
     super.initState();
-    schoolController = AdminTableController(items: []);
+    courseController = AdminTableController(items: []);
     _getData();
   }
 
@@ -37,84 +37,86 @@ class _SchoolView extends AdminStateView<SchoolView> {
       setState(() {
         _foodItems = data;
 
-        for (int i = 0; i < _foodItems.length; i++) {
-          String foodNameCorrect = 'foodName: ${_foodItems[i]['foodName']}';
-          print('Food Name: ' + foodNameCorrect);
+         // Sort the _foodItems list by the 'qty_in_stock' column in ascending order
+_foodItems.sort((a, b) => int.parse(a['qty_in_stock'].toString()).compareTo(int.parse(b['qty_in_stock'].toString())));
 
-          itemData.add({
-            'foodID': _foodItems[i]['foodID'],
-            'foodName': _foodItems[i]['food_name'],
-            'stallID': _foodItems[i]['stallID'],
-            'mainCategory': _foodItems[i]['main_category'],
-            'subCategory': _foodItems[i]['sub_category'],
-            'foodPrice': _foodItems[i]['food_price'],
-            'qtyInStock': _foodItems[i]['qty_in_stock'],
-            'foodImage': _foodItems[i]['food_image'],
-          });
-        }
 
-        schoolController = AdminTableController(items: [
+
+          itemData = _foodItems.map((item) {
+        return {
+          'foodID': item['foodID'],
+          'foodName': item['food_name'],
+          'stallID': item['stallID'],
+          'mainCategory': item['main_category'],
+          'subCategory': item['sub_category'],
+          'foodPrice': item['food_price'],
+          'qtyInStock': item['qty_in_stock'],
+          'foodImage': item['food_image'],
+          };
+      }).toList();
+
+        courseController = AdminTableController(items: [
           AdminTableItem(
-              itemView: schoolItemView,
+              itemView: itemView,
               width: 130,
               label: "Food ID",
               prop: 'foodID',
               ),
           AdminTableItem(
-            itemView: schoolItemView,
+            itemView: itemView,
             width: 150,
             label: "Food Name",
             prop: 'foodName',
             fixed: FixedDirection.left
           ),
           AdminTableItem(
-            itemView: schoolItemView,
+            itemView: itemView,
             width: 150,
             label: "Stall ID",
             prop: 'stallID',
           ),
           AdminTableItem(
-            itemView: schoolItemView,
+            itemView: itemView,
             width: 150,
             label: "Main Category",
             prop: 'mainCategory',
           ),
           AdminTableItem(
-            itemView: schoolItemView,
+            itemView: itemView,
             width: 150,
             label: "Sub Category",
             prop: 'subCategory',
           ),
           AdminTableItem(
-              itemView: schoolItemView,
+              itemView: itemView,
               width: 100,
               label: "Food Price",
               prop: 'foodPrice'),
           AdminTableItem(
-              itemView: schoolItemView,
-              width: 200,
+              itemView: itemView,
+              width: 150,
               label: "Quantity",
+              fixed: FixedDirection.right,
               prop: 'qtyInStock'),
           AdminTableItem(
-              itemView: schoolItemView,
+              itemView: itemView,
               width: 200,
               label: "Food Image",
               prop: 'foodImage'),
           AdminTableItem(
-              itemView: schoolItemView,
+              itemView: itemView,
               width: 150,
               label: "More",
-              fixed: FixedDirection.right,
               prop: 'action'),
         ]);
-        schoolController.setNewData(itemData);
+        courseController.setNewData(itemData);
       });
     } catch (e) {
       print('Error loading Food data: $e');
     }
   }
 
-  Widget schoolItemView(
+  Widget itemView(
       BuildContext context, int index, dynamic data, AdminTableItem item) {
     if (index == -1) {
       return Container(
@@ -162,7 +164,7 @@ class _SchoolView extends AdminStateView<SchoolView> {
       return Container(
         alignment: Alignment.center,
         child: Text(
-          "${schoolController.ofData(index)[item.prop!]}",
+          "${courseController.ofData(index)[item.prop!]}",
           style: TextStyle(color: AdminColors()
               .get()
               .secondaryColor),
@@ -215,22 +217,20 @@ class _SchoolView extends AdminStateView<SchoolView> {
       updatedItem['qty_in_stock'] = newQuantity;
 
       // Update the item in the itemData list as well
-      var updatedItemData = itemData.firstWhere(
-        (item) => item['foodID'] == updatedItem['foodID'],
-        orElse: () => {},
-      );
-      if (updatedItemData.isNotEmpty) {
-        updatedItemData['qty_in_stock'] = newQuantity;
+      var updatedItemIndex = itemData.indexWhere((item) => item['foodID'] == updatedItem['foodID']);
+      if (updatedItemIndex != -1) {
+        itemData[updatedItemIndex]['qty_in_stock'] = newQuantity;
       }
 
       // Update the item in the database
       foodDisplay.updateQuantity(updatedItem['foodID'], newQuantity);
 
       // Update the table controller with the new data
-      schoolController.setNewData(itemData);
+      courseController.setNewData(itemData);
     }
   });
 }
+
 
   // Function to delete the item at the specified index
   void _deleteItem(int index) {
@@ -258,7 +258,7 @@ class _SchoolView extends AdminStateView<SchoolView> {
 
 
       // Update the table controller with the new data
-    schoolController.setNewData(itemData);
+    courseController.setNewData(itemData);
       }
     });
   }
@@ -284,7 +284,7 @@ class _SchoolView extends AdminStateView<SchoolView> {
             const SizedBox(height: 10), // Add some space between button and table
             Expanded(
               child: AdminTable(
-                controller: schoolController,
+                controller: courseController,
                 fixedHeader: true,
               ),
             ),
