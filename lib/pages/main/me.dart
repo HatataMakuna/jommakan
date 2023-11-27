@@ -85,6 +85,13 @@ class MePage extends StatelessWidget {
             // Handle other button clicks
           }
         },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color(colorHex),
+          minimumSize: const Size(double.infinity, 1), // removes space between buttons
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero, // no border radius
+          ),
+        ),
         child: Align(
           alignment: Alignment.centerLeft,
           child: Padding(
@@ -97,13 +104,6 @@ class MePage extends StatelessWidget {
             ),
           ),
         ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Color(colorHex),
-          minimumSize: const Size(double.infinity, 1), // removes space between buttons
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero, // no border radius
-          ),
-        )
       )
     );
   }

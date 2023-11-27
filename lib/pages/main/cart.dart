@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/FoodDelivery/payment_main.dart';
 import 'package:jom_makan/pages/cart/edit_cart.dart';
 import 'package:jom_makan/server/cart/get_cart.dart';
 import 'package:jom_makan/stores/user_provider.dart';
@@ -119,61 +120,61 @@ class _CartPageState extends State<CartPage> {
 
   Widget _buildCartList(List<Map<String, dynamic>> cartItems) {
     return ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: cartItems.length,
-        itemBuilder: (context, index) {
-          final cartItem = cartItems[index];
+      scrollDirection: Axis.vertical,
+      itemCount: cartItems.length,
+      itemBuilder: (context, index) {
+        final cartItem = cartItems[index];
           
-          List<String> preferences = [
-            if (int.parse(cartItem['no_vege']) == 1) 'No Vegetarian',
-            if (int.parse(cartItem['extra_vege']) == 1) 'Extra Vegetarian',
-            if (int.parse(cartItem['no_spicy']) == 1) 'No Spicy',
-            if (int.parse(cartItem['extra_spicy']) == 1) 'Extra Spicy',
-          ].where((preference) => preference.isNotEmpty).toList();
+        List<String> preferences = [
+          if (int.parse(cartItem['no_vege']) == 1) 'No Vegetarian',
+          if (int.parse(cartItem['extra_vege']) == 1) 'Extra Vegetarian',
+          if (int.parse(cartItem['no_spicy']) == 1) 'No Spicy',
+          if (int.parse(cartItem['extra_spicy']) == 1) 'Extra Spicy',
+        ].where((preference) => preference.isNotEmpty).toList();
 
-          return ListTile(
-            // leading: image
-            leading: Image(
-              image: AssetImage('images/foods/' + cartItem['food_image']),
-              width: 100,
-              height: 100,
-            ),
-            title: Text(cartItem['food_name'] ?? ''),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        return ListTile(
+          // leading: image
+          leading: Image(
+            image: AssetImage('images/foods/${cartItem['food_image']}'),
+            width: 100,
+            height: 100,
+          ),
+          title: Text(cartItem['food_name'] ?? ''),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Quantity: ${cartItem['quantity'] ?? ''}',),
+              const SizedBox(height: 8),
+              _buildPreferencesDropdown(preferences),
+              const SizedBox(height: 8),
+              _buildAdditionalNotes(cartItem),
+            ],
+          ),
+          // ignore: sized_box_for_whitespace
+          trailing: Container(
+            width: 150,
+            child: Row(
               children: [
-                Text('Quantity: ${cartItem['quantity'] ?? ''}',),
-                const SizedBox(height: 8),
-                _buildPreferencesDropdown(preferences),
-                const SizedBox(height: 8),
-                _buildAdditionalNotes(cartItem),
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    // Navigate to the food details page for editing
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditCartPage(cartItem: cartItem),
+                      ),
+                    );
+                  }
+                ),
+                const SizedBox(width: 8),
+                Text('Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}'),
               ],
             ),
-            // ignore: sized_box_for_whitespace
-            trailing: Container(
-              width: 150,
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      // Navigate to the food details page for editing
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditCartPage(cartItem: cartItem),
-                        ),
-                      );
-                    }
-                  ),
-                  const SizedBox(width: 8),
-                  Text('Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}'),
-                ],
-              ),
-            ),
-          );
-        },
-      );
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildPreferencesDropdown(List<String> preferences) {
@@ -304,10 +305,35 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  // TODO: Do something with the checkout logic; possibly need to merge
   void _checkout() {
-    // Implement your checkout logic here
-    // For example, you can navigate to a checkout page
-    Navigator.pushNamed(context, '/checkout');
+    // Navigate to payment page
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Warning!'),
+          content: const Text('You will be redirect to the payment page. Upon going to the payment process, you cannot modify your cart details. Are you sure you want to proceed to payment?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Yes! Take Me There'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PaymentPage(
+                    cartItems: _cartItems, noCutlery: isNoCutlery,
+                  )),
+                );
+              },
+            ),
+          ],
+        );
+      }
+    );
   }
 }

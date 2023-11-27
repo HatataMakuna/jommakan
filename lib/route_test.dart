@@ -1,5 +1,6 @@
 // THIS FILE IS ONLY FOR EASE OF TESTING PURPOSE
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/Admin/admin_main.dart';
 import 'package:jom_makan/pages/order/order_history.dart';
 import 'package:provider/provider.dart';
 import 'package:jom_makan/stores/user_provider.dart'; // Import the UserProvider class
@@ -27,14 +28,28 @@ class MyApp extends StatelessWidget {
     Future.delayed(Duration.zero, () {
       Provider.of<UserProvider>(context, listen: false).setUserName('Testing');
       Provider.of<UserProvider>(context, listen: false).setUserID(1);
+      Provider.of<UserProvider>(context, listen: false).setUserRole('User');
+      Provider.of<UserProvider>(context, listen: false).setUserEmail('testing@tarc.edu.my');
     });
+
+    /* Future.delayed(Duration.zero, () {
+      Provider.of<UserProvider>(context, listen: false).setUserName('Jm_admin');
+      Provider.of<UserProvider>(context, listen: false).setUserID(2);
+      Provider.of<UserProvider>(context, listen: false).setUserRole('Admin');
+    }); */
     
     // Access the user name from the provider
     String? userName = Provider.of<UserProvider>(context).userName;
 
+    bool hasRequiredRole(BuildContext context, String requiredRole) {
+      String? userRole = Provider.of<UserProvider>(context).userRole;
+      return userRole == requiredRole;
+    }
+
     return MaterialApp(
       initialRoute: '/',
       routes: {
+        // user
         '/': (context) => const MainPage(), // Change this to which page you want the testing process to start with
         '/user/login': (context) => const LoginPage(),
         '/user/create-account': (context) => const CreateAccount(),
@@ -44,6 +59,9 @@ class MyApp extends StatelessWidget {
         '/rider/rider-info': (context) => const RiderInfo(),
         '/home': (context) => const MainPage(),
         '/search': (context) => const SearchPage(),
+
+        // admin
+        '/admin': (context) => const AdminMainPage(),
       },
     );
   }
