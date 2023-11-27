@@ -1,6 +1,14 @@
+// TODO: Use flutter_map package
+
+/*
+[ERROR:flutter/runtime/dart_vm_initializer.cc(41)] Unhandled Exception: PlatformException(UNKNOWN_ERROR, The specified service does not exist as an installed service., null, null)
+#0      MethodChannelGeolocator.getCurrentPosition
+*/
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+//import 'package:mapbox_gl/mapbox_gl.dart';
 
 void main() {
   runApp(
@@ -19,8 +27,7 @@ class _LocationState extends State<Location> {
   bool mapToggle = false;
 
   late Position currentLocation; // Define currentLocation here
-
-  late GoogleMapController mapController;
+  late MapController mapController;
 
   @override
   void initState() {
@@ -41,22 +48,26 @@ class _LocationState extends State<Location> {
         title: const Text('Track Your Order'),
       ),
       body: Center(
+        // ignore: sized_box_for_whitespace
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: mapToggle
-              ? GoogleMap(
-                  onMapCreated: onMapCreated,
-                  myLocationEnabled: true,
-                  mapType: MapType.normal,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      currentLocation.latitude,
-                      currentLocation.longitude,
-                    ),
-                    zoom: 19.0,
+              ? FlutterMap(
+                options: MapOptions(
+                  center: LatLng(
+                    currentLocation.latitude,
+                    currentLocation.longitude
                   ),
-                )
+                  zoom: 19.0,
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'dev.fleaflet.flutter_map.example',
+                  ),
+                ],
+              )
               : const Center(
                   child: Text(
                     'Loading ..please Wait..',
