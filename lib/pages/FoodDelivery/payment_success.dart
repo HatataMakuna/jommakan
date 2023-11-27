@@ -108,14 +108,6 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: To be removed after testing
-    Future.delayed(Duration.zero, () {
-      Provider.of<UserProvider>(context, listen: false).setUserName('Testing');
-      Provider.of<UserProvider>(context, listen: false).setUserID(1);
-      Provider.of<UserProvider>(context, listen: false).setUserRole('User');
-      Provider.of<UserProvider>(context, listen: false).setUserEmail('testing@tarc.edu.my');
-    });
-
     return Scaffold(
       body: bodyData(),
     );

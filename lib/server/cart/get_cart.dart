@@ -5,7 +5,7 @@ class GetCart {
     try {
       String query = '''
         SELECT
-          c.cartID, f.food_name, c.quantity, c.no_vege, c.extra_vege, c.no_spicy, 
+          c.cartID, f.foodID, f.food_name, c.quantity, c.no_vege, c.extra_vege, c.no_spicy, 
           c.extra_spicy, c.notes, f.food_image, f.food_price, s.stall_name 
         FROM cart c
         JOIN foods f ON c.foodID = f.foodID
@@ -19,6 +19,7 @@ class GetCart {
       for (final row in results.rows) {
         cartItems.add({
           'cartID': row.colByName("cartID"),
+          'foodID': row.colByName("foodID"),
           'food_name': row.colByName("food_name"),
           'quantity': row.colByName("quantity"),
           'no_vege': row.colByName("no_vege"),

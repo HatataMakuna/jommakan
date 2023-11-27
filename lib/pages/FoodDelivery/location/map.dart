@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+//import 'package:mapbox_gl/mapbox_gl.dart';
 
 void main() {
   runApp(
@@ -19,17 +21,20 @@ class _LocationState extends State<Location> {
   bool mapToggle = false;
 
   late Position currentLocation; // Define currentLocation here
-
-  late GoogleMapController mapController;
+  late MapController mapController;
 
   @override
   void initState() {
     super.initState();
-    Geolocator.getCurrentPosition().then((currloc) {
+    // requires location
+    /* Geolocator.getCurrentPosition().then((currloc) {
       setState(() {
         currentLocation = currloc;
         mapToggle = true;
       });
+    }); */
+    setState(() {
+      mapToggle = true;
     });
   }
 
@@ -41,22 +46,27 @@ class _LocationState extends State<Location> {
         title: const Text('Track Your Order'),
       ),
       body: Center(
+        // ignore: sized_box_for_whitespace
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: mapToggle
-              ? GoogleMap(
-                  onMapCreated: onMapCreated,
-                  myLocationEnabled: true,
-                  mapType: MapType.normal,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      currentLocation.latitude,
-                      currentLocation.longitude,
-                    ),
-                    zoom: 19.0,
+              ? FlutterMap(
+                options: MapOptions(
+                  center: LatLng(3.216, 101.727),/* currentLocation != null ? LatLng(
+                    currentLocation.latitude,
+                    currentLocation.longitude
+                  ) : LatLng(0.0, 0.0) */
+                  zoom: 17.0,
+                  minZoom: 5.0,
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'com.example.app',
                   ),
-                )
+                ],
+              )
               : const Center(
                   child: Text(
                     'Loading ..please Wait..',
