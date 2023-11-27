@@ -1,5 +1,4 @@
 // PAYMENT OPTIONS
-// TODO: Do something with the payment method links
 import 'package:flutter/material.dart';
 import 'package:jom_makan/components/payment/payment_option_button.dart';
 

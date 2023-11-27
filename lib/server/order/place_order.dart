@@ -1,5 +1,4 @@
 import 'package:jom_makan/database/db_connection.dart';
-import 'package:intl/intl.dart';
 import 'package:jom_makan/server/cart/clear_cart.dart';
 import 'package:jom_makan/server/payment/add_payment.dart';
 
@@ -38,6 +37,35 @@ class PlaceOrder {
 
       // Insert into the order_details table
       for (var cartItem in cartItems) {
+        bool noVege, extraVege, noSpicy, extraSpicy;
+        if (cartItem['no_vege'] == 1) {
+          noVege = true;
+        } else {
+          noVege = false;
+        }
+        print(noVege);
+
+        if (cartItem['extra_vege'] == 1) {
+          extraVege = true;
+        } else {
+          extraVege = false;
+        }
+        print(extraVege);
+
+        if (cartItem['no_spicy'] == 1) {
+          noSpicy = true;
+        } else {
+          noSpicy = false;
+        }
+        print(noSpicy);
+
+        if (cartItem['extra_spicy'] == 1) {
+          extraSpicy = true;
+        } else {
+          extraSpicy = false;
+        }
+        print(extraSpicy);
+
         await pool.execute('''
           INSERT INTO order_details (orderID, foodID, quantity, price, no_vege, extra_vege, no_spicy, extra_spicy, notes) 
           VALUES (:orderID, :foodID, :quantity, :price, :no_vege, :extra_vege, :no_spicy, :extra_spicy, :notes)
@@ -45,11 +73,11 @@ class PlaceOrder {
           "orderID": orderID,
           "foodID": cartItem['foodID'],
           "quantity": cartItem['quantity'],
-          "price": cartItem['price'],
-          "no_vege": cartItem['no_vege'] ? 1 : 0,
-          "extra_vege": cartItem['extra_vege'] ? 1 : 0,
-          "no_spicy": cartItem['no_spicy'] ? 1 : 0,
-          "extra_spicy": cartItem['extra_spicy'] ? 1 : 0,
+          "price": double.parse(cartItem['food_price']) * double.parse(cartItem['quantity']),
+          "no_vege": noVege ? 1 : 0,
+          "extra_vege": extraVege ? 1 : 0,
+          "no_spicy": noSpicy ? 1 : 0,
+          "extra_spicy": extraSpicy ? 1 : 0,
           "notes": cartItem['notes']
         });
       }
@@ -65,12 +93,12 @@ class PlaceOrder {
   }
 }
 
-void main() {
+/* void main() {
   BigInt test = BigInt.from(1);
   int intTest = test.toInt();
 
   print(intTest);
-}
+} */
 
 /*
   cart (cartID, userID, foodID, quantity, no_vege, extra_vege, no_spicy, extra_spicy, notes)

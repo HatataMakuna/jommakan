@@ -1,4 +1,3 @@
-// TODO: Payment methods link to paymentPage.dart then return here after selecting one method
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/FoodDelivery/address.dart';
 import 'package:jom_makan/pages/FoodDelivery/creditPayment.dart';
