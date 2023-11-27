@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jom_makan/server/promotion.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:jom_makan/server/renewStall/renew.dart';
 
 class AddStall extends StatefulWidget {
@@ -14,6 +15,7 @@ class _RenewStallState extends State<AddStall> {
    late TextEditingController _stallIDController = TextEditingController();
   late TextEditingController _stallNameController = TextEditingController();
   late TextEditingController _canteenController = TextEditingController();
+  late TextEditingController _hygieneLevelController = TextEditingController();
   late bool isTyping = false;
   late Renew _registerRenew = Renew();
   late String _errorMessage;
@@ -25,6 +27,8 @@ class _RenewStallState extends State<AddStall> {
     _stallIDController = TextEditingController();
     _stallNameController = TextEditingController();
     _canteenController = TextEditingController();
+    _hygieneLevelController = TextEditingController();
+
     isTyping = false;
     _registerRenew = Renew();
     _errorMessage = '';
@@ -59,7 +63,8 @@ class _RenewStallState extends State<AddStall> {
             const SizedBox(height: 20),
             canteenField(),
             const SizedBox(height: 20),
-            
+            hygieneLevelField(),
+            const SizedBox(height: 20),
             registerButton(),
             // text fields
           ],
@@ -89,6 +94,48 @@ class _RenewStallState extends State<AddStall> {
       decoration: const InputDecoration(labelText: 'Canteen'),
     );
   }
+
+ Widget hygieneLevelField() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+     
+      Row(
+        children: [
+          Expanded(
+            child: TextFormField(
+              controller: _hygieneLevelController,
+              readOnly: true,
+              decoration: InputDecoration(
+                hintText: 'Please Submit Government Hygiene Level.PDF',
+              ),
+            ),
+          ),
+          SizedBox(width: 10),
+          ElevatedButton(
+            onPressed: _pickPDF,
+            child: Text('Pick PDF'),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+void _pickPDF() async {
+  // Use a file picker library or any other method to allow users to pick a PDF file.
+  // Here, I'm using the `FilePicker` library as an example.
+  FilePickerResult? result = await FilePicker.platform.pickFiles(
+    type: FileType.custom,
+    allowedExtensions: ['pdf'],
+  );
+
+  if (result != null && result.files.isNotEmpty) {
+    setState(() {
+      _hygieneLevelController.text = result.files.first.name ?? '';
+    });
+  }
+}
 
   
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/Admin/views/base_views.dart';
-import 'package:jom_makan/pages/Admin/views/school/add_food.dart';
+import 'package:jom_makan/pages/Admin/views/inventory/add_food.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
 import 'package:jom_makan/server/food/food.dart';
@@ -36,6 +36,9 @@ class _SchoolView extends AdminStateView<SchoolView> {
 
       setState(() {
         _foodItems = data;
+
+         // Clear the existing data
+      itemData.clear();
 
         for (int i = 0; i < _foodItems.length; i++) {
           String foodNameCorrect = 'foodName: ${_foodItems[i]['foodName']}';

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 //import 'package:jom_makan/pages/admin/store/name_random.dart';
 import 'package:jom_makan/pages/Admin/views/base_views.dart';
-import 'package:jom_makan/pages/Admin/views/user/add_promotion.dart';
+import 'package:jom_makan/pages/Admin/views/promotion/add_promotion.dart';
 import 'package:jom_makan/pages/Admin/widgets/button/style.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table.dart';
@@ -52,7 +52,7 @@ class _UserList extends AdminStateView<UserList> {
 
       setState(() {
         _promoItems = data;
-
+ 
         // Move the logic inside setState after _promoItems has been updated
         //NameRandom nameRandom = NameRandom();
 

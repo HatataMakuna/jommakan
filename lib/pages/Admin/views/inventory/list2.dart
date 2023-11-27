@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/Admin/views/base_views.dart';
-import 'package:jom_makan/pages/Admin/views/school/add_food.dart';
+import 'package:jom_makan/pages/Admin/views/inventory/add_food.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
 import 'package:jom_makan/server/food/food.dart';
@@ -40,7 +40,8 @@ class _StockView extends AdminStateView<StockView> {
          // Sort the _foodItems list by the 'qty_in_stock' column in ascending order
 _foodItems.sort((a, b) => int.parse(a['qty_in_stock'].toString()).compareTo(int.parse(b['qty_in_stock'].toString())));
 
-
+ // Clear the existing data
+      itemData.clear();
 
           itemData = _foodItems.map((item) {
         return {

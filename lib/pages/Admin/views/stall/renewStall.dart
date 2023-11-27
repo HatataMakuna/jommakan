@@ -95,6 +95,9 @@ class RenewStallPage extends AdminStateView<RenewStallView> {
       setState(() {
         _renewItem = data;
 
+         // Clear the existing data
+      itemData.clear();
+
         for (int i = 0; i < _renewItem.length; i++) {
           String foodNameCorrect = 'foodName: ${_renewItem[i]['stallName']}';
           print('Food Name: ' + foodNameCorrect);

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/Admin/views/course/list.dart';
+import 'package:jom_makan/pages/Admin/views/payment/paymentList.dart';
+import 'package:jom_makan/pages/Admin/views/payment/paymentList2.dart';
+import 'package:jom_makan/pages/Admin/views/payment/paymentList3.dart';
+import 'package:jom_makan/pages/Admin/views/report/daily.dart';
+import 'package:jom_makan/pages/Admin/views/report/monthly.dart';
+import 'package:jom_makan/pages/Admin/views/report/yearly.dart';
 import 'package:jom_makan/pages/Admin/views/router_view.dart';
-import 'package:jom_makan/pages/Admin/views/school/list.dart';
-import 'package:jom_makan/pages/Admin/views/school/list2.dart';
+import 'package:jom_makan/pages/Admin/views/inventory/list.dart';
+import 'package:jom_makan/pages/Admin/views/inventory/list2.dart';
 import 'package:jom_makan/pages/Admin/views/stall/renewStall.dart';
-import 'package:jom_makan/pages/Admin/views/user/list.dart';
+import 'package:jom_makan/pages/Admin/views/promotion/list.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:jom_makan/pages/Admin/views/index.dart';
@@ -153,19 +159,19 @@ final menuRoute = [
         path: 'list',
         name: 'course_list',
         title: 'Daily Sales Report',
-        onRouteView: (context, state) => CourseListPage(),
+        onRouteView: (context, state) => DailySales(),
       ),
       RouteInfo(
         path: 'update',
         name: 'course_update',
         title: 'Monthly Sales Report',
-        onRouteView: (context, state) => SchoolView(),
+        onRouteView: (context, state) => MonthlySales(),
       ),
       RouteInfo(
         path: 'subject',
         name: 'course_subject',
         title: 'Yearly Sales Report',
-        onRouteView: (context, state) => SchoolView(),
+        onRouteView: (context, state) => YearlySales(),
       ),
     ],
   ),
@@ -178,13 +184,13 @@ final menuRoute = [
         path: 'order',
         name: 'transaction_order',
         title: 'Payment Details',
-        onRouteView: (context, state) => SchoolView(),
+        onRouteView: (context, state) => PaymentView(),
       ),
       RouteInfo(
         path: 'pay-config',
         name: 'transaction_pay_config',
         title: 'Payment Method',
-        onRouteView: (context, state) => SchoolView(),
+        onRouteView: (context, state) => PaymentSearch(),
       ),
       RouteInfo(
         path: 'refund',
@@ -196,7 +202,7 @@ final menuRoute = [
         path: 'log',
         name: 'transaction_log',
         title: 'Transaction Details',
-        onRouteView: (context, state) => SchoolView(),
+        onRouteView: (context, state) => PaymentDate(),
       ),
     ],
   ),
