@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/FoodDelivery/payment_main_rework.dart';
+import 'package:jom_makan/pages/FoodDelivery/payment_main.dart';
 import 'package:jom_makan/pages/cart/edit_cart.dart';
 import 'package:jom_makan/server/cart/get_cart.dart';
 import 'package:jom_makan/stores/user_provider.dart';
@@ -305,10 +305,8 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  // TODO: Do something with the checkout logic; possibly need to merge
   void _checkout() {
-    // Implement your checkout logic here
-    // For example, you can navigate to a checkout page
+    // Navigate to payment page
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -337,6 +335,5 @@ class _CartPageState extends State<CartPage> {
         );
       }
     );
-    //Navigator.pushNamed(context, '/checkout');
   }
 }

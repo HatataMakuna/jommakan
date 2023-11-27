@@ -225,8 +225,11 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (BuildContext context) => Location()));
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => const Location(),
+                      ),
+                    );
                   },
                 ),
               ],
@@ -236,7 +239,7 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
   );
   }
 
-  String _formatTime(DateTime dateTime) {
+  /* String _formatTime(DateTime dateTime) {
     return "${_formatTwoDigitNumber(dateTime.hour)}:${_formatTwoDigitNumber(dateTime.minute)} ${_getPeriod(dateTime.hour)}";
   }
 
@@ -246,5 +249,5 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
 
   String _getPeriod(int hour) {
     return hour < 12 ? 'AM' : 'PM';
-  }
+  } */
 }

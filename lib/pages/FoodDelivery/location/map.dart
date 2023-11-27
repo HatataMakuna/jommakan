@@ -2,9 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
+void main() {
+  runApp(
+    const MaterialApp(home: Location()),
+  );
+}
+
 class Location extends StatefulWidget {
+  const Location({super.key});
+
   @override
-  _LocationState createState() => _LocationState();
+  State<StatefulWidget> createState() => _LocationState();
 }
 
 class _LocationState extends State<Location> {
@@ -14,6 +22,7 @@ class _LocationState extends State<Location> {
 
   late GoogleMapController mapController;
 
+  @override
   void initState() {
     super.initState();
     Geolocator.getCurrentPosition().then((currloc) {
@@ -48,7 +57,7 @@ class _LocationState extends State<Location> {
                     zoom: 19.0,
                   ),
                 )
-              : Center(
+              : const Center(
                   child: Text(
                     'Loading ..please Wait..',
                     style: TextStyle(fontSize: 20.0),
