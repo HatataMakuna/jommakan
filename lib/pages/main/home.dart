@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<StatefulWidget> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -42,12 +42,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _loadRecommendations() async {
+  void _loadRecommendations() async {
     List<Rating> ratings = await _foodRatings.getRatingsForRecommendation();
     RecommendationSystem recommendationSystem = RecommendationSystem(ratings: ratings);
 
     // Get user ID from the store
-    int? userID = Provider.of<UserProvider>(context, listen: false).userID;
+    int? userID = _getUserID();
 
     // Generate list of recommended food IDs
     List<int> recommendedFoodIDs = recommendationSystem.recommendFoods(userID!);
@@ -60,6 +60,10 @@ class _HomePageState extends State<HomePage> {
         _recommendedFoods = recommendedFoods;
       });
     }
+  }
+
+  int? _getUserID() {
+    return Provider.of<UserProvider>(context, listen: false).userID;
   }
 
   @override
@@ -287,48 +291,60 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 10),
             // Display recommended foods based on user's ratings
-            // ignore: sized_box_for_whitespace
-            Container(
-              height: 130,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _recommendedFoods.length,
-                itemBuilder: ((context, index) {
-                  Map<String, dynamic> food = _recommendedFoods[index];
-                  return InkWell(
-                    onTap: () {
-                      // Navigate to food details page using food['foodID']
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FoodDetailsPage(selectedFood: food),
+            if (_recommendedFoods.isNotEmpty) ...[
+              // ignore: sized_box_for_whitespace
+              Container(
+                height: 130,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _recommendedFoods.length,
+                  itemBuilder: ((context, index) {
+                    Map<String, dynamic> food = _recommendedFoods[index];
+                    return InkWell(
+                      onTap: () {
+                        // Navigate to food details page using food['foodID']
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FoodDetailsPage(selectedFood: food),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            // display food image
+                            Image(
+                              image: AssetImage('images/foods/${food['food_image']}'),
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.cover,
+                            ),
+                            const SizedBox(height: 5),
+                            // display food name
+                            Text(
+                              food['food_name'],
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          // display food image
-                          Image(
-                            image: AssetImage('images/foods/${food['food_image']}'),
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.cover,
-                          ),
-                          const SizedBox(height: 5),
-                          // display food name
-                          Text(
-                            food['food_name'],
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ],
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  }),
+                ),
               ),
-            ),
+            ] else ...[
+              // Display message if no recommended foods
+              const Center(
+                child: Text(
+                  'No recommended foods. Try rate some foods to get recommendations.',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

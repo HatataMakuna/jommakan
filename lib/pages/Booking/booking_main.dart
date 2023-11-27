@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +35,7 @@ class BusLayout extends StatefulWidget {
 
 class _BusLayoutState extends State<BusLayout> {
   Set<SeatNumber> selectedSeats = {};
-
-  String qrCodeData = ''; // Add this variable to store the QR code image URL
+  Uint8List? qrCodeBytes; // Use Uint8List to store image bytes
 
   Future<void> generateQRCode(Set<SeatNumber> selectedSeats) async {
     final List<Map<String, int>> seatsList = selectedSeats
@@ -60,8 +60,12 @@ class _BusLayoutState extends State<BusLayout> {
       // Assume the Flask server returns the QR code image URL in the response
 
       final File file = File('assets/example.png');
+      await file.writeAsBytes(response.bodyBytes);
+      //file.readAsBytes();
+      //print('Body Bytes: ${response.bodyBytes}');
+
       setState(() {
-        qrCodeData = jsonDecode(response.body)['qrCodeData'].toString();
+        qrCodeBytes = response.bodyBytes;
       });
     } else {
       // Handle errors
@@ -73,18 +77,17 @@ class _BusLayoutState extends State<BusLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(
-              height: 16,
-            ),
+            const SizedBox(height: 16),
             const Text("Please Select Your Seat"),
-            const SizedBox(
-              height: 32,
-            ),
-            Flexible(
+            const SizedBox(height: 32),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: SizedBox(
                 width: double.maxFinite,
                 height: 500,
@@ -95,7 +98,7 @@ class _BusLayoutState extends State<BusLayout> {
                     } else {
                       selectedSeats.remove(SeatNumber(rowI: rowI, colI: colI));
                     }
-            setState(() {}); // Trigger a rebuild when seats are selected/deselected
+                    setState(() {}); // Trigger a rebuild when seats are selected/deselected
                   },
                   stateModel: const SeatLayoutStateModel(
                     rows: 10,
@@ -286,13 +289,14 @@ class _BusLayoutState extends State<BusLayout> {
             ),
           const SizedBox(height: 20),
             // Display the QR code using QrImage
-            if (qrCodeData.isNotEmpty)
-              QrImageView(
-                data: qrCodeData,
-                version: QrVersions.auto,
-                size: 200.0,
+            if (qrCodeBytes != null)
+              Image.memory(
+                qrCodeBytes!,
+                width: 200.0,
+                height: 200.0,
               ),
           ],
+          ),
         ),
       ),
     );

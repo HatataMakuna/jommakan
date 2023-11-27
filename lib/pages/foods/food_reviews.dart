@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/components/get_average_ratings.dart';
+import 'package:jom_makan/components/rating/get_average_ratings.dart';
 import 'package:jom_makan/pages/foods/add_or_edit_review.dart';
 import 'package:jom_makan/server/rating/get_ratings.dart';
 import 'package:jom_makan/stores/user_provider.dart';
@@ -12,7 +12,7 @@ class FoodReviewsPage extends StatefulWidget {
   const FoodReviewsPage({super.key, required this.selectedFood});
 
   @override
-  _FoodReviewsPageState createState() => _FoodReviewsPageState();
+  State<StatefulWidget> createState() => _FoodReviewsPageState();
 }
 
 class _FoodReviewsPageState extends State<FoodReviewsPage> {
@@ -32,16 +32,16 @@ class _FoodReviewsPageState extends State<FoodReviewsPage> {
 
   // Function to get average ratings and update the state
   void _getAverageRatings() async {
-    double _rating = await _getAvgRatings.setAverageRating(int.parse(widget.selectedFood['foodID']));
+    double rating = await _getAvgRatings.setAverageRating(int.parse(widget.selectedFood['foodID']));
     setState(() {
-      averageRating = _rating;
+      averageRating = rating;
     });
   }
 
   void _getNoOfRatings() async {
-    int _noRatings = await _getAvgRatings.setNoRatings(int.parse(widget.selectedFood['foodID']));
+    int numberOfRatings = await _getAvgRatings.setNoRatings(int.parse(widget.selectedFood['foodID']));
     setState(() {
-      noRatings = _noRatings;
+      noRatings = numberOfRatings;
     });
   }
 
@@ -82,7 +82,7 @@ class _FoodReviewsPageState extends State<FoodReviewsPage> {
               Container(
                 constraints: const BoxConstraints.expand(height: 250),
                 child: Image(
-                  image: AssetImage('images/foods/' + widget.selectedFood['food_image']),
+                  image: AssetImage('images/foods/${widget.selectedFood['food_image']}'),
                   fit: BoxFit.cover,
                 )
               ),
@@ -164,21 +164,25 @@ class _FoodReviewsPageState extends State<FoodReviewsPage> {
                   Provider.of<UserProvider>(context, listen: false).userID!,
                 );
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddReviewPage(
-                      currentUserReview: currentUserReview,
-                      selectedFood: widget.selectedFood,
-                    ),
-                  ),
-                );
+                goToAddReviewPage(currentUserReview);
               },
               child: const Text('Add / Modify a review'),
             ),
             const SizedBox(height: 16),
             getUserReviews(),
           ],
+        ),
+      ),
+    );
+  }
+
+  void goToAddReviewPage(Map<String, dynamic>? userReview) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddReviewPage(
+          currentUserReview: userReview,
+          selectedFood: widget.selectedFood,
         ),
       ),
     );
@@ -224,5 +228,4 @@ class _FoodReviewsPageState extends State<FoodReviewsPage> {
       ),
     );
   }
-
 }

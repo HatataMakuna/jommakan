@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:jom_makan/pages/FoodDelivery/payment_success.dart';
+import 'package:jom_makan/stores/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class CreditCardPage extends StatefulWidget {
+  final bool noCutlery;
+  final List<Map<String, dynamic>> cartItems;
+  final double totalPrice;
+
+  const CreditCardPage({
+    super.key, required this.noCutlery,
+    required this.cartItems, required this.totalPrice,
+  });
+
   @override
-  _CreditCardPageState createState() => _CreditCardPageState();
+  State<StatefulWidget> createState() => _CreditCardPageState();
 }
 
 class _CreditCardPageState extends State<CreditCardPage> {
@@ -273,32 +284,38 @@ class _CreditCardPageState extends State<CreditCardPage> {
         ),
       );
 
-  Widget floatingBar() => Ink(
-        decoration: const ShapeDecoration(
-          shape: StadiumBorder(),
+  Widget floatingBar() {
+    return Ink(
+      decoration: const ShapeDecoration(
+        shape: StadiumBorder(),
+      ),
+      child: FloatingActionButton.extended(
+        onPressed: () async{
+          // Navigate to PaymentMethodPage and wait for result
+          Navigator.push(
+            context, MaterialPageRoute(
+              builder: (context) => PaymentSuccessPage(
+                userID: Provider.of<UserProvider>(context, listen: false).userID!,
+                noCutlery: widget.noCutlery,
+                cartItems: widget.cartItems,
+                paymentMethod: 'Debit/Credit Card',
+                totalPrice: widget.totalPrice,
+              ),
+            ),
+          );
+        },
+        backgroundColor: Colors.blue,
+        icon: const Icon(
+          Icons.check,
+          color: Colors.black,
         ),
-        child: FloatingActionButton.extended(
-          onPressed: ()async{
-                // Navigate to PaymentMethodPage and wait for result
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PaymentSuccessPage(),
-                  ),
-                );
-        
-          },
-          backgroundColor: Colors.blue,
-          icon: const Icon(
-            Icons.check,
-            color: Colors.black,
-          ),
-          label: const Text(
-            "Continue",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
+        label: const Text(
+          "Continue",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
-      );
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

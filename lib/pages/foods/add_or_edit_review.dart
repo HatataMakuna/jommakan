@@ -15,7 +15,7 @@ class AddReviewPage extends StatefulWidget {
   });
 
   @override
-  _AddReviewPageState createState() => _AddReviewPageState();
+  State<StatefulWidget> createState() => _AddReviewPageState();
 }
 
 class _AddReviewPageState extends State<AddReviewPage> {
@@ -65,7 +65,7 @@ class _AddReviewPageState extends State<AddReviewPage> {
                 Container(
                   constraints: const BoxConstraints.expand(height: 250),
                   child: Image(
-                    image: AssetImage('images/foods/' + widget.selectedFood['food_image']),
+                    image: AssetImage('images/foods/${widget.selectedFood['food_image']}'),
                     fit: BoxFit.cover,
                   )
                 ),
@@ -198,7 +198,11 @@ class _AddReviewPageState extends State<AddReviewPage> {
       );
     }
 
-    // Show message whether the review has been saved successfully
+    showSaveReviewStatus(isSuccess);
+  }
+
+  // Show message whether the review has been saved successfully
+  void showSaveReviewStatus(bool isSuccess) {
     if (isSuccess) {
       showDialog(
         context: context,

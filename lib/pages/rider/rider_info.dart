@@ -1,4 +1,3 @@
-// TODO: Register as rider
 import 'package:flutter/material.dart';
 import 'package:jom_makan/server/rider/get_rider_info.dart';
 import 'package:jom_makan/server/rider/register_as_rider.dart';
@@ -21,17 +20,16 @@ class _RiderInfoState extends State<RiderInfo> {
   @override
   void initState() {
     super.initState();
-
     _checkIsRegistered();
   }
 
   // Method to check whether the user is being registered as rider
   void _checkIsRegistered() async {
-    bool? _isRegistered = await _getRiderInfo.riderIsRegistered(
+    bool? chkIsRegistered = await _getRiderInfo.riderIsRegistered(
       Provider.of<UserProvider>(context, listen: false).userID!
     );
     setState(() {
-      isRegistered = _isRegistered;
+      isRegistered = chkIsRegistered;
     });
   }
 
@@ -51,11 +49,27 @@ class _RiderInfoState extends State<RiderInfo> {
           },
         ),
       ),
-      body: const Center(child: Text('WIP')),
+      body: loadRiderInfoContent(),
     );
   }
 
-  Widget _loadUnregisteredContent() {
+  Widget loadRiderInfoContent() {
+    print(isRegistered);
+    if (isRegistered == true) {
+      return loadRiderMenu();
+    } else if (isRegistered == false) {
+      return loadUnregisteredContent();
+    } else {
+      return const Center(
+        child: Text(
+          'There is an error while verifying rider info. Please check again later.',
+          style: TextStyle(fontSize: 16),
+        ),
+      );
+    }
+  }
+
+  Widget loadUnregisteredContent() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -69,8 +83,12 @@ class _RiderInfoState extends State<RiderInfo> {
         const Text(
           'You are not yet registered as a rider. Join our delivery team and start earning passive money!',
           textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 20),
         const Text(
           'Rules and Regulations:',
           style: TextStyle(
@@ -79,24 +97,31 @@ class _RiderInfoState extends State<RiderInfo> {
           ),
         ),
         // Need change the rules
-        const Text(
-          '1. Riders must stay at the campus by the time you accept any delivery offer.',
-          textAlign: TextAlign.start,
-        ),
-        const Text(
-          '2. Riders must complete at least 2 deliveries every week.',
-          textAlign: TextAlign.start,
+        const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '1. Riders must stay at the campus by the time you accept any delivery offer.',
+              textAlign: TextAlign.start,
+            ),
+            Text(
+              '2. Riders must complete at least 2 deliveries every week.',
+              textAlign: TextAlign.start,
+            ),
+          ],
         ),
         const SizedBox(height: 12),
         Row(
           children: [
             Checkbox(
-              value: false, // Provide the actual value based on user's choice
+              value: readAndAgreed, // Provide the actual value based on user's choice
               onChanged: (bool? value) {
                 // Handle the checkbox value change
-                setState(() {
-                  readAndAgreed = !readAndAgreed;
-                });
+                if (value != null) {
+                  setState(() {
+                    readAndAgreed = !readAndAgreed;
+                  });
+                }
               },
             ),
             const Text(
@@ -107,17 +132,19 @@ class _RiderInfoState extends State<RiderInfo> {
         ),
         const SizedBox(height: 16),
         ElevatedButton(
-          onPressed: () {
-            // Handle the registration button click
-            // Navigate to the rider registration page or perform the necessary actions
-          },
+          onPressed: readAndAgreed ? () => showRegisterConfirmation() : null,
           child: const Text('Register as a Rider'),
         ),
       ],
     );
   }
 
-  void _showRegisterConfirmation() {
+  /*
+  ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fix the errors')),
+      );
+  */
+  void showRegisterConfirmation() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -135,9 +162,7 @@ class _RiderInfoState extends State<RiderInfo> {
               child: const Text('Yes'),
               onPressed: () {
                 Navigator.of(context).pop();
-
-                // register
-                
+                registerRider();
               }
             ),
           ],
@@ -150,7 +175,10 @@ class _RiderInfoState extends State<RiderInfo> {
     bool registerResult = await _registerAsRider.registerRider(
       Provider.of<UserProvider>(context, listen: false).userID!
     );
+    registerStatus(registerResult);
+  }
 
+  void registerStatus(bool registerResult) {
     if (registerResult) {
       showDialog(
         context: context,
@@ -186,9 +214,10 @@ class _RiderInfoState extends State<RiderInfo> {
     }
   }
 
-  Widget _loadRiderMenu() {
+  Widget loadRiderMenu() {
     return Column(
       children: [
+        const SizedBox(height: 12),
         // delivery image
         const Image(
           image: AssetImage('images/delivery.png'),
@@ -219,8 +248,15 @@ class _RiderInfoState extends State<RiderInfo> {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ElevatedButton(
         onPressed: () {
-          
+          // TODO: do something with the menus
         },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color(colorHex),
+          minimumSize: const Size(double.infinity, 1), // removes space between buttons
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero, // no border radius
+          ),
+        ),
         child: Align(
           alignment: Alignment.centerLeft,
           child: Padding(
@@ -231,13 +267,6 @@ class _RiderInfoState extends State<RiderInfo> {
                 color: Colors.black,
               ),
             ),
-          ),
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Color(colorHex),
-          minimumSize: const Size(double.infinity, 1), // removes space between buttons
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero, // no border radius
           ),
         ),
       ),

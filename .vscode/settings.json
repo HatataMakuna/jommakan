@@ -4,5 +4,6 @@
     "files.associations": {
         "*.embeddedhtml": "html",
         "memory": "cpp"
-    }
+    },
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

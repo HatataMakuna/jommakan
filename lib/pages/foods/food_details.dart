@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/components/get_average_ratings.dart';
+import 'package:jom_makan/components/rating/get_average_ratings.dart';
 import 'package:jom_makan/pages/foods/food_reviews.dart';
 import 'package:jom_makan/server/cart/add_to_cart.dart';
 import 'package:jom_makan/server/views/update_views.dart';
@@ -12,7 +12,7 @@ class FoodDetailsPage extends StatefulWidget {
   const FoodDetailsPage({super.key, required this.selectedFood});
 
   @override
-  _FoodDetailsPageState createState() => _FoodDetailsPageState();
+  State<StatefulWidget> createState() => _FoodDetailsPageState();
 }
 
 class _FoodDetailsPageState extends State<FoodDetailsPage> {
@@ -45,16 +45,16 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
 
   // Function to get average ratings and update the state
   void _getAverageRatings() async {
-    double _rating = await _getAvgRatings.setAverageRating(int.parse(widget.selectedFood['foodID']));
+    double rating = await _getAvgRatings.setAverageRating(int.parse(widget.selectedFood['foodID']));
     setState(() {
-      averageRating = _rating;
+      averageRating = rating;
     });
   }
 
   void _getNoOfRatings() async {
-    int _noRatings = await _getAvgRatings.setNoRatings(int.parse(widget.selectedFood['foodID']));
+    int numberOfRatings = await _getAvgRatings.setNoRatings(int.parse(widget.selectedFood['foodID']));
     setState(() {
-      noRatings = _noRatings;
+      noRatings = numberOfRatings;
     });
   }
 
@@ -90,7 +90,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
               Container(
                 constraints: const BoxConstraints.expand(height: 250),
                 child: Image(
-                  image: AssetImage('images/foods/' + widget.selectedFood['food_image']),
+                  image: AssetImage('images/foods/${widget.selectedFood['food_image']}'),
                   fit: BoxFit.cover,
                 )
               ),
@@ -335,10 +335,32 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
     );
   }
 
-  // Replace this method with your actual logic to add the item to the cart
-  /* void addToCart() {
-    print('Added to cart: ${widget.selectedFood['food_name']}, Quantity: $quantity, Notes: $notes, Total Price: RM${totalPrice.toStringAsFixed(2)}');
-  } */
+  void addCartConfirmation() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Add to Cart?'),
+          content: const Text('Are you sure you want to add this food item to cart?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Yes'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                addToCart();
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
 
   void addToCart() async {
     AddToCart addToCart = AddToCart();
@@ -354,10 +376,46 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
       notes: notes,
     );
 
-    if (addToCartResult) {
-      print('Item added to cart successfully');
+    showStatusMessage(addToCartResult);
+  }
+
+  void showStatusMessage(bool result) {
+    if (result) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Your food item has been successfully added to cart!'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+              ),
+            ],
+          );
+        }
+      );
     } else {
-      print('Failed to add item to cart');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Sorry'),
+            content: const Text('There was an error while trying to add food to cart. Please try again later.'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+              ),
+            ],
+          );
+        }
+      );
     }
   }
 }

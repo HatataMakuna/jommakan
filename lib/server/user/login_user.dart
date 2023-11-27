@@ -8,20 +8,19 @@ class LoginUser {
     try {
       // Check if the user exists with the given email and password
       var results = await pool.execute(
-        'SELECT userID, username FROM users WHERE email = :email AND password = :password',
+        'SELECT userID, username, user_role FROM users WHERE email = :email AND password = :password',
         {
           "email": email,
           "password": password,
         },
       );
 
-      String? userID, userName;
+      String? userID, userName, userRole;
 
       for (final row in results.rows) {
         userID = row.colByName("userID");
         userName = row.colByName("username");
-        print(userID);
-        print(userName);
+        userRole = row.colByName("user_role");
       }
 
       // If not found or does not match with database, login failed
@@ -30,6 +29,7 @@ class LoginUser {
           'success': false,
           'userID': userID,
           'username': userName,
+          'user_role': userRole,
         };
       }
       // If matches with the database, login succeed
@@ -38,6 +38,7 @@ class LoginUser {
           'success': true,
           'userID': userID,
           'username': userName,
+          'user_role': userRole,
         };
       }
     } catch (e) {
@@ -46,6 +47,7 @@ class LoginUser {
         'success': false,
         'userID': null,
         'username': null,
+        'user_role': null,
       };
     }
   }

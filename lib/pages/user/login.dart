@@ -151,13 +151,10 @@ class _LoginState extends State<LoginPage> {
       // Login was successful, get the username
       var username = loginResult['username'];
       var userID = int.parse(loginResult['userID']);
+      var userrole = loginResult['user_role'];
 
-      // update the user name in the provider
-      Provider.of<UserProvider>(context, listen: false).setUserName(username);
-      Provider.of<UserProvider>(context, listen: false).setUserID(userID);
-
-      // navigate to the home page
-      Navigator.pushReplacementNamed(context, '/home');
+      sendUserDetailsToProvider(username, userID, userrole, email);
+      navigateToUserPortal(userrole);
     } else {
       // Login failed, show an error message
       setState(() {
@@ -166,6 +163,23 @@ class _LoginState extends State<LoginPage> {
 
       // Clear the password field
       _passwordController.clear();
+    }
+  }
+
+  void sendUserDetailsToProvider(String username, int userID, String userrole, String email) {
+    Provider.of<UserProvider>(context, listen: false).setUserName(username);
+    Provider.of<UserProvider>(context, listen: false).setUserID(userID);
+    Provider.of<UserProvider>(context, listen: false).setUserRole(userrole);
+    Provider.of<UserProvider>(context, listen: false).setUserEmail(email);
+  }
+
+  void navigateToUserPortal(String userrole) {
+    if (userrole == 'User') {
+      // Navigate to user home page
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      // If the user is an admin, navigate to admin home page
+      Navigator.pushReplacementNamed(context, '/admin');
     }
   }
 }
