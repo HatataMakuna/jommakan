@@ -94,10 +94,10 @@ class RecommendationSystem {
 
 // Example usage
 Future<void> getRecommendations() async {
-  FoodRatings _foodRatings = FoodRatings();
+  FoodRatings foodRatings = FoodRatings();
   
   // Retrieve ratings from database
-  List<Rating> ratings = await _foodRatings.getRatingsForRecommendation();
+  List<Rating> ratings = await foodRatings.getRatingsForRecommendation();
 
   // Create an instance of the RecommendationSystem
   RecommendationSystem recommendationSystem = RecommendationSystem(ratings: ratings);

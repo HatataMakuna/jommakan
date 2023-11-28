@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/server/promotion.dart';
-import 'package:jom_makan/server/promotion.dart';
 
-//void main() => runApp(const MaterialApp(home: CreateAccount()));
-
-class addPromotion extends StatefulWidget {
-  const addPromotion({super.key});
+class AddPromotion extends StatefulWidget {
+  const AddPromotion({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return _promotionState();
-  }
+  State<StatefulWidget> createState() => _PromotionState();
 }
 
-class _promotionState extends State<addPromotion> {
+class _PromotionState extends State<AddPromotion> {
    final TextEditingController _foodIdController = TextEditingController();
   final TextEditingController _foodNameController = TextEditingController();
   final TextEditingController _foodPriceController = TextEditingController();
@@ -21,9 +16,7 @@ class _promotionState extends State<addPromotion> {
   final TextEditingController _foodStallController = TextEditingController();
   final TextEditingController _foodDescriptionController = TextEditingController();
   bool isTyping = false;
-  bool _showPassword = false;
-  final Promotion _registerPromotion = Promotion(); // Instantiate Register (server-side) class
-  bool _isRegistering = false;
+  final Promotion _registerPromotion = Promotion();
 
   @override
   Widget build(BuildContext context) {
@@ -170,11 +163,6 @@ class _promotionState extends State<addPromotion> {
     return ElevatedButton(
       // Disable the button if there are errors or empty fields
       onPressed: () {
-        // Set the registration status to true before showing the dialog
-        setState(() {
-          _isRegistering = true;
-        });
-
         // confirm register
         showDialog(
           context: context,
@@ -314,10 +302,6 @@ class _promotionState extends State<addPromotion> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                // Reset the registration status when canceling
-                setState(() {
-                  _isRegistering = false;
-                });
                 Navigator.of(context).pop();
               },
               child: const Text('OK'),
@@ -352,10 +336,4 @@ class _promotionState extends State<addPromotion> {
       }
     );
   }
-
-  // @override
-  // void dispose() {
-  //   _emailController.dispose();
-  //   super.dispose();
-  // }
 }

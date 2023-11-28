@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/Admin/style/colors.dart';
 import 'package:jom_makan/pages/Admin/widgets/input/style.dart';
 
+// ignore: must_be_immutable
 class AdminInput extends StatefulWidget {
   final BoxDecoration? decoration;
   final TextEditingController? controller;

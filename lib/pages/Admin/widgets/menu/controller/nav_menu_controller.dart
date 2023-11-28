@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class NavMenuController extends ChangeNotifier {
   List<dynamic> _data = [];
 
-  dynamic? _selected;
+  dynamic _selected;
 
   var mapData = <String, dynamic>{};
 
@@ -60,8 +60,8 @@ class NavMenuController extends ChangeNotifier {
     }
   }
 
-  // 获取child数据
-  dynamic ofIndex(int index, String? parentPath, {dynamic? data}) {
+  // get child statistics
+  dynamic ofIndex(int index, String? parentPath, {dynamic data}) {
     if (data == null) {
       _data[index]['id'] = "$index";
       mapData[_data[index]['name']] = _data[index];
@@ -73,7 +73,7 @@ class NavMenuController extends ChangeNotifier {
     }
   }
 
-  dynamic? getData(String name){
+  dynamic getData(String name){
     return mapData[name];
   }
 
@@ -97,7 +97,7 @@ class NavMenuController extends ChangeNotifier {
     return parent;
   }
 
-  int needNumber({dynamic? data}) {
+  int needNumber({dynamic data}) {
     if (data == null) {
       return _data.length;
     }

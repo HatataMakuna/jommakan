@@ -1,4 +1,9 @@
 {
     "cmake.configureOnOpen": false,
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "memory": "cpp"
+    },
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

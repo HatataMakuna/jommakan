@@ -4,20 +4,20 @@ import 'package:responsive_framework/responsive_wrapper.dart';
 
 void main() {
   AdminRouter();
-  runApp(const MyApp());
+  runApp(const AdminMainPage());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class AdminMainPage extends StatelessWidget {
+  const AdminMainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = ThemeData(
         primarySwatch: Colors.blue,
         tabBarTheme: Theme.of(context).tabBarTheme.copyWith(
-              labelColor: Colors.black26,
-              labelStyle: const TextStyle(color: Colors.black26, fontSize: 14),
-            ));
+          labelColor: Colors.black26,
+          labelStyle: const TextStyle(color: Colors.black26, fontSize: 14),
+        ));
 
     return MaterialApp.router(
       theme: themeData,
