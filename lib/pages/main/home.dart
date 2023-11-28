@@ -84,9 +84,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: AppBar(
+      appBar: AppBar(
           backgroundColor: Colors.white,
           title: SizedBox(
             height: kToolbarHeight,
@@ -121,20 +119,21 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            _logo.getLogoImageWithCustomSize(299, 60),
-            const SizedBox(height: 10),
-            categoriesList(),
-            const SizedBox(height: 10),
-            popularFoods(),
-            const SizedBox(height: 10),
-            loadingRecommendations ? const Center(child: CircularProgressIndicator()) : youMayLike(),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              _logo.getLogoImageWithCustomSize(299, 60),
+              const SizedBox(height: 10),
+              categoriesList(),
+              const SizedBox(height: 10),
+              popularFoods(),
+              const SizedBox(height: 10),
+              loadingRecommendations ? const Center(child: CircularProgressIndicator()) : youMayLike(),
+            ],
+          ),
         ),
       ),
     );

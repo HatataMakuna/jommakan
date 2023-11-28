@@ -75,15 +75,13 @@ class _SearchPageState extends State<SearchPage> {
   Widget _initSearchScreen() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Expanded(
-        child: foundFoods.isNotEmpty ? _buildSearchResults()
-          : const Center(
-            child: Text(
-              'No results found',
-              style: TextStyle(fontSize: 24),
-            ),
+      child: foundFoods.isNotEmpty ? _buildSearchResults()
+        : const Center(
+          child: Text(
+            'No results found',
+            style: TextStyle(fontSize: 24),
           ),
-      ),
+        ),
     );
   }
 

@@ -1,6 +1,5 @@
 // ignore_for_file: use_key_in_widget_constructors
 // THE OFFICIAL ROUTES PAGE
-
 import 'package:flutter/material.dart';
 import 'package:jom_makan/access_denied.dart';
 import 'package:jom_makan/pages/order/order_history.dart';
@@ -16,12 +15,16 @@ import 'package:jom_makan/pages/user/forget_password.dart';
 import 'package:jom_makan/pages/search/search.dart';
 import 'package:jom_makan/pages/Admin/admin_main.dart';
 
-void main() => runApp(
-  ChangeNotifierProvider(
-    create: (context) => UserProvider(),
-    child: const MyApp(),
-  )
-);
+void main() {
+  //debugCheckHasMaterialLocalizations(BuildContext context);
+  //debugCheckHasDirectionality(BuildContext context);
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      child: const MyApp(),
+    )
+  );
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});

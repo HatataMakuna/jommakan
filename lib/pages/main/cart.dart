@@ -70,20 +70,22 @@ class _CartPageState extends State<CartPage> {
     if (_cartItems.isEmpty) {
       return const Center(child: Text('No items in the cart.'));
     } else {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            _buildCartContent(),
-            const SizedBox(height: 10),
-            _buildTotalPrice(),
-            const SizedBox(height: 10),
-            _buildNoCutleryRequest(),
-            const SizedBox(height: 10),
-            _checkoutButton(),
-            const SizedBox(height: 10),
-          ],
+      return SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              _buildCartContent(),
+              const SizedBox(height: 10),
+              _buildTotalPrice(),
+              const SizedBox(height: 10),
+              _buildNoCutleryRequest(),
+              const SizedBox(height: 10),
+              _checkoutButton(),
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       );
     }
@@ -162,7 +164,7 @@ class _CartPageState extends State<CartPage> {
           ),
           // ignore: sized_box_for_whitespace
           trailing: Container(
-            width: 180,
+            width: 150,
             child: Row(
               children: [
                 IconButton(
@@ -178,7 +180,10 @@ class _CartPageState extends State<CartPage> {
                   }
                 ),
                 const SizedBox(width: 8),
-                Text('Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}'),
+                Text(
+                  'Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}',
+                  style: const TextStyle(fontSize: 12),
+                ),
               ],
             ),
           ),
