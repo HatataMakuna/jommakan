@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jom_makan/server/promotion.dart';
@@ -123,14 +126,25 @@ class _RenewStallState extends State<AddStall> {
 }
 
 void _pickPDF() async {
-  // Use a file picker library or any other method to allow users to pick a PDF file.
-  // Here, I'm using the `FilePicker` library as an example.
   FilePickerResult? result = await FilePicker.platform.pickFiles(
     type: FileType.custom,
     allowedExtensions: ['pdf'],
   );
 
   if (result != null && result.files.isNotEmpty) {
+    File pickedFile = File(result.files.first.path!);
+
+    // Get the documents directory
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String documentsPath = documentsDirectory.path;
+
+    // Specify the destination path
+    String destinationPath = '$documentsPath/stall/${result.files.first.name}';
+
+    // Copy the file to the destination path
+    await pickedFile.copy(destinationPath);
+
+    // Update the controller with the picked file's name
     setState(() {
       _hygieneLevelController.text = result.files.first.name ?? '';
     });
