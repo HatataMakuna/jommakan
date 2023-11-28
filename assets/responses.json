@@ -1,7 +1,7 @@
 {
     "responses": [
       {
-        "trigger": "hello",
+        "trigger": ["hello", "hi", "hihi"],
         "response": "Hi there! Welcome to our food ordering service. How can I assist you today?"
       },
       {

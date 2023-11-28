@@ -26,7 +26,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _loadResponses() async {
-    String data = await rootBundle.loadString('lib/pages/chatbot/responses.json');
+    String data = await rootBundle.loadString('assets/responses.json');
     _responses = json.decode(data);
   }
 
@@ -97,9 +97,18 @@ class _ChatScreenState extends State<ChatScreen> {
     String lowerCaseUserMessage = userMessage.toLowerCase();
 
     for (var rule in _responses['responses']) {
-      if (lowerCaseUserMessage.contains(rule['trigger'])) {
+      var trigger = rule['trigger'];
+
+      if (trigger is String && lowerCaseUserMessage.contains(trigger)) {
         response = rule['response'];
         break;
+      } else if (trigger is List<dynamic>) {
+        for (var triggerItem in trigger) {
+          if (lowerCaseUserMessage.contains(triggerItem)) {
+            response = rule['response'];
+            break;
+          }
+        }
       }
     }
 
