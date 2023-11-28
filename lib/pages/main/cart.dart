@@ -199,10 +199,10 @@ class _CartPageState extends State<CartPage> {
         children: [
           const Text(
             'Additional Preferences:',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
           for (String preference in preferences)
-            Text(preference),
+            Text(preference, style: const TextStyle(fontSize: 12)),
         ]
       );
     } else {
