@@ -4,6 +4,8 @@ import 'package:jom_makan/server/rider/register_as_rider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
+// TODO: REFER SDA PDF FILE
+
 class RiderInfo extends StatefulWidget {
   const RiderInfo({super.key});
 
@@ -16,6 +18,7 @@ class _RiderInfoState extends State<RiderInfo> {
   final RegisterAsRider _registerAsRider = RegisterAsRider();
   bool? isRegistered = false;
   bool readAndAgreed = false;
+  bool loading = true;
 
   @override
   void initState() {
@@ -30,6 +33,7 @@ class _RiderInfoState extends State<RiderInfo> {
     );
     setState(() {
       isRegistered = chkIsRegistered;
+      loading = false;
     });
   }
 
@@ -49,12 +53,11 @@ class _RiderInfoState extends State<RiderInfo> {
           },
         ),
       ),
-      body: loadRiderInfoContent(),
+      body: loading ? const Center(child: CircularProgressIndicator()) : loadRiderInfoContent(),
     );
   }
 
   Widget loadRiderInfoContent() {
-    print(isRegistered);
     if (isRegistered == true) {
       return loadRiderMenu();
     } else if (isRegistered == false) {
@@ -236,9 +239,9 @@ class _RiderInfoState extends State<RiderInfo> {
         ),
         const SizedBox(height: 12),
         // display menu buttons
-        _buildButton(context, 'Rider Reviews', 0xFFFFE5BA),
-        _buildButton(context, 'Pending Deliveries', 0xFFFFE5BA),
-        _buildButton(context, 'Delivery History', 0xFFFFE5BA),
+        //_buildButton(context, 'Rider Reviews', 0xFFFFE5BA),
+        //_buildButton(context, 'Pending Deliveries', 0xFFFFE5BA),
+        //_buildButton(context, 'Delivery History', 0xFFFFE5BA),
       ],
     );
   }

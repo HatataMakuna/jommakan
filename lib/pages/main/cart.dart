@@ -15,6 +15,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   final GetCart _getCart = GetCart();
   List<Map<String, dynamic>> _cartItems = [];
+  bool loading = true;
 
   // for calculate total price
   double totalPrice = 0.0;
@@ -47,6 +48,8 @@ class _CartPageState extends State<CartPage> {
           for (final cartItem in _cartItems) {
             totalPrice += int.parse(cartItem['quantity']) * double.parse(cartItem['food_price']);
           }
+
+          loading = false;
         });
       }
     } catch (error) {
@@ -58,7 +61,8 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: null,
-      body: _initalizeCartPage(),
+      body: loading ? const Center(child: CircularProgressIndicator())
+        : _initalizeCartPage(),
     );
   }
 
@@ -103,14 +107,14 @@ class _CartPageState extends State<CartPage> {
           const Text(
             'Cart List',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 12),
           // ignore: sized_box_for_whitespace
           Container(
-            height: 250, // adjust depend on other column usages
+            height: 300, // adjust depend on other column usages
             child: _buildCartList(_cartItems),
           ),
         ],
@@ -136,14 +140,20 @@ class _CartPageState extends State<CartPage> {
           // leading: image
           leading: Image(
             image: AssetImage('images/foods/${cartItem['food_image']}'),
-            width: 100,
-            height: 100,
+            width: 80,
+            height: 80,
           ),
-          title: Text(cartItem['food_name'] ?? ''),
+          title: Text(
+            cartItem['food_name'] ?? '',
+            style: const TextStyle(fontSize: 12),
+          ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Quantity: ${cartItem['quantity'] ?? ''}',),
+              Text(
+                'Quantity: ${cartItem['quantity'] ?? ''}',
+                style: const TextStyle(fontSize: 12),
+              ),
               const SizedBox(height: 8),
               _buildPreferencesDropdown(preferences),
               const SizedBox(height: 8),
@@ -152,7 +162,7 @@ class _CartPageState extends State<CartPage> {
           ),
           // ignore: sized_box_for_whitespace
           trailing: Container(
-            width: 150,
+            width: 180,
             child: Row(
               children: [
                 IconButton(
@@ -226,14 +236,14 @@ class _CartPageState extends State<CartPage> {
         leading: const Text(
           'Total Price:',
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
         ),
         trailing: Text(
           'RM ${totalPrice.toStringAsFixed(2)}',
           style: const TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.blue,
           ),
