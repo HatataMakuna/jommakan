@@ -24,10 +24,10 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _fetchAllFoods() async {
-    final _allFoods = await _getAllFoods.getAllFoods();
+    final getAllFoods = await _getAllFoods.getAllFoods();
     setState(() {
-      allFoods = _allFoods;
-      foundFoods = _allFoods;
+      allFoods = getAllFoods;
+      foundFoods = getAllFoods;
     });
   }
 
@@ -68,21 +68,21 @@ class _SearchPageState extends State<SearchPage> {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: foundFoods.isNotEmpty ? _buildSearchResults()
-                : const Center(
-                  child: Text(
-                    'No results found',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                ),
+      body: _initSearchScreen(),
+    );
+  }
+
+  Widget _initSearchScreen() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Expanded(
+        child: foundFoods.isNotEmpty ? _buildSearchResults()
+          : const Center(
+            child: Text(
+              'No results found',
+              style: TextStyle(fontSize: 24),
             ),
-          ],
-        ),
+          ),
       ),
     );
   }
@@ -108,7 +108,7 @@ class _SearchPageState extends State<SearchPage> {
               constraints: const BoxConstraints(maxHeight: 150),
               child: ListTile(
                 leading: Image(
-                  image: AssetImage('images/foods/' + food['food_image']),
+                  image: AssetImage('images/foods/${food['food_image']}'),
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,

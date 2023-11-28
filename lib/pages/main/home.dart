@@ -10,6 +10,19 @@ import 'package:jom_makan/server/rating/get_ratings.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
+/*
+  TODO:
+  SELECT ORDER OPTION
+  - Pre-order
+  - Self-collect
+  - Delivery
+  - Order Now
+
+  DISPLAY IN MENU
+*/
+
+// TODO: Populate the home page, make it scrollable
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -22,6 +35,7 @@ class _HomePageState extends State<HomePage> {
   final GetFoods _getFoods = GetFoods();
   final GetPopularFoods _getPopularFoods = GetPopularFoods();
   final FoodRatings _foodRatings = FoodRatings();
+  bool loadingRecommendations = true;
 
   List<Map<String, dynamic>> _popularFoods = [];
   List<Map<String, dynamic>> _recommendedFoods = [];
@@ -58,6 +72,7 @@ class _HomePageState extends State<HomePage> {
     if (mounted) {
       setState(() {
         _recommendedFoods = recommendedFoods;
+        loadingRecommendations = false;
       });
     }
   }
@@ -113,12 +128,12 @@ class _HomePageState extends State<HomePage> {
           children: [
             const SizedBox(height: 10),
             _logo.getLogoImageWithCustomSize(299, 60),
-            //const SizedBox(height: 10),
-            //categoriesList(),
+            const SizedBox(height: 10),
+            categoriesList(),
             const SizedBox(height: 10),
             popularFoods(),
             const SizedBox(height: 10),
-            youMayLike(),
+            loadingRecommendations ? const Center(child: CircularProgressIndicator()) : youMayLike(),
           ],
         ),
       ),
