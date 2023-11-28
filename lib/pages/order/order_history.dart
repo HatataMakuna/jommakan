@@ -106,14 +106,14 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                       Text(
                         orderItem['odetailsID'].toString(),
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold
                         ),
                       ),
                       Text(
                         orderItem['date'],
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -135,7 +135,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                           Text(
                             orderItem['food_name'],
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold
                             ),
                           ),
@@ -143,7 +143,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                           Text(
                             'RM ${orderItem['price'] ?? ''} (${orderItem['quantity'].toString()} ITEMS) - ${orderItem['payment']}',
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.w300
                             ),
                           ),
@@ -157,7 +157,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                       orderItem['status'],
                       style: const TextStyle(
                         color: Colors.green,
-                        fontSize: 15,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -167,7 +167,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                       orderItem['status'],
                       style: const TextStyle(
                         color: Colors.yellow,
-                        fontSize: 15,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
