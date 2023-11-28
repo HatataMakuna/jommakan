@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/Admin/views/base_views.dart';
-import 'package:jom_makan/pages/Admin/views/school/add_food.dart';
+import 'package:jom_makan/pages/Admin/views/inventory/add_food.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
 import 'package:jom_makan/server/food/food.dart';
@@ -26,6 +26,7 @@ class _SchoolView extends AdminStateView<SchoolView> {
   @override
   void initState() {
     super.initState();
+    schoolController = AdminTableController(items: []);
     _getData();
   }
 
@@ -35,6 +36,9 @@ class _SchoolView extends AdminStateView<SchoolView> {
 
       setState(() {
         _foodItems = data;
+
+         // Clear the existing data
+      itemData.clear();
 
         for (int i = 0; i < _foodItems.length; i++) {
           String foodNameCorrect = 'foodName: ${_foodItems[i]['foodName']}';
@@ -55,15 +59,16 @@ class _SchoolView extends AdminStateView<SchoolView> {
         schoolController = AdminTableController(items: [
           AdminTableItem(
               itemView: schoolItemView,
-              width: 100,
+              width: 130,
               label: "Food ID",
               prop: 'foodID',
-              fixed: FixedDirection.left),
+              ),
           AdminTableItem(
             itemView: schoolItemView,
             width: 150,
             label: "Food Name",
             prop: 'foodName',
+            fixed: FixedDirection.left
           ),
           AdminTableItem(
             itemView: schoolItemView,
@@ -100,15 +105,15 @@ class _SchoolView extends AdminStateView<SchoolView> {
               prop: 'foodImage'),
           AdminTableItem(
               itemView: schoolItemView,
-              width: 100,
-              label: "操作",
+              width: 150,
+              label: "More",
               fixed: FixedDirection.right,
               prop: 'action'),
         ]);
         schoolController.setNewData(itemData);
       });
     } catch (e) {
-      print('Error loading promotion data: $e');
+      print('Error loading Food data: $e');
     }
   }
 
@@ -143,8 +148,16 @@ class _SchoolView extends AdminStateView<SchoolView> {
         ),
       ),
       const SizedBox(width: 10),
-        const Text("更多",
-          style: TextStyle(color: Colors.blueAccent, fontSize: 15),),
+         GestureDetector(
+        onTap: () {
+          // Call the function to delete the item at index
+          _showQuantityDialog(index);
+        },
+        child: const Text(
+          "Update",
+          style: TextStyle(color: Colors.red, fontSize: 15),
+        ),
+      ),
         ],
           ),
         );
@@ -160,6 +173,67 @@ class _SchoolView extends AdminStateView<SchoolView> {
       );
     }
   }
+
+
+  void _showQuantityDialog(int index) {
+  int newQuantity = 0;
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Update Quantity'),
+        content: TextField(
+          keyboardType: TextInputType.number,
+          onChanged: (value) {
+            newQuantity = int.tryParse(value) ?? 0;
+          },
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _updateQuantity(index, newQuantity);
+              Navigator.of(context).pop();
+            },
+            child: const Text('Update'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+
+  void _updateQuantity(int index, int newQuantity) {
+  setState(() {
+    if (index >= 0 && index < _foodItems.length) {
+      var updatedItem = _foodItems[index];
+      updatedItem['qty_in_stock'] = newQuantity;
+
+      // Update the item in the itemData list as well
+      var updatedItemData = itemData.firstWhere(
+        (item) => item['foodID'] == updatedItem['foodID'],
+        orElse: () => {},
+      );
+      if (updatedItemData.isNotEmpty) {
+        updatedItemData['qty_in_stock'] = newQuantity;
+      }
+
+      // Update the item in the database
+      foodDisplay.updateQuantity(updatedItem['foodID'], newQuantity);
+
+      // Update the table controller with the new data
+      schoolController.setNewData(itemData);
+    }
+  });
+}
 
   // Function to delete the item at the specified index
   void _deleteItem(int index) {
