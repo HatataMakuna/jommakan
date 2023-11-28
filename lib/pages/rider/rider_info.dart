@@ -239,9 +239,9 @@ class _RiderInfoState extends State<RiderInfo> {
         ),
         const SizedBox(height: 12),
         // display menu buttons
-        //_buildButton(context, 'Rider Reviews', 0xFFFFE5BA),
-        //_buildButton(context, 'Pending Deliveries', 0xFFFFE5BA),
-        //_buildButton(context, 'Delivery History', 0xFFFFE5BA),
+        _buildButton(context, 'Rider Reviews', 0xFFFFE5BA),
+        _buildButton(context, 'Pending Deliveries', 0xFFFFE5BA),
+        _buildButton(context, 'Delivery History', 0xFFFFE5BA),
       ],
     );
   }

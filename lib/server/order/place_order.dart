@@ -14,7 +14,7 @@ class PlaceOrder {
   }) async {
     //String formattedDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
 
-    int? paymentID = await _addPayment.addPayment(paymentMethod: paymentMethod);
+    int? paymentID = await _addPayment.addPayment(paymentMethod: paymentMethod, totalPrice: totalPrice);
     if (paymentID == null) {
       print('An error occurred while processing your order');
       return false;

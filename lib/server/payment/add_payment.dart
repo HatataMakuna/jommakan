@@ -5,18 +5,19 @@ class AddPayment {
   String paymentDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
   String paymentTime = DateFormat('HH:mm:ss').format(DateTime.now());
   
-  Future<int?> addPayment({required String paymentMethod}) async {
+  Future<int?> addPayment({required String paymentMethod, required double totalPrice}) async {
     //String paymentDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
     //String paymentTime = DateFormat('HH:mm:ss').format(DateTime.now());
 
     try {
       var result = await pool.execute('''
-        INSERT INTO payments (payment_method, payment_date, payment_time) 
-        VALUES (:payment_method, :payment_date, :payment_time)
+        INSERT INTO payments (payment_method, payment_date, payment_time, total_price) 
+        VALUES (:payment_method, :payment_date, :payment_time, :total_price)
       ''', {
         "payment_method": paymentMethod,
         "payment_date": paymentDate,
         "payment_time": paymentTime,
+        "total_price": totalPrice,
       });
 
       return result.lastInsertID.toInt();
@@ -36,9 +37,10 @@ class AddPayment {
       for (final row in results.rows) {
         payment.add({
           "paymentID": row.colByName("paymentID"),
-           "payment_method": row.colByName("payment_method"),
-        "payment_date": row.colByName("payment_date"),
-        "payment_time": row.colByName("payment_time"),
+          "payment_method": row.colByName("payment_method"),
+          "payment_date": row.colByName("payment_date"),
+          "payment_time": row.colByName("payment_time"),
+          "total_price": row.colByName("total_price"),
         });
       }
 

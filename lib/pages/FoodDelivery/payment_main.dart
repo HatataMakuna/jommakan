@@ -211,7 +211,7 @@ class _PaymentPageState extends State<PaymentPage> {
         const Text(
           'Order Summary',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -250,14 +250,20 @@ class _PaymentPageState extends State<PaymentPage> {
         return ListTile(
           leading: Image(
             image: AssetImage('images/foods/${cartItem['food_image']}'),
-            width: 100,
-            height: 100,
+            width: 80,
+            height: 80,
           ),
-          title: Text(cartItem['food_name'] ?? ''),
+          title: Text(
+            cartItem['food_name'] ?? '',
+            style: const TextStyle(fontSize: 12),
+          ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Quantity: ${cartItem['quantity'] ?? ''}',),
+              Text(
+                'Quantity: ${cartItem['quantity'] ?? ''}',
+                style: const TextStyle(fontSize: 12),
+              ),
               const SizedBox(height: 8),
               _buildPreferencesList(preferences),
               const SizedBox(height: 8),
@@ -267,7 +273,10 @@ class _PaymentPageState extends State<PaymentPage> {
           // ignore: sized_box_for_whitespace
           trailing: Container(
             width: 150,
-            child: Text('Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}'),
+            child: Text(
+              'Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 12),
+            ),
           ),
         );
       },
@@ -281,10 +290,10 @@ class _PaymentPageState extends State<PaymentPage> {
         children: [
           const Text(
             'Additional Preferences:',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
           for (String preference in preferences)
-            Text(preference),
+            Text(preference, style: const TextStyle(fontSize: 12)),
         ]
       );
     } else {
@@ -301,9 +310,9 @@ class _PaymentPageState extends State<PaymentPage> {
         children: [
           const Text(
             'Additional Notes:',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           ),
-          Text(cartItem['notes'].toString()),
+          Text(cartItem['notes'].toString(), style: const TextStyle(fontSize: 12)),
         ],
       );
     }
@@ -314,14 +323,14 @@ class _PaymentPageState extends State<PaymentPage> {
       leading: const Text(
         'Total Price: ',
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
         ),
       ),
       trailing: Text(
         'RM ${totalPrice.toStringAsFixed(2)}',
         style: const TextStyle(
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: FontWeight.bold,
           color: Colors.red,
         ),
@@ -341,13 +350,13 @@ class _PaymentPageState extends State<PaymentPage> {
       leading: const Text(
         'No Cutlery Requested?',
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
         ),
       ),
       trailing: Text(
         noCutleryRequest,
-        style: const TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 14),
       ),
     );
   }
@@ -359,7 +368,7 @@ class _PaymentPageState extends State<PaymentPage> {
         const Text(
           'Payment Method',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),

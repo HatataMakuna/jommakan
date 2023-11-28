@@ -10,17 +10,6 @@ import 'package:jom_makan/server/rating/get_ratings.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
-/*
-  TODO:
-  SELECT ORDER OPTION
-  - Pre-order
-  - Self-collect
-  - Delivery
-  - Order Now
-
-  DISPLAY IN MENU
-*/
-
 // TODO: Populate the home page, make it scrollable
 
 class HomePage extends StatefulWidget {
@@ -124,13 +113,13 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               _logo.getLogoImageWithCustomSize(299, 60),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               categoriesList(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               popularFoods(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               loadingRecommendations ? const Center(child: CircularProgressIndicator()) : youMayLike(),
             ],
           ),

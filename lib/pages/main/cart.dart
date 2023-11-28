@@ -1,3 +1,5 @@
+// TODO: Do something with the order methods?
+
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/FoodDelivery/payment_main.dart';
 import 'package:jom_makan/pages/cart/edit_cart.dart';
@@ -20,6 +22,10 @@ class _CartPageState extends State<CartPage> {
   // for calculate total price
   double totalPrice = 0.0;
   bool isNoCutlery = false;
+
+  // order options
+  String dropdownValue = 'Order Now';
+  var dropdownItems = ['Order Now', 'Self-Collect', 'Delivery', 'Pre-Order'];
 
   @override
   void initState() {
@@ -75,20 +81,42 @@ class _CartPageState extends State<CartPage> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
+              _buildOrderOptions(),
+              const SizedBox(height: 15),
               _buildCartContent(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               _buildTotalPrice(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               _buildNoCutleryRequest(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               _checkoutButton(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
             ],
           ),
         ),
       );
     }
+  }
+
+  Widget _buildOrderOptions() {
+    return DropdownButton<String>(
+      value: dropdownValue, // Initial value
+      icon: const Icon(Icons.keyboard_arrow_down), // Down arrow icon
+      // Array list of items
+      items: dropdownItems.map((String items) {
+        return DropdownMenuItem(
+          value: items,
+          child: Text(items),
+        );
+      }).toList(),
+      // After selecting the desired option, it will change button value to selected value
+      onChanged: (String? newValue) {
+        setState(() {
+          dropdownValue = newValue!;
+        });
+      }
+    );
   }
 
   Widget _buildCartContent() {
@@ -219,9 +247,9 @@ class _CartPageState extends State<CartPage> {
         children: [
           const Text(
             'Additional Notes:',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           ),
-          Text(cartItem['notes'].toString()),
+          Text(cartItem['notes'].toString(), style: const TextStyle(fontSize: 12)),
         ],
       );
     }
@@ -277,7 +305,7 @@ class _CartPageState extends State<CartPage> {
                 const Text(
                   'No Cutlery Request:',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -301,7 +329,7 @@ class _CartPageState extends State<CartPage> {
                   child: Text(
                     'We\'ll let the stall know you request not to provide cutlery. Thanks for reducing single-use plastic.',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 12,
                     ),
                   ),
                 ),
