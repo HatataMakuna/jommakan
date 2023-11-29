@@ -64,6 +64,7 @@ class MePage extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           // TODO: Customer Service Chatbot? - Populate the JSON file
+          // list of foods, stalls??
           if (label == 'Edit profile') {
             // Navigate to edit profile page
             Navigator.of(context).pushNamed('/user/edit-profile');

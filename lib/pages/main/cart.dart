@@ -369,7 +369,7 @@ class _CartPageState extends State<CartPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => PaymentPage(
-                    cartItems: _cartItems, noCutlery: isNoCutlery,
+                    cartItems: _cartItems, noCutlery: isNoCutlery, orderMethod: dropdownValue,
                   )),
                 );
               },

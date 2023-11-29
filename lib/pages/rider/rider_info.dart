@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/rider/pending_delivery.dart';
 import 'package:jom_makan/server/rider/get_rider_info.dart';
 import 'package:jom_makan/server/rider/register_as_rider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
@@ -252,6 +253,13 @@ class _RiderInfoState extends State<RiderInfo> {
       child: ElevatedButton(
         onPressed: () {
           // TODO: do something with the menus
+          if (label == 'Pending Deliveries') {
+            Navigator.push(
+              context, MaterialPageRoute(
+                builder: (context) => const PendingDeliveryPage(),
+              ),
+            );
+          }
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(colorHex),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/FoodDelivery/address.dart';
-import 'package:jom_makan/pages/FoodDelivery/creditPayment.dart';
+import 'package:jom_makan/pages/FoodDelivery/credit_payment.dart';
 import 'package:jom_makan/pages/FoodDelivery/payment_methods.dart';
 import 'package:jom_makan/pages/FoodDelivery/payment_success.dart';
 import 'package:jom_makan/stores/user_provider.dart';
@@ -9,9 +9,10 @@ import 'package:provider/provider.dart';
 class PaymentPage extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
   final bool noCutlery;
+  final String orderMethod;
   //String selectedPaymentMethod;
 
-  const PaymentPage({super.key, required this.cartItems, required this.noCutlery});
+  const PaymentPage({super.key, required this.cartItems, required this.noCutlery, required this.orderMethod});
 
   @override
   State<StatefulWidget> createState() => _PaymentPageState();
@@ -22,7 +23,7 @@ class _PaymentPageState extends State<PaymentPage> {
   ValueNotifier<String> selectedAddressNotifier = ValueNotifier<String>('');
   ValueNotifier<String> selectedPaymentMethodNotifier = ValueNotifier<String>('');
   //String paymentMethod = '';
-
+  
   @override
   void initState() {
     super.initState();
@@ -65,7 +66,9 @@ class _PaymentPageState extends State<PaymentPage> {
           context,
           MaterialPageRoute(
             builder: (context) => CreditCardPage(
-              noCutlery: widget.noCutlery, cartItems: widget.cartItems, totalPrice: totalPrice
+              noCutlery: widget.noCutlery, cartItems: widget.cartItems,
+              totalPrice: totalPrice, orderMethod: widget.orderMethod,
+              address: selectedAddressNotifier.value
             ),
           ),
         );
@@ -132,31 +135,31 @@ class _PaymentPageState extends State<PaymentPage> {
           //automaticallyImplyLeading: false, // Disable the back button
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // delivery
-              _loadDeliveryContent(),
-              const Divider(),
-              // display cart items
-              _loadOrderSummary(),
-              const Divider(),
-              // payment methods link
-              _loadPaymentMethods(),
-              const Divider(),
-              const Spacer(),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => handlePayment(),
-                  child: Text(getPaymentButtonLabel()),
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                // delivery
+                _loadDeliveryContent(),
+                const Divider(),
+                // display cart items
+                _loadOrderSummary(),
+                const Divider(),
+                // payment methods link
+                _loadPaymentMethods(),
+                const Divider(),
+                const Spacer(),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => handlePayment(),
+                    child: Text(getPaymentButtonLabel()),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
     );
   }
 
@@ -271,12 +274,9 @@ class _PaymentPageState extends State<PaymentPage> {
             ],
           ),
           // ignore: sized_box_for_whitespace
-          trailing: Container(
-            width: 150,
-            child: Text(
-              'Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 12),
-            ),
+          trailing: Text(
+            'Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}',
+            style: const TextStyle(fontSize: 12),
           ),
         );
       },
@@ -425,7 +425,9 @@ class _PaymentPageState extends State<PaymentPage> {
         noCutlery: widget.noCutlery,
         cartItems: widget.cartItems,
         paymentMethod: selectedPaymentMethodNotifier.value,
-        totalPrice: totalPrice
+        totalPrice: totalPrice,
+        orderMethod: widget.orderMethod,
+        address: selectedAddressNotifier.value,
       ),
     ));
   }
