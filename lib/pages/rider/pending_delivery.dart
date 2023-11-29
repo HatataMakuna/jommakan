@@ -69,8 +69,110 @@ class _PendingDeliveryPageState extends State<PendingDeliveryPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _loadPendingDeliveryList(),
+        child: _loadTwo(),
       ),
+    );
+  }
+
+  Widget _loadTwo() {
+    return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      border: TableBorder.all(
+        color: Colors.grey,
+        width: 1,
+      ),
+      children: [
+        // Header row
+        const TableRow(
+          decoration: BoxDecoration(
+            color: Color(0xFFE0E0E0),
+          ),
+          children: [
+            TableCell(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Order ID',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            TableCell(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Username',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            TableCell(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Total no. of food ordered',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            TableCell(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Ordered on',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
+        ),
+        // Data rows
+        for (int index = 0; index < _deliveryList.length; index++) ...[
+          TableRow(
+            decoration: BoxDecoration(
+              color: index % 2 == 0 ? Colors.white : Colors.grey,
+            ),
+            children: [
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '${_deliveryList[index]['orderID']}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '${_deliveryList[index]['username']}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '${_deliveryList[index]['foodCount']}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '${_deliveryList[index]['orderedOn']}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ],
     );
   }
 
