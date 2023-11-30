@@ -76,6 +76,12 @@ class RenewStallPage extends AdminStateView<RenewStallView> {
           ),
         );
       }
+      if(item.prop == 'state'){
+          return Container(
+            alignment: Alignment.center,
+            child: TagView(data[item.prop!], type: AdminButtonType.primary,size: AdminButtonSize.mini,),
+          );
+        }
       return Container(
         alignment: Alignment.center,
         child: Text(
@@ -91,6 +97,7 @@ class RenewStallPage extends AdminStateView<RenewStallView> {
   void _getData()  async{
     try {
       final data = await renewStall.getRenewData();
+      final state = ['Processing', 'Approve', 'Reject'];
 
       setState(() {
         _renewItem = data;
@@ -101,11 +108,15 @@ class RenewStallPage extends AdminStateView<RenewStallView> {
         for (int i = 0; i < _renewItem.length; i++) {
           String foodNameCorrect = 'foodName: ${_renewItem[i]['stallName']}';
           print('Food Name: ' + foodNameCorrect);
+          int stateIndex = Random().nextInt(3);
 
           itemData.add({
             'stallID': _renewItem[i]['stallID'],
             'stallName': _renewItem[i]['stallName'],
+            'stallOwner': _renewItem[i]['stallOwner'],
+            'totalStaff': _renewItem[i]['totalStaff'],
             'canteen': _renewItem[i]['canteen'],
+            'state': state[stateIndex],
           });
         }
 
@@ -119,9 +130,21 @@ class RenewStallPage extends AdminStateView<RenewStallView> {
       ),
       AdminTableItem(
         itemView: renewStallView,
-        width: 870,
+        width: 300,
         label: 'Stall Name',
         prop: 'stallName',
+      ),
+      AdminTableItem(
+        itemView: renewStallView,
+        width: 150,
+        label: 'Stall Owner',
+        prop: 'stallOwner',
+      ),
+      AdminTableItem(
+        itemView: renewStallView,
+        width: 150,
+        label: 'Total Staff',
+        prop: 'totalStaff',
       ),
       AdminTableItem(
         itemView: renewStallView,
@@ -129,6 +152,11 @@ class RenewStallPage extends AdminStateView<RenewStallView> {
         label: 'Canteen',
         prop: 'canteen',
       ),
+      AdminTableItem(
+          itemView: renewStallView,
+          width: 200,
+          label: 'Approve',
+          prop: 'state'),
          AdminTableItem(
               itemView: renewStallView,
               width: 150,

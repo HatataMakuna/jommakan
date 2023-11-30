@@ -39,6 +39,8 @@ class AddPayment {
            "payment_method": row.colByName("payment_method"),
         "payment_date": row.colByName("payment_date"),
         "payment_time": row.colByName("payment_time"),
+                "total_price": row.colByName("total_price"),
+
         });
       }
 

@@ -27,6 +27,8 @@ String currentDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
   final AddPayment paymentDisplay = AddPayment();
   List<Map<String, dynamic>> _paymentItems = [];
 
+  double totalPrice = 0.0;
+
   @override
   void initState() {
     super.initState();
@@ -63,6 +65,32 @@ String currentDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
           .where((item) => item['payment_date'] == currentDate)
           .toList();
 
+
+     // Calculate the total price
+totalPrice = _paymentItems.fold(
+  0.0,
+  (previous, current) {
+    final total = current['total_price'];
+    if (total is double) {
+      return previous + total;
+    } else if (total is String) {
+      // Try parsing the String to double
+      final doubleValue = double.tryParse(total);
+      if (doubleValue != null) {
+        return previous + doubleValue;
+      } else {
+        // Handle the case where parsing fails (e.g., log an error)
+        print('Error parsing total_price: $total');
+        return previous;
+      }
+    } else {
+      // Handle other types if necessary
+      return previous;
+    }
+  },
+);
+
+
            // Clear the existing data
       itemData.clear();
 
@@ -72,6 +100,7 @@ String currentDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
           'payment_method': payment['payment_method'],
           'payment_date': payment['payment_date'],
           'payment_time': payment['payment_time'],
+          'total_price': payment['total_price'],
         };
       }).toList();
 
@@ -101,6 +130,12 @@ String currentDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
             label: "Payment Time",
             prop: 'payment_time',
           ),
+          AdminTableItem(
+            itemView: paymentItemView,
+            width: 150,
+            label: "Total Price",
+            prop: 'total_price',
+          ),
           
           AdminTableItem(
               itemView: paymentItemView,
@@ -115,6 +150,11 @@ String currentDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
       print('Error loading Food data: $e');
     }
   }
+
+
+  Widget buildTotalAmount() {
+  return Text('Total Amount: RM ${totalPrice.toStringAsFixed(2)}');
+}
 
   Widget paymentItemView(
       BuildContext context, int index, dynamic data, AdminTableItem item) {
@@ -174,6 +214,9 @@ String currentDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
   }
 
 
+
+
+
   void _showPaymentMethodDialog(int index) {
   String newPaymentMethod = '';
 
@@ -225,7 +268,8 @@ String currentDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
           item['paymentID'] == deletedItem['paymentID'] &&
           item['payment_method'] == deletedItem['payment_method'] &&
           item['payment_date'] == deletedItem['payment_date'] &&
-          item['payment_time'] == deletedItem['payment_time']);
+          item['payment_time'] == deletedItem['payment_time']&&
+          item['total_price'] == deletedItem['total_price'] );
        
        // Delete the item from the database
       paymentDisplay.deletePayment(deletedItem['paymentID']);

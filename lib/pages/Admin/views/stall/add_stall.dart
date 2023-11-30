@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jom_makan/server/promotion.dart';
@@ -17,6 +14,8 @@ class AddStall extends StatefulWidget {
 class _RenewStallState extends State<AddStall> {
    late TextEditingController _stallIDController = TextEditingController();
   late TextEditingController _stallNameController = TextEditingController();
+   late TextEditingController _stallOwnerController = TextEditingController();
+    late TextEditingController _totalStaffController = TextEditingController();
   late TextEditingController _canteenController = TextEditingController();
   late TextEditingController _hygieneLevelController = TextEditingController();
   late bool isTyping = false;
@@ -29,6 +28,8 @@ class _RenewStallState extends State<AddStall> {
     super.initState();
     _stallIDController = TextEditingController();
     _stallNameController = TextEditingController();
+     _stallOwnerController = TextEditingController();
+      _totalStaffController = TextEditingController();
     _canteenController = TextEditingController();
     _hygieneLevelController = TextEditingController();
 
@@ -64,6 +65,10 @@ class _RenewStallState extends State<AddStall> {
             const SizedBox(height: 20),
             stallNameField(),
             const SizedBox(height: 20),
+             stallOwnerField(),
+            const SizedBox(height: 20),
+             totalStaffField(),
+            const SizedBox(height: 20),
             canteenField(),
             const SizedBox(height: 20),
             hygieneLevelField(),
@@ -88,6 +93,20 @@ class _RenewStallState extends State<AddStall> {
     return TextField(
       controller: _stallNameController,
       decoration: const InputDecoration(labelText: 'Stall Name'),
+    );
+  }
+
+   Widget stallOwnerField() {
+    return TextField(
+      controller: _stallNameController,
+      decoration: const InputDecoration(labelText: 'Stall Owner'),
+    );
+  }
+
+   Widget totalStaffField() {
+    return TextField(
+      controller: _stallNameController,
+      decoration: const InputDecoration(labelText: 'Total Staff'),
     );
   }
 
@@ -126,25 +145,14 @@ class _RenewStallState extends State<AddStall> {
 }
 
 void _pickPDF() async {
+  // Use a file picker library or any other method to allow users to pick a PDF file.
+  // Here, I'm using the `FilePicker` library as an example.
   FilePickerResult? result = await FilePicker.platform.pickFiles(
     type: FileType.custom,
     allowedExtensions: ['pdf'],
   );
 
   if (result != null && result.files.isNotEmpty) {
-    File pickedFile = File(result.files.first.path!);
-
-    // Get the documents directory
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String documentsPath = documentsDirectory.path;
-
-    // Specify the destination path
-    String destinationPath = '$documentsPath/stall/${result.files.first.name}';
-
-    // Copy the file to the destination path
-    await pickedFile.copy(destinationPath);
-
-    // Update the controller with the picked file's name
     setState(() {
       _hygieneLevelController.text = result.files.first.name ?? '';
     });
@@ -313,6 +321,8 @@ void _pickPDF() async {
   bool _hasEmptyFields() {
     return _stallIDController.text.isEmpty || 
       _stallNameController.text.isEmpty ||
+      _stallOwnerController.text.isEmpty ||
+      _totalStaffController.text.isEmpty ||
       _canteenController.text.isEmpty;
   }
 
@@ -320,10 +330,12 @@ void _pickPDF() async {
   void renewRegister() async {
     String stallID = _stallIDController.text;
     String stallName = _stallNameController.text;
+    String stallOwner = _stallOwnerController.text;
+    String totalStaff = _totalStaffController.text;
     String canteen = _canteenController.text;
 
     bool registrationResult = await _registerRenew.renewRegister(
-      stallID: stallID, stallName: stallName, canteen: canteen,
+      stallID: stallID, stallName: stallName, stallOwner: stallOwner, totalStaff: totalStaff, canteen: canteen,
     );
 
     if (registrationResult) {
