@@ -16,26 +16,25 @@ import 'package:jom_makan/pages/search/search.dart';
 import 'package:jom_makan/pages/Admin/admin_main.dart';
 
 void main() {
-  //debugCheckHasMaterialLocalizations(BuildContext context);
-  //debugCheckHasDirectionality(BuildContext context);
   runApp(
     ChangeNotifierProvider(
       create: (context) => UserProvider(),
-      child: const MyApp(),
+      child: MyApp(),
     )
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Access the user name from the provider
-    String? userName = Provider.of<UserProvider>(context).userName;
+    // Access the user details from the provider
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+    String? userName = userProvider.userName;
 
     bool hasRequiredRole(BuildContext context, String requiredRole) {
-      String? userRole = Provider.of<UserProvider>(context).userRole;
+      String? userRole = userProvider.userRole;
       return userRole == requiredRole;
     }
 

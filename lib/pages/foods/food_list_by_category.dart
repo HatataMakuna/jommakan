@@ -1,55 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/foods/food_details.dart';
-import 'package:jom_makan/server/food/get_all_foods.dart';
+import 'package:jom_makan/server/food/get_foods.dart';
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+class FoodCategoryList extends StatefulWidget {
+  final String selectedCategory;
+  const FoodCategoryList({super.key, required this.selectedCategory});
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  State<StatefulWidget> createState() => _FoodCategoryListState();
 }
 
-class _SearchPageState extends State<SearchPage> {
-  final GetAllFoods _getAllFoods = GetAllFoods();
-  List<Map<String, dynamic>> allFoods = []; // initial search result when the query is empty
-  List<Map<String, dynamic>> foundFoods = []; // used as search result when the query is not empty
-  bool loadingFoods = true;
+class _FoodCategoryListState extends State<FoodCategoryList> {
+  bool loading = true;
+  final GetFoods _getFoods = GetFoods();
+  List<Map<String, dynamic>> allFoods = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchAllFoods();
-
-    // all foods will be shown at initialise
-    foundFoods = allFoods;
-
-    setState(() {
-      loadingFoods = false;
-    });
+    _fetchFoods();
   }
 
-  void _fetchAllFoods() async {
-    final getAllFoods = await _getAllFoods.getAllFoods();
+  void _fetchFoods() async {
+    List<Map<String, dynamic>> results = await _getFoods.getFoodsByCategory(widget.selectedCategory);
     setState(() {
-      allFoods = getAllFoods;
-      foundFoods = getAllFoods;
-    });
-  }
-
-  void _runSearchQuery(String query) {
-    List<Map<String, dynamic>> results = [];
-    if (query.isEmpty) {
-      // If the search query is empty, return all foods to user
-      results = allFoods;
-    } else {
-      results = allFoods
-          .where((food) =>
-              food["food_name"].toLowerCase().contains(query.toLowerCase()) || 
-              food["stall_name"].toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    }
-    setState(() {
-      foundFoods = results;
+      allFoods = results;
+      loading = false;
     });
   }
 
@@ -58,13 +34,9 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: TextField(
-          onChanged: (value) => _runSearchQuery(value),
-          decoration: const InputDecoration(
-            hintText: 'Search for foods...',
-            border: InputBorder.none,
-            suffixIcon: Icon(Icons.search),
-          ),
+        title: Text(
+          'Food Category: ${widget.selectedCategory}',
+          style: const TextStyle(color: Colors.black),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -73,28 +45,26 @@ class _SearchPageState extends State<SearchPage> {
           },
         ),
       ),
-      body: loadingFoods ? const Center(child: CircularProgressIndicator()) : _initSearchScreen(),
+      body: loading ? const Center(child: CircularProgressIndicator()) : _initFoodList(),
     );
   }
 
-  Widget _initSearchScreen() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: foundFoods.isNotEmpty ? _buildSearchResults()
-        : const Center(
-          child: Text(
-            'No results found',
-            style: TextStyle(fontSize: 24),
-          ),
-        ),
-    );
+  Widget _initFoodList() {
+    if (allFoods.isEmpty) {
+      return const Center(child: Text(
+        'No foods found under this category.',
+        style: TextStyle(fontSize: 14),
+      ));
+    } else {
+      return _loadFoodList();
+    }
   }
 
-  Widget _buildSearchResults() {
+  Widget _loadFoodList() {
     return ListView.builder(
-      itemCount: foundFoods.length,
+      itemCount: allFoods.length,
       itemBuilder: (context, index) {
-        Map<String, dynamic> food = foundFoods[index];
+        Map<String, dynamic> food = allFoods[index];
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 8),
           elevation: 5,
@@ -149,12 +119,12 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ],
                   ],
-                ),
               ),
             ),
           ),
+          ),
         );
-      }
+      },
     );
   }
 }
