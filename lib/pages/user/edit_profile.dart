@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/server/user/user_profile.dart';
+import 'package:jom_makan/stores/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key, required this.username}) : super(key: key);
-  final String username;
+  final int? userID;
+  const EditProfile({super.key, required this.userID});
 
   @override
   State<StatefulWidget> createState() => _EditProfileState();
@@ -16,16 +18,16 @@ class _EditProfileState extends State<EditProfile> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _currentPasswordController = TextEditingController();
-  final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _repeatPasswordController = TextEditingController();
+  //final TextEditingController _newPasswordController = TextEditingController();
+  //final TextEditingController _repeatPasswordController = TextEditingController();
 
   // Error texts
   String? _emailError;
-  String? _passwordError;
-  String? _repeatPasswordError;
+  //String? _passwordError;
+  //String? _repeatPasswordError;
 
   late String existingUsername;
-  bool _showPassword = false;
+  //bool _showPassword = false;
 
   // Fetch user profile data when the widget is initialized
   @override
@@ -36,7 +38,8 @@ class _EditProfileState extends State<EditProfile> {
 
   // Fetch user profile data
   void _fetchUserProfile() async {
-    var userProfileData = await _userProfile.getUserProfile(widget.username);
+    int userID = widget.userID!;
+    var userProfileData = await _userProfile.getUserProfile(userID);
     if (userProfileData['success']) {
       // Set the text controllers with the retrieved data
       setState(() {
@@ -47,23 +50,30 @@ class _EditProfileState extends State<EditProfile> {
       // Get the username and temporarily stores in a variable for server-side purpose
       existingUsername = _nameController.text;
     } else {
-      // Handle error
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Oops! There is an error!'),
-            content: const Text('Error while retrieving user profile. Please try again later.'),
-            actions: <Widget>[
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ]
-          );
-        }
-      );
+      showErrorFetchingProfileMessage();
     }
+  }
+
+  void showErrorFetchingProfileMessage() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Oops! There is an error!'),
+          content: const Text('Error while retrieving user profile. Please try again later.'),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                // Go back to the previous page
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      }
+    );
   }
   
   // Dispose controllers to avoid memory leaks
@@ -72,8 +82,8 @@ class _EditProfileState extends State<EditProfile> {
     _nameController.dispose();
     _emailController.dispose();
     _currentPasswordController.dispose();
-    _newPasswordController.dispose();
-    _repeatPasswordController.dispose();
+    //_newPasswordController.dispose();
+    //_repeatPasswordController.dispose();
     super.dispose();
   }
 
@@ -104,10 +114,10 @@ class _EditProfileState extends State<EditProfile> {
             const SizedBox(height: 16),
             currentPassword(),
             const SizedBox(height: 16),
-            newPassword(),
+            /* newPassword(),
             const SizedBox(height: 16),
             repeatPassword(),
-            const SizedBox(height: 16),
+            const SizedBox(height: 16), */
             saveButton(),
           ],
         ),
@@ -142,7 +152,7 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget newPassword() {
+  /* Widget newPassword() {
     return TextField(
       controller: _newPasswordController,
       decoration: InputDecoration(
@@ -184,7 +194,7 @@ class _EditProfileState extends State<EditProfile> {
       onChanged: (value) => _validateRepeatPassword(value),
       obscureText: !_showPassword, 
     );
-  }
+  } */
 
   Widget saveButton() {
     return ElevatedButton(
@@ -205,7 +215,7 @@ class _EditProfileState extends State<EditProfile> {
     setState(() {});
   }
 
-  void _validatePassword(String value) {
+  /* void _validatePassword(String value) {
     if (value.length < 8) {
       _passwordError = 'Password must be at least 8 characters';
     } else {
@@ -221,7 +231,7 @@ class _EditProfileState extends State<EditProfile> {
       _repeatPasswordError = null;
     }
     setState(() {});
-  }
+  } */
 
   // Function to handle save button press
   void _saveChanges() async {
@@ -229,20 +239,35 @@ class _EditProfileState extends State<EditProfile> {
     final String name = _nameController.text;
     final String email = _emailController.text;
     final String currentPassword = _currentPasswordController.text;
-    final String newPassword = _newPasswordController.text;
-    final String repeatPassword = _repeatPasswordController.text;
+    //final String newPassword = _newPasswordController.text;
+    //final String repeatPassword = _repeatPasswordController.text;
+
+    int userID = Provider.of<UserProvider>(context, listen: false).userID!;
 
     // Validate the inputs
     _validateEmail(email);
-    _validatePassword(newPassword);
-    _validateRepeatPassword(repeatPassword);
+    //_validatePassword(newPassword);
+    //_validateRepeatPassword(repeatPassword);
 
     // required:
     // name and email; current password
     // passwords
 
     // Check for errors
-    if (
+    if (name.isEmpty || email.isEmpty || currentPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in the missing fields')),
+      );
+      return;
+    }
+    if (_emailError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid email')),
+      );
+      return;
+    }
+
+    /* if (
       // If the new and repeat password fields are empty, but the name is empty or email has errors
       ((name.isEmpty || _emailError != null) && (newPassword.isEmpty && repeatPassword.isEmpty)) ||
 
@@ -258,69 +283,89 @@ class _EditProfileState extends State<EditProfile> {
         const SnackBar(content: Text('Please fix the errors')),
       );
       return;
-    }
+    } */
 
     // Check if the current password matches with the database
-    bool isCurrentPasswordMatch = await _userProfile.checkCurrentPassword(name, currentPassword);
+    bool isCurrentPasswordMatch = await _userProfile.checkCurrentPassword(userID, currentPassword);
 
     if (!isCurrentPasswordMatch) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid current password')),
-      );
+      showInvalidCurrentPasswordMessage();
     } else {
       // If there are no errors, show confirmation message
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Confirmation'),
-            content: const Text('Are you sure you want to save your changes?'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-              ),
-              ElevatedButton(
-                child: const Text('Register'),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-
-                  // Update the user profile
-                  updateUserProfile(existingUsername, name, email, newPassword);
-                },
-              ),
-            ],
-          );
-        }
-      );
+      showConfirmationMessage();
     }
   }
 
-  // function to update user profile
-  void updateUserProfile(String currentUsername, String username, String email, String password) async {
-    bool isUpdateSuccessful;
+  void showInvalidCurrentPasswordMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Invalid current password')),
+    );
+  }
 
-    if (username.isNotEmpty && email.isNotEmpty && password.isEmpty) {
+  void showConfirmationMessage() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmation'),
+          content: const Text('Are you sure you want to save your changes?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Yes'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+
+                // Update the user profile
+                updateUserProfile(_nameController.text, _emailController.text);
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  // function to update user profile
+  void updateUserProfile(String username, String email) async {
+    int userID = Provider.of<UserProvider>(context, listen: false).userID!;
+    bool isUpdateSuccessful = await _userProfile.updateNameEmail(userID, username, email);
+
+    /* if (username.isNotEmpty && email.isNotEmpty && password.isEmpty) {
       isUpdateSuccessful = await _userProfile.updateNameEmail(currentUsername, username, email);
     }
     else if (username.isEmpty && email.isEmpty && password.isNotEmpty) {
       isUpdateSuccessful = await _userProfile.updatePassword(currentUsername, password);
     } else {
       isUpdateSuccessful = await _userProfile.updateUserProfile(currentUsername, username, email, password);
-    }
+    } */
     
     if (isUpdateSuccessful) {
       // Show a success message or navigate back
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile updated successfully')),
-      );
+      showUpdateSuccessfulMessage(username, email);
     } else {
       // Show an error message or handle the update failure
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to update profile. Please try again.')),
-      );
+      showUpdateFailedMessage();
     }
+  }
+
+  void showUpdateSuccessfulMessage(String username, String email) {
+    Provider.of<UserProvider>(context, listen: false).setUserName(username);
+    Provider.of<UserProvider>(context, listen: false).setUserEmail(email);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Profile updated successfully')),
+    );
+  }
+
+  void showUpdateFailedMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Failed to update profile. Please try again.')),
+    );
   }
 }

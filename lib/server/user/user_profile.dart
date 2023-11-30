@@ -2,16 +2,17 @@ import 'package:jom_makan/database/db_connection.dart';
 
 class UserProfile {
   // Get user profile and display name and email in edit profile page
-  Future<Map<String, dynamic>> getUserProfile(String username) async {
+  Future<Map<String, dynamic>> getUserProfile(int userID) async {
     try {
       // Retrieve user information based on the name
-      var results = await pool.execute('SELECT * FROM users WHERE username = :username', {"username": username});
+      var results = await pool.execute('SELECT * FROM users WHERE userID = :userID', {"userID": userID});
       
       // If the user is found, return user data
       if (results.isNotEmpty) {
-        String? email;
+        String? username, email;
 
         for (final row in results.rows) {
+          username = row.colByName("username");
           email = row.colByName("email");
         }
         
@@ -31,10 +32,10 @@ class UserProfile {
   }
 
   // Check if the provided current password matches the one stored in the database
-  Future<bool> checkCurrentPassword(String username, String currentPassword) async {
+  Future<bool> checkCurrentPassword(int userID, String currentPassword) async {
     try {
       // Retrieve user information based on the username
-      var results = await pool.execute('SELECT password FROM users WHERE username = :username', {"username": username});
+      var results = await pool.execute('SELECT password FROM users WHERE userID = :userID', {"userID": userID});
 
       // If the user is found, compare passwords
       if (results.isNotEmpty) {
@@ -54,15 +55,15 @@ class UserProfile {
   }
 
   // Update username and email in the database (username and email)
-  Future<bool> updateNameEmail(String currentUsername, String username, String email) async {
+  Future<bool> updateNameEmail(int userID, String username, String email) async {
     try {
       // Update user information based on the username
       await pool.execute(
-        'UPDATE users SET username = :username, email = :email WHERE username = :curusername',
+        'UPDATE users SET username = :username, email = :email WHERE userID = :userID',
         {
           "username": username,
           "email": email,
-          "curusername": currentUsername,
+          "userID": userID,
         },
       );
 
@@ -74,14 +75,14 @@ class UserProfile {
   }
 
   // Update password in the database
-  Future<bool> updatePassword(String currentUsername, String password) async {
+  Future<bool> updatePassword(int userID, String password) async {
     try {
       // Update user information based on the username
       await pool.execute(
-        'UPDATE users SET password = :password WHERE username = :curusername',
+        'UPDATE users SET password = :password WHERE userID = :userID',
         {
           "password": password,
-          "curusername": currentUsername,
+          "curusername": userID,
         },
       );
 

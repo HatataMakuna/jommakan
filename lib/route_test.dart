@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/Admin/admin_main.dart';
 import 'package:jom_makan/pages/order/order_history.dart';
+import 'package:jom_makan/pages/user/change_password.dart';
 import 'package:provider/provider.dart';
 import 'package:jom_makan/stores/user_provider.dart'; // Import the UserProvider class
 import 'package:jom_makan/pages/main/main_page.dart';
 import 'package:jom_makan/pages/user/create_account.dart';
-import 'package:jom_makan/pages/user/edit_profile.dart';
 import 'package:jom_makan/pages/user/forget_password.dart';
 import 'package:jom_makan/pages/user/login.dart';
 import 'package:jom_makan/pages/search/search.dart';
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Schedule the modification after the build phase has completed
     Future.delayed(Duration.zero, () {
-      Provider.of<UserProvider>(context, listen: false).setUserName('Testing');
+      Provider.of<UserProvider>(context, listen: false).setUserName('Testin');
       Provider.of<UserProvider>(context, listen: false).setUserID(1);
       Provider.of<UserProvider>(context, listen: false).setUserRole('User');
       Provider.of<UserProvider>(context, listen: false).setUserEmail('testing@tarc.edu.my');
@@ -39,7 +39,8 @@ class MyApp extends StatelessWidget {
     }); */
     
     // Access the user name from the provider
-    String? userName = Provider.of<UserProvider>(context).userName;
+    //String? userName = Provider.of<UserProvider>(context).userName;
+    //int? userID = Provider.of<UserProvider>(context, listen: false).userID;
 
     bool hasRequiredRole(BuildContext context, String requiredRole) {
       String? userRole = Provider.of<UserProvider>(context).userRole;
@@ -54,7 +55,9 @@ class MyApp extends StatelessWidget {
         '/user/login': (context) => const LoginPage(),
         '/user/create-account': (context) => const CreateAccount(),
         '/user/forget-password': (context) => const ForgetPasswordPage(),
-        '/user/edit-profile': (context) => EditProfile(username: userName.toString()),
+
+        //'/user/edit-profile': (context) => EditProfile(userID: userID),
+        '/user/change-password': (context) => const ChangePassword(),
         '/user/order-history': (context) => const OrderHistoryPage(),
         '/rider/rider-info': (context) => const RiderInfo(),
         '/home': (context) => const MainPage(),

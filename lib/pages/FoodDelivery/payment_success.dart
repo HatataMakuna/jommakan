@@ -6,6 +6,7 @@ import 'package:jom_makan/pages/foodDelivery/widgets/profile_tile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:jom_makan/server/order/place_order.dart';
 import 'package:jom_makan/server/payment/add_payment.dart';
+import 'package:jom_makan/server/rider/add_delivery.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,8 @@ void main() {
           cartItems: [],
           paymentMethod: 'E-wallet',
           totalPrice: 0.0,
+          orderMethod: 'Delivery',
+          address: '',
         ),
       )
     ),
@@ -32,11 +35,13 @@ class PaymentSuccessPage extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
   final String paymentMethod;
   final double totalPrice;
+  final String orderMethod;
+  final String address;
 
   const PaymentSuccessPage({
     super.key, required this.userID, required this.noCutlery,
     required this.cartItems, required this.paymentMethod,
-    required this.totalPrice
+    required this.totalPrice, required this.orderMethod, required this.address,
   });
 
   /*
@@ -55,6 +60,7 @@ class PaymentSuccessPage extends StatefulWidget {
 class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
   final PlaceOrder _placeOrder = PlaceOrder();
   final AddPayment _addPayment = AddPayment();
+  final AddDelivery _addDelivery = AddDelivery();
   bool isDataAvailable = true;
   late String formattedTime;  // Define formattedTime variable
 
@@ -90,6 +96,11 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
         totalPrice: widget.totalPrice,
       );
 
+      // If the order method is Delivery, add to Delivery database
+      if (widget.orderMethod == 'Delivery') {
+        await _addDelivery.addDelivery(orderID: _placeOrder.orderID, address: widget.address);
+      }
+
       setState(() {
         if (isSuccess) {
           Future.delayed(const Duration(seconds: 3)).then((_) => goToDialog());
@@ -108,6 +119,13 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
 
   @override
   Widget build(BuildContext context) {
+    /* Future.delayed(Duration.zero, () {
+      Provider.of<UserProvider>(context, listen: false).setUserName('Testing');
+      Provider.of<UserProvider>(context, listen: false).setUserID(1);
+      Provider.of<UserProvider>(context, listen: false).setUserRole('User');
+      Provider.of<UserProvider>(context, listen: false).setUserEmail('testing@tarc.edu.my');
+    }); */
+
     return Scaffold(
       body: bodyData(),
     );
