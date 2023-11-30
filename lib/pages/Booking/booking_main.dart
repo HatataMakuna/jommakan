@@ -38,9 +38,14 @@ class _BusLayoutState extends State<BusLayout> {
   Uint8List? qrCodeBytes; // Use Uint8List to store image bytes
 
   Future<void> generateQRCode(Set<SeatNumber> selectedSeats) async {
-    final List<Map<String, int>> seatsList = selectedSeats
-        .map((seat) => {'rowI': seat.rowI, 'colI': seat.colI})
-        .toList();
+    final List<Map<String, Object>> seatsList = selectedSeats
+    .map((seat) => {
+          'text': 'Welcome To JomMakan Seating',
+          // 'textStyle': TextStyle(fontWeight: FontWeight.bold),
+          'rowI': seat.rowI,
+          'colI': seat.colI,
+        })
+    .toList();
 
     final response = await http.post(
       Uri.parse('http://127.0.0.1:5000/generate_qr'),
@@ -53,7 +58,9 @@ class _BusLayoutState extends State<BusLayout> {
       }),
     );
 
-    if (response.statusCode == 200) {
+     if (response.statusCode == 200) {
+      // Assume the Flask server returns the UI information in the response
+      // final Map<String, dynamic> responseData = jsonDecode(response.body);
 
       // Debug print the response body
       print('Server response body: ${response.body}');
@@ -66,6 +73,7 @@ class _BusLayoutState extends State<BusLayout> {
 
       setState(() {
         qrCodeBytes = response.bodyBytes;
+        
       });
     } else {
       // Handle errors
@@ -73,6 +81,7 @@ class _BusLayoutState extends State<BusLayout> {
     }
   }
 
+     
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -304,6 +313,43 @@ class _BusLayoutState extends State<BusLayout> {
 }
 
 
+class UIPage extends StatelessWidget {
+  final String logoUrl;
+  final String welcomeText;
+
+  const UIPage({
+    required this.logoUrl,
+    required this.welcomeText,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('UI Display Page'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(
+              logoUrl,
+              width: 100.0,
+              height: 100.0,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              welcomeText,
+              style: TextStyle(fontSize: 20.0),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class SelectedSeatsPage extends StatelessWidget {
   final Set<SeatNumber> selectedSeats;
 
@@ -346,5 +392,4 @@ class SeatNumber {
   String toString() {
     return '[$rowI][$colI]';
   }
-
 }

@@ -3,23 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
-  runApp(const PreOrderPage());
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Pre-order and Automation Time',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: PreOrderPage(),
+    );
+  }
 }
 
 class PreOrderPage extends StatefulWidget {
-  const PreOrderPage({super.key});
-
   @override
-  State<PreOrderPage> createState() => _PreOrderPageState();
+  _PreOrderPageState createState() => _PreOrderPageState();
 }
 
 class _PreOrderPageState extends State<PreOrderPage> {
-  late String selectedTime;
+  late String preOrderTime;
+  late String deliveryTime;
+  String selectedOption = 'None';
 
   @override
   void initState() {
     super.initState();
-    selectedTime = _getInitialTime();
+    preOrderTime = _getInitialTime();
+    deliveryTime = _getInitialTime();
   }
 
   String _getInitialTime() {
@@ -39,10 +53,14 @@ class _PreOrderPageState extends State<PreOrderPage> {
     }
   }
 
-  Future<void> _selectPreOrderTime(BuildContext context) async {
+  Future<void> _selectTime(BuildContext context, String option) async {
     try {
       final currentWorldTime = await _getCurrentWorldTime();
-      final TimeOfDay? picked = await showTimePickerDialog();
+
+      final TimeOfDay? picked = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
 
       if (picked != null) {
         final DateTime selectedDateTime = DateTime(
@@ -55,10 +73,37 @@ class _PreOrderPageState extends State<PreOrderPage> {
 
         if (selectedDateTime.isAfter(currentWorldTime)) {
           setState(() {
-            selectedTime = "${picked.hour}:${picked.minute} ${picked.period.toString().split('.')[1]}";
+            if (option == 'Order Now') {
+              selectedOption = 'Order Now';
+            } else if (option == 'Pre-order') {
+              preOrderTime = "${picked.hour}:${picked.minute} ${picked.period.toString().split('.')[1]}";
+              selectedOption = 'Pre-order';
+            } else if (option == 'Delivery') {
+              deliveryTime = "${picked.hour}:${picked.minute} ${picked.period.toString().split('.')[1]}";
+              selectedOption = 'Delivery';
+            }
           });
+
+          // Automatically estimate automation time based on the selected time
+          _estimateAutomationTime(option);
         } else {
-          _showInvalidTime();
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Invalid Time'),
+                content: const Text('Please select a time after the current time.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
         }
       }
     } catch (e) {
@@ -83,30 +128,26 @@ class _PreOrderPageState extends State<PreOrderPage> {
     }
   }
 
-  Future<TimeOfDay?> showTimePickerDialog() async {
-    return await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-  }
-
-  void _showInvalidTime() {
+  // Function to estimate automation time based on the selected time
+  void _estimateAutomationTime(String option) {
+    String selectedTime = (option == 'Pre-order') ? preOrderTime : (option == 'Delivery') ? deliveryTime : '';
+    String estimatedAutomationTime = "Estimated Automation Time for $option: $selectedTime";
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Invalid Time'),
-          content: const Text('Please select a time after the current time.'),
-          actions: <Widget>[
+          title: const Text('Automation Time Estimate'),
+          content: Text(estimatedAutomationTime),
+          actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
-              child: const Text('Ok'),
+              child: const Text('OK'),
             ),
           ],
         );
-      }
+      },
     );
   }
 
@@ -121,14 +162,17 @@ class _PreOrderPageState extends State<PreOrderPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-             ElevatedButton(
-              onPressed: () {
-                (context);
-              },
-              child: const Text('Order Now'),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  _selectTime(context, 'Order Now');
+                },
+                child: const Text('Order Now'),
+              ),
             ),
-            const SizedBox(height: 16,),
+            const SizedBox(height: 16),
             const Divider(),
+            const SizedBox(height: 16),
             const Text(
               'Select Pre-order Time:',
               style: TextStyle(
@@ -137,47 +181,92 @@ class _PreOrderPageState extends State<PreOrderPage> {
               ),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                _selectPreOrderTime(context);
-              },
-              child: const Text('Select Time'),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Selected Time: $selectedTime',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
+            Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Implement logic to estimate automation time
-                  // You can use selectedTime to calculate the automation time
-                  // For example, you can add a fixed time or use a predefined formula
-                  String estimatedAutomationTime = "Estimated Automation Time: $selectedTime";
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Automation Time Estimate'),
-                        content: Text(estimatedAutomationTime),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                  if (selectedOption == 'None' || selectedOption == 'Pre-order') {
+                    _selectTime(context, 'Pre-order');
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Error'),
+                          content: const Text('You can only choose one option.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
-                child: const Text('Estimate Automation Time'),
+                child: const Text('Select Time'),
               ),
             ),
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                'Pre-order Time: $preOrderTime',
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Divider(),
+            const SizedBox(height: 16),
+            const Text(
+              'Select Delivery Time:',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  if (selectedOption == 'None' || selectedOption == 'Delivery') {
+                    _selectTime(context, 'Delivery');
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Error'),
+                          content: const Text('You can only choose one option.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                child: const Text('Select Time'),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                'Delivery Time: $deliveryTime',
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            const Spacer(),
           ],
         ),
       ),

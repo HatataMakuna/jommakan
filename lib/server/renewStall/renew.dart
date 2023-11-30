@@ -1,16 +1,20 @@
+import 'dart:ffi';
+
 import 'package:jom_makan/database/db_connection.dart';
 
 class Renew {
   Future<bool> renewRegister({
-    required String stallID, required String stallName, required String canteen,
+    required String stallID, required String stallName, required String stallOwner, required String totalStaff, required String canteen,
   }) async {
     try {
       var result = await pool.execute(
-        'INSERT INTO stallDisplay (stallID, stallName, canteen)'
-        ' VALUES (:stallID, :stallName, :canteen)',
+        'INSERT INTO stallDisplay (stallID, stallName, stallOwner, totalStaff, canteen)'
+        ' VALUES (:stallID, :stallName, :stallOwner, :totalStaff, :canteen)',
         {
           "stallID": stallID,
           "stallName": stallName,
+          "stallOwner": stallOwner,
+          "totalStaff": totalStaff,
           "canteen": canteen,
         },
       );
@@ -34,6 +38,8 @@ class Renew {
         renew.add({
           'stallID': row.colByName("stallID"),
           'stallName': row.colByName("stallName"),
+          'stallOwner': row.colByName("stallOwner"),
+          'totalStaff': row.colByName("totalStaff"),
           'canteen': row.colByName("canteen"),
         });
       }
