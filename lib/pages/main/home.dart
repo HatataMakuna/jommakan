@@ -73,10 +73,13 @@ class _HomePageState extends State<HomePage> {
 
   void _loadFoods() async {
     final getAllFoods = await _getAllFoods.getAllFoods();
-    setState(() {
-      _allFoods = getAllFoods;
-      loadingOtherFoods = false;
-    });
+    
+    if (mounted) {
+      setState(() {
+        _allFoods = getAllFoods;
+        loadingOtherFoods = false;
+      });
+    }
   }
 
   int? _getUserID() {
