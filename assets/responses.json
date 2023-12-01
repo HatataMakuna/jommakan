@@ -2,7 +2,7 @@
     "responses": [
       {
         "trigger": ["hello", "hi", "hihi"],
-        "response": "Hi there! Welcome to our food ordering service. How can I assist you today?"
+        "response": "Hi there! Welcome to the JomMakan food ordering service. How can I assist you today?"
       },
       {
         "trigger": "how are you",
@@ -31,6 +31,18 @@
       {
         "trigger": "default",
         "response": "I'm sorry, but I didn't understand that. If you have a specific question, please ask, and I'll do my best to assist you!"
+      },
+      {
+        "trigger": "opening hours",
+        "response": "Our stalls are open from 7 AM to 5 PM every Monday to Saturday."
+      },
+      {
+        "trigger": "delivery hours",
+        "response": "Our delivery services are open from 10 AM to 5 PM every Monday to Friday."
+      },
+      {
+        "trigger": ["place an order", "place order"],
+        "response": "You can place an order by adding your desired foods to the cart and tap on the Checkout button in the cart page."
       }
     ]
 }

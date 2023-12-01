@@ -8,10 +8,12 @@ class CreditCardPage extends StatefulWidget {
   final bool noCutlery;
   final List<Map<String, dynamic>> cartItems;
   final double totalPrice;
+  final String orderMethod;
+  final String address;
 
   const CreditCardPage({
-    super.key, required this.noCutlery,
-    required this.cartItems, required this.totalPrice,
+    super.key, required this.noCutlery, required this.cartItems,
+    required this.totalPrice, required this.orderMethod, required this.address,
   });
 
   @override
@@ -300,6 +302,8 @@ class _CreditCardPageState extends State<CreditCardPage> {
                 cartItems: widget.cartItems,
                 paymentMethod: 'Debit/Credit Card',
                 totalPrice: widget.totalPrice,
+                orderMethod: widget.orderMethod,
+                address: widget.address,
               ),
             ),
           );
@@ -334,7 +338,7 @@ class ProfileTile extends StatelessWidget {
   final String subtitle;
   final Color textColor;
 
-  ProfileTile({required this.title, required this.subtitle, required this.textColor});
+  const ProfileTile({super.key, required this.title, required this.subtitle, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
