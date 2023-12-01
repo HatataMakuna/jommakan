@@ -12,6 +12,7 @@ class PlaceOrder {
     required List<Map<String, dynamic>> cartItems,
     required String paymentMethod,
     required double totalPrice,
+    required String orderMethod,
   }) async {
     //String formattedDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
 
@@ -24,13 +25,14 @@ class PlaceOrder {
     try {
       // Insert into the orders table
       var result = await pool.execute('''
-        INSERT INTO orders (userID, noCutlery, paymentID, total_price) 
-        VALUES (:userID, :noCutlery, :payment, :total_price)
+        INSERT INTO orders (userID, noCutlery, paymentID, total_price, order_method) 
+        VALUES (:userID, :noCutlery, :payment, :total_price, :order_method)
       ''', {
         "userID": userID,
         "noCutlery": noCutlery ? 1 : 0,
         "payment": paymentID,
         "total_price": totalPrice,
+        "order_method": orderMethod,
       });
 
       // Get the last order ID

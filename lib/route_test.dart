@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Schedule the modification after the build phase has completed
     Future.delayed(Duration.zero, () {
-      Provider.of<UserProvider>(context, listen: false).setUserName('Testin');
+      Provider.of<UserProvider>(context, listen: false).setUserName('Testing');
       Provider.of<UserProvider>(context, listen: false).setUserID(1);
       Provider.of<UserProvider>(context, listen: false).setUserRole('User');
       Provider.of<UserProvider>(context, listen: false).setUserEmail('testing@tarc.edu.my');
