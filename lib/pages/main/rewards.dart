@@ -12,34 +12,110 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: RewardsPage(),
+      home: RewardPage(),
     );
   }
 }
 
-class RewardsPage extends StatelessWidget {
-  const RewardsPage({Key? key});
+class RewardPage extends StatefulWidget {
+  @override
+  _RewardPageState createState() => _RewardPageState();
+}
+
+class _RewardPageState extends State<RewardPage> {
+  int userPoints = 500;
+  List<AchievedReward> achievedRewards = [];
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      // appBar: AppBar(
+      //   title: const Text('My Rewards'),
+      // ),
+      body: Stack(
         children: [
-          RewardCard(
-            title: 'Your Rewards',
-            description: 'Unlock delicious discounts and exclusive offers every time you dine with us.',
-            validThrough: '12/2023',
-            cardholderName: 'John Doe',
-            rewardPoints: '500',
-            onPressed: () {
-              // Implement the action when the user taps the "Redeem Now" button
-            },
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/sub.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-          SizedBox(height: 16),
-          TotalSpendUpgradeCard(
-            totalSpent: 'RM 500.00',
-            toUpgrade: 'RM 0.00',
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      UserCard(userName: 'Chun Wai', userPoints: userPoints),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Your Rewards',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue,),
+                      ),
+                      const SizedBox(height: 16),
+                      RewardCard(
+                        title: 'Free Delivery',
+                        description: 'Get free delivery on your next order!',
+                        points: 100,
+                        userPoints: userPoints,
+                        onRedeem: (int points) {
+                          setState(() {
+                            userPoints -= points;
+                            achievedRewards.add(AchievedReward(
+                              title: 'Free Delivery',
+                              details: 'Free delivery on your next order!',
+                              termsAndConditions:
+                                  'Valid for one-time use only.',
+                            ));
+                          });
+                        },
+                      ),
+                      RewardCard(
+                        title: 'Discount Coupon',
+                        description:
+                            'Enjoy a 20% discount on selected items.',
+                        points: 150,
+                        userPoints: userPoints,
+                        onRedeem: (int points) {
+                          setState(() {
+                            userPoints -= points;
+                            achievedRewards.add(AchievedReward(
+                              title: 'Discount Coupon',
+                              details: '20% discount on selected items.',
+                              termsAndConditions:
+                                  'Not applicable to certain products.',
+                            ));
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Achieved Rewards',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Display achieved rewards
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: achievedRewards
+                      .map((reward) => AchievedRewardCard(achievedReward: reward))
+                      .toList(),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -47,54 +123,98 @@ class RewardsPage extends StatelessWidget {
   }
 }
 
-class TotalSpendUpgradeCard extends StatelessWidget {
-  final String totalSpent;
-  final String toUpgrade;
+class UserCard extends StatelessWidget {
+  final String userName;
+  final int userPoints;
 
-  const TotalSpendUpgradeCard({
-    required this.totalSpent,
-    required this.toUpgrade,
+  UserCard({required this.userName, required this.userPoints});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.white.withOpacity(0.8),
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Welcome, $userName!',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Your Points: $userPoints',
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RewardCard extends StatelessWidget {
+  final String title;
+  final String description;
+  final int points;
+  final int userPoints;
+  final Function(int) onRedeem;
+
+  RewardCard({
+    required this.title,
+    required this.description,
+    required this.points,
+    required this.userPoints,
+    required this.onRedeem,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      elevation: 5,
-      child: Container(
-        width: 300, // Adjust the width as needed
+      color: Colors.white.withOpacity(0.8),
+      elevation: 3,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Total Spent',
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-                SizedBox(height: 8),
-                Text(
-                  totalSpent,
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-              ],
+            Text(
+              title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const Divider(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            const SizedBox(height: 8),
+            Text(
+              description,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'To Upgrade',
-                  style: Theme.of(context).textTheme.headline6,
+                  'Points: $points',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                SizedBox(height: 8),
-                Text(
-                  toUpgrade,
-                  style: Theme.of(context).textTheme.subtitle1,
+                ElevatedButton(
+                  onPressed: userPoints >= points
+                      ? () {
+                          onRedeem(points);
+                        }
+                      : null,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                      (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.disabled)) {
+                          return Colors.grey; // Disabled color
+                        }
+                        return Colors.orange; // Enabled color
+                      },
+                    ),
+                  ),
+                  child: const Text('Redeem'),
                 ),
               ],
             ),
@@ -105,126 +225,59 @@ class TotalSpendUpgradeCard extends StatelessWidget {
   }
 }
 
-
-class RewardCard extends StatelessWidget {
+class AchievedReward {
   final String title;
-  final String description;
-  final String? validThrough;
-  final String? cardholderName;
-  final String? rewardPoints;
-  final String? value;
-  final VoidCallback? onPressed;
+  final String details;
+  final String termsAndConditions;
 
-  const RewardCard({
+  AchievedReward({
     required this.title,
-    required this.description,
-    this.validThrough,
-    this.cardholderName,
-    this.rewardPoints,
-    this.value,
-    this.onPressed,
+    required this.details,
+    required this.termsAndConditions,
   });
+}
+
+class AchievedRewardCard extends StatelessWidget {
+  final AchievedReward achievedReward;
+
+  AchievedRewardCard({required this.achievedReward});
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 3,
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(12.0),
       ),
-      elevation: 5,
-      child: Container(
-        width: 300, // Adjust the width as needed
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-                if (onPressed != null)
-                  ElevatedButton(
-                    onPressed: onPressed,
-                    child: Text('Redeem Now'),
-                  ),
-              ],
-            ),
-            Divider(),
-            SizedBox(height: 8),
             Text(
-              'Reward Description:',
-              style: Theme.of(context).textTheme.subtitle1,
+              achievedReward.title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 8),
             Text(
-              description,
-              style: Theme.of(context).textTheme.bodyText2,
+              achievedReward.details,
+              style: const TextStyle(fontSize: 16),
             ),
-            if (validThrough != null)
-              SizedBox(height: 16),
-            if (validThrough != null)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Valid Through:',
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                  Text(
-                    validThrough!,
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                ],
+            const SizedBox(height: 8),
+            const Text(
+              'Terms & Conditions:',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
-            if (cardholderName != null)
-              SizedBox(height: 16),
-            if (cardholderName != null)
-              Text(
-                'Cardholder Information',
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-            if (cardholderName != null)
-              SizedBox(height: 8),
-            if (cardholderName != null)
-              Text(
-                cardholderName!,
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-            if (rewardPoints != null)
-              SizedBox(height: 16),
-            if (rewardPoints != null)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Reward Points:',
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                  Text(
-                    rewardPoints!,
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                ],
-              ),
-            if (value != null)
-              SizedBox(height: 16),
-            if (value != null)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Value:',
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                  Text(
-                    value!,
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                ],
-              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              achievedReward.termsAndConditions,
+              style: const TextStyle(fontSize: 14),
+            ),
           ],
         ),
       ),
