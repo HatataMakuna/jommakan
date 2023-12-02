@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/chatbot/chat_screen.dart';
 import 'package:jom_makan/pages/user/edit_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
@@ -44,6 +45,7 @@ class MePage extends StatelessWidget {
                 
                 // Light yellow buttons
                 _buildButton(context, 'Rider info', 0xFFFFE5BA),
+                _buildButton(context, 'Customer Service', 0xFFFFE5BA),
 
                 /* _buildButton(context, 'My ratings', 0xFFC2EAFF),
                 _buildButton(context, 'Edit Review', 0xFFC2EAFF),
@@ -86,6 +88,13 @@ class MePage extends StatelessWidget {
           }
           else if (label == 'Rider info') {
             Navigator.of(context).pushNamed('/rider/rider-info');
+          }
+          else if (label == 'Customer Service') {
+            Navigator.push(
+              context, MaterialPageRoute(
+                builder: (context) => const ChatScreen(),
+              ),
+            );
           }
           else if (label == 'Logout') {
             // Show logout confirmation dialog

@@ -4,6 +4,7 @@ void main() {
   runApp(MyApp());
 }
 
+// ignore: use_key_in_widget_constructors
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -12,17 +13,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: RewardPage(),
+      home: const RewardsPage(),
     );
   }
 }
 
-class RewardPage extends StatefulWidget {
+class RewardsPage extends StatefulWidget {
+  const RewardsPage({super.key});
+
   @override
-  _RewardPageState createState() => _RewardPageState();
+  RewardsPageState createState() => RewardsPageState();
 }
 
-class _RewardPageState extends State<RewardPage> {
+class RewardsPageState extends State<RewardsPage> {
   int userPoints = 500;
   List<AchievedReward> achievedRewards = [];
 
@@ -127,7 +130,7 @@ class UserCard extends StatelessWidget {
   final String userName;
   final int userPoints;
 
-  UserCard({required this.userName, required this.userPoints});
+  const UserCard({super.key, required this.userName, required this.userPoints});
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +165,8 @@ class RewardCard extends StatelessWidget {
   final int userPoints;
   final Function(int) onRedeem;
 
-  RewardCard({
+  const RewardCard({
+    super.key,
     required this.title,
     required this.description,
     required this.points,
@@ -240,7 +244,7 @@ class AchievedReward {
 class AchievedRewardCard extends StatelessWidget {
   final AchievedReward achievedReward;
 
-  AchievedRewardCard({required this.achievedReward});
+  const AchievedRewardCard({super.key, required this.achievedReward});
 
   @override
   Widget build(BuildContext context) {
