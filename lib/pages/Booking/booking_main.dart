@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:jom_makan/server/seatDisplay/seatDisplay.dart';
+import 'package:photo_view/photo_view.dart';
 
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
+import 'package:jom_makan/components/logo.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,6 +39,50 @@ class BusLayout extends StatefulWidget {
 class _BusLayoutState extends State<BusLayout> {
   Set<SeatNumber> selectedSeats = {};
   Uint8List? qrCodeBytes; // Use Uint8List to store image bytes
+  final SeatDisplay addSeat = SeatDisplay();
+  List<Map<String, dynamic>> _addSeat = [];
+  
+
+  final TextEditingController _confirmationIDController = TextEditingController();
+  final TextEditingController _rowController = TextEditingController();
+  final TextEditingController _colController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+var itemData = [];
+
+
+
+Future<String> _getData() async {
+  try {
+    final data = await addSeat.getSeatingData();
+    final state = ['Processing', 'Approve', 'Reject'];
+
+    _addSeat = data;
+
+    for (int i = 0; i < _addSeat.length; i++) {
+      String foodNameCorrect = 'foodName: ${_addSeat[i]['confirmationID']}';
+      print('Food Name: ' + foodNameCorrect);
+      print('Date : ${_addSeat[i]['confirmationID']}');
+      itemData.add({
+        'confirmationID': _addSeat[i]['confirmationID'],
+        'row': _addSeat[i]['row'],
+        'col': _addSeat[i]['col'],
+        'location': _addSeat[i]['location'],
+        'time': _addSeat[i]['time'],
+      });
+
+      // Add row and col to _addSeat list
+      _addSeat[i]['row'] = _addSeat[i]['row'];
+      _addSeat[i]['col'] = _addSeat[i]['col'];
+    }
+
+    // Return the confirmation ID or other data you want to display
+    return _addSeat.isNotEmpty ? _addSeat[0]['confirmationID'].toString() : '';
+  } catch (e) {
+    print('Error loading promotion data: $e');
+    return ''; // Return an empty string or some default value in case of an error
+  }
+}
 
   Future<void> generateQRCode(Set<SeatNumber> selectedSeats) async {
     final List<Map<String, Object>> seatsList = selectedSeats
@@ -57,24 +104,26 @@ class _BusLayoutState extends State<BusLayout> {
         'data': seatsList,
       }),
     );
+    print(seatsList.map((seat) => seat['rowI']).toList());
 
-     if (response.statusCode == 200) {
-      // Assume the Flask server returns the UI information in the response
-      // final Map<String, dynamic> responseData = jsonDecode(response.body);
-
-      // Debug print the response body
-      print('Server response body: ${response.body}');
-      // Assume the Flask server returns the QR code image URL in the response
-
+      if (response.statusCode == 200) {
       final File file = File('assets/example.png');
       await file.writeAsBytes(response.bodyBytes);
-      //file.readAsBytes();
-      //print('Body Bytes: ${response.bodyBytes}');
 
       setState(() {
         qrCodeBytes = response.bodyBytes;
-        
       });
+
+      // Navigate to a new page to display the QR code
+      Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => QRCodeDisplayPage(
+      qrCodeBytes: qrCodeBytes!,
+      selectedSeats: selectedSeats,
+    ),
+  ),
+);
     } else {
       // Handle errors
       print('Failed to generate QR code: ${response.statusCode}');
@@ -107,7 +156,9 @@ class _BusLayoutState extends State<BusLayout> {
                     } else {
                       selectedSeats.remove(SeatNumber(rowI: rowI, colI: colI));
                     }
-                    setState(() {}); // Trigger a rebuild when seats are selected/deselected
+                    setState(() {
+                                     
+                    }); // Trigger a rebuild when seats are selected/deselected
                   },
                   stateModel: const SeatLayoutStateModel(
                     rows: 10,
@@ -283,13 +334,15 @@ class _BusLayoutState extends State<BusLayout> {
     // ),
     const SizedBox(height: 12),
     Text(selectedSeats.join(" , ")), // Display selected seat numbers directly
-    
+const SizedBox(height: 12),
    // Add a button to generate the QR code
             ElevatedButton(
               onPressed: () {
                 print("Selected Seats: $selectedSeats"); // Debug print
                 generateQRCode(selectedSeats);
                 print(selectedSeats);
+                // Navigator.of(context).pop(); // Close the dialog
+                    seatAdded(); // Call the registerUser function
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith((states) => const Color(0xFFfc4c4e)),
@@ -304,11 +357,271 @@ class _BusLayoutState extends State<BusLayout> {
                 width: 200.0,
                 height: 200.0,
               ),
+              Column(
+  children: [
+    TextField(
+      controller: _rowController,
+      onTap: () {
+        setState(() {
+          selectedSeats.map((seat) => '${seat.rowI}').join(' ');
+        });
+      },
+    ),
+  ],
+),
+
           ],
           ),
         ),
       ),
     );
+  }
+
+  // Passing the data to "server/register.dart" for performing the server-side script
+ void seatAdded() async {
+  // Generate a unique confirmationID (starting from C0001)
+  String confirmationID =
+      'C${DateTime.now().millisecondsSinceEpoch % 10000}'.padLeft(5, '0');
+
+  // Assume that location is always "RedBrick Cafe"
+  String location = 'RedBrick Cafe';
+
+  // Get the current date and time
+  DateTime now = DateTime.now();
+
+  for (SeatNumber seat in selectedSeats) {
+    int row = seat.rowI;
+    int col = seat.colI;
+
+    bool registrationResult = await addSeat.seatAdded(
+      confirmationID: confirmationID,
+      row: row,
+      col: col,
+      location: location,
+      time: now,
+    );
+
+    if (registrationResult) {
+      // Seat added successfully, you can perform any additional actions here
+      print('Seat added successfully: $seat');
+    } else {
+      // Handle the case when the seat addition fails
+      print('Failed to add seat: $seat');
+    }
+  }
+}
+
+}
+
+
+
+
+// class SelectedSeatsPage extends StatelessWidget {
+//   final Set<SeatNumber> selectedSeats;
+
+//   const SelectedSeatsPage({Key? key, required this.selectedSeats}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Selected Seats'),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text('Selected Seats: ${selectedSeats.join(", ")}'),
+//             // You can add more widgets or actions based on the selected seats data
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+class QRCodeDisplayPage extends StatelessWidget {
+  final Uint8List qrCodeBytes;
+  final Logo _logo = Logo();
+  final Set<SeatNumber> selectedSeats;
+  final SeatDisplay addSeat = SeatDisplay();
+  List<Map<String, dynamic>> _addSeat = [];
+
+  final TextEditingController _confirmationIDController = TextEditingController();
+  final TextEditingController _rowController = TextEditingController();
+  final TextEditingController _colController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+  var itemData = [];
+
+  Future<String> _getData() async {
+  try {
+    final data = await addSeat.getSeatingData();
+    final state = ['Processing', 'Approve', 'Reject'];
+
+    _addSeat = data;
+
+    for (int i = 0; i < _addSeat.length; i++) {
+      String foodNameCorrect = 'foodName: ${_addSeat[i]['confirmationID']}';
+      print('Food Name: ' + foodNameCorrect);
+      print('Date : ${_addSeat[i]['confirmationID']}');
+      itemData.add({
+        'confirmationID': _addSeat[i]['confirmationID'],
+        'row': _addSeat[i]['row'],
+        'col': _addSeat[i]['col'],
+        'location': _addSeat[i]['location'],
+        'time': _addSeat[i]['time'],
+      });
+
+      // Display the information
+      print('Confirmation ID: ${_addSeat[i]['confirmationID']}');
+      print('Row: ${_addSeat[i]['row']}');
+      print('Col: ${_addSeat[i]['col']}');
+      print('Location: ${_addSeat[i]['location']}');
+      print('Time: ${_addSeat[i]['time']}');
+
+      // Add row and col to _addSeat list
+      _addSeat[i]['row'] = _addSeat[i]['row'];
+      _addSeat[i]['col'] = _addSeat[i]['col'];
+    }
+
+    // Return the confirmation ID or other data you want to display
+    return _addSeat.isNotEmpty ? _addSeat[0]['confirmationID'].toString() : '';
+  } catch (e) {
+    print('Error loading promotion data: $e');
+    return ''; // Return an empty string or some default value in case of an error
+  }
+}
+
+
+  QRCodeDisplayPage({Key? key, required this.qrCodeBytes, required this.selectedSeats})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('QR Code Display'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Thanks You To Choosing JomMakan',
+              style: TextStyle(fontSize: 18.0),
+            ),
+            SizedBox(
+              width: 200.0,
+              height: 200.0,
+              child: PhotoView(
+                imageProvider: MemoryImage(qrCodeBytes),
+                minScale: PhotoViewComputedScale.contained * 0.8,
+                maxScale: PhotoViewComputedScale.covered * 2,
+                backgroundDecoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
+          FutureBuilder<String>(
+            future: _getData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error loading data');
+              } else {
+                String confirmationID = snapshot.data ?? '';
+                Map<String, dynamic> seatData = _addSeat.isNotEmpty ? _addSeat[0] : {};
+
+                return Column(
+                  children: [
+                    Text(
+                      'Confirmation ID: ${seatData['confirmationID']}',
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                    Text(
+                      'Row: ${seatData['row']}',
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                    Text(
+                      'Col: ${seatData['col']}',
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                    Text(
+                      'Location: ${seatData['location']}',
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                    Text(
+                      'Time: ${seatData['time']}',
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+
+
+            const SizedBox(height: 20.0),
+            Text(
+              'Selected Seats: ${selectedSeats.join(", ")}',
+              style: TextStyle(fontSize: 18.0),
+            ),
+            const SizedBox(height: 20.0),
+            // Display details of selected seats
+            for (SeatNumber seat in selectedSeats)
+              FutureBuilder<String>(
+                future: getSeatStatus(seat),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error loading seat status');
+                  } else {
+                    String seatStatus = snapshot.data ?? 'Available';
+                    return Text(
+                      'Seat ${seat.rowI}-${seat.colI}: $seatStatus',
+                      style: TextStyle(fontSize: 18.0),
+                    );
+                  }
+                },
+              ),
+            const SizedBox(height: 20.0),
+            Text(
+              'Location : RedBrick Cafe',
+              style: TextStyle(fontSize: 18.0),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 10.0),
+            _logo.getLogoWithTarumt(),
+            const SizedBox(height: 10.0),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Function to get seat status
+  Future<String> getSeatStatus(SeatNumber seat) async {
+    // Use your logic to get the current status of the seat
+    // For example, you can use the _addSeat list to get the status
+    for (var seatData in _addSeat) {
+      if (seatData['row'] == seat.rowI && seatData['col'] == seat.colI) {
+        return seatData['status'] ?? 'Unknown';
+      }
+    }
+    return 'Unknown';
   }
 }
 
@@ -350,29 +663,6 @@ class UIPage extends StatelessWidget {
   }
 }
 
-class SelectedSeatsPage extends StatelessWidget {
-  final Set<SeatNumber> selectedSeats;
-
-  const SelectedSeatsPage({Key? key, required this.selectedSeats}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Selected Seats'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Selected Seats: ${selectedSeats.join(", ")}'),
-            // You can add more widgets or actions based on the selected seats data
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class SeatNumber {
   final int rowI;
