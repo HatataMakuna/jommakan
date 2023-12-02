@@ -8,7 +8,6 @@ class GetAllFoods {
         SELECT
           foods.foodID, foods.food_name, stalls.stall_name, 
           foods.food_price, foods.qty_in_stock, foods.food_image 
-            
         FROM foods
         JOIN stalls ON foods.stallID = stalls.stallID
       ''';

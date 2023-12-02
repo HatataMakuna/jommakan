@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/chatbot/chat_screen.dart';
+import 'package:jom_makan/pages/user/edit_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 
@@ -8,7 +10,7 @@ class MePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Access the user name from the provider
-    String? userName = Provider.of<UserProvider>(context).userName;
+    String userName = Provider.of<UserProvider>(context).userName!;
 
     return Scaffold(
       appBar: null,
@@ -38,12 +40,14 @@ class MePage extends StatelessWidget {
               children: [
                 // Light blue buttons
                 _buildButton(context, 'Edit profile', 0xFFC2EAFF),
+                _buildButton(context, 'Change password', 0xFFC2EAFF),
                 _buildButton(context, 'Order history', 0xFFC2EAFF),
                 
                 // Light yellow buttons
                 _buildButton(context, 'Rider info', 0xFFFFE5BA),
+                _buildButton(context, 'Customer Service', 0xFFFFE5BA),
 
-                /* _buildButton(context, 'Pick up order', 0xFFC2EAFF),
+                /* _buildButton(context, 'My ratings', 0xFFC2EAFF),
                 _buildButton(context, 'Edit Review', 0xFFC2EAFF),
                 
                 _buildButton(context, 'My Rewards', 0xFFFFE5BA),
@@ -59,20 +63,38 @@ class MePage extends StatelessWidget {
   }
 
   Widget _buildButton(BuildContext context, String label, int colorHex) {
+    int userID = Provider.of<UserProvider>(context).userID!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: ElevatedButton(
         onPressed: () {
-          // TODO: Customer Service Chatbot?
+          // TODO: Customer Service Chatbot? - Populate the JSON file
+          // list of foods, stalls??
           if (label == 'Edit profile') {
             // Navigate to edit profile page
-            Navigator.of(context).pushNamed('/user/edit-profile');
+            // Navigator.of(context).pushNamed('/user/edit-profile');
+            Navigator.push(
+              context, MaterialPageRoute(
+                builder: (context) => EditProfile(userID: userID),
+              ),
+            );
+          }
+          else if (label == 'Change password') {
+            Navigator.of(context).pushNamed('/user/change-password');
           }
           else if (label == 'Order history') {
             Navigator.of(context).pushNamed('/user/order-history');
           }
           else if (label == 'Rider info') {
             Navigator.of(context).pushNamed('/rider/rider-info');
+          }
+          else if (label == 'Customer Service') {
+            Navigator.push(
+              context, MaterialPageRoute(
+                builder: (context) => const ChatScreen(),
+              ),
+            );
           }
           else if (label == 'Logout') {
             // Show logout confirmation dialog

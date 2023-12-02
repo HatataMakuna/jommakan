@@ -111,7 +111,7 @@ class OrderDetailsPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'RM ${selectedOrderItem['price'] ?? ''} (${selectedOrderItem['quantity'].toString()} ITEMS) - ${selectedOrderItem['payment']}',
+              'RM ${double.parse(selectedOrderItem['price']).toStringAsFixed(2)} (${selectedOrderItem['quantity'].toString()} ITEMS) - ${selectedOrderItem['payment']}',
               style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 16),

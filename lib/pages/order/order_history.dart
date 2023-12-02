@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:jom_makan/pages/order/order_details.dart';
 import 'package:jom_makan/server/order/get_orders.dart';
 import 'package:jom_makan/stores/user_provider.dart';
@@ -141,7 +142,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'RM ${orderItem['price'] ?? ''} (${orderItem['quantity'].toString()} ITEMS) - ${orderItem['payment']}',
+                            'RM ${double.parse(orderItem['price']).toStringAsFixed(2)} (${orderItem['quantity'].toString()} ITEMS) - ${orderItem['payment']}',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w300

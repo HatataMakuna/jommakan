@@ -68,6 +68,8 @@ class _PaymentSearch extends AdminStateView<PaymentSearch> {
             'payment_method': _paymentItems[i]['payment_method'],
             'payment_date': _paymentItems[i]['payment_date'],
             'payment_time': _paymentItems[i]['payment_time'],
+                        'total_price': _paymentItems[i]['total_price'],
+
           });
         }
         }
@@ -97,6 +99,12 @@ class _PaymentSearch extends AdminStateView<PaymentSearch> {
             width: 150,
             label: "Payment Time",
             prop: 'payment_time',
+          ),
+          AdminTableItem(
+            itemView: paymentItemView,
+            width: 150,
+            label: "Total Price",
+            prop: 'total_price',
           ),
           
           AdminTableItem(

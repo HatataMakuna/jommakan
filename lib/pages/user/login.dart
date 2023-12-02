@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/stores/favorites_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:jom_makan/server/user/login_user.dart';
@@ -17,7 +18,7 @@ class _LoginState extends State<LoginPage> {
   bool? check = false;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final LoginUser _loginUser = LoginUser(); // Instantiate LoginUser class
+  final LoginUser _loginUser = LoginUser();
   final Logo _logo = Logo();
 
   String _errorText = ''; // To store error text
@@ -145,7 +146,7 @@ class _LoginState extends State<LoginPage> {
 
     // Call the loginUser function from LoginUser class
     var loginResult = await _loginUser.loginUser(email: email, password: password);
-    print(loginResult);
+    //print(loginResult);
 
     if (loginResult['success']) {
       // Login was successful, get the username
@@ -166,11 +167,14 @@ class _LoginState extends State<LoginPage> {
     }
   }
 
-  void sendUserDetailsToProvider(String username, int userID, String userrole, String email) {
-    Provider.of<UserProvider>(context, listen: false).setUserName(username);
-    Provider.of<UserProvider>(context, listen: false).setUserID(userID);
-    Provider.of<UserProvider>(context, listen: false).setUserRole(userrole);
-    Provider.of<UserProvider>(context, listen: false).setUserEmail(email);
+  void sendUserDetailsToProvider(String username, int userID, String userrole, String email) async {
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+    FavoritesProvider favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
+    userProvider.setUserName(username);
+    userProvider.setUserID(userID);
+    userProvider.setUserRole(userrole);
+    userProvider.setUserEmail(email);
+    favoritesProvider.fetchFavorites(userID);
   }
 
   void navigateToUserPortal(String userrole) {

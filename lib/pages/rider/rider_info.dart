@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/rider/my_deliveries.dart';
+import 'package:jom_makan/pages/rider/pending_delivery.dart';
 import 'package:jom_makan/server/rider/get_rider_info.dart';
 import 'package:jom_makan/server/rider/register_as_rider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
@@ -240,8 +242,8 @@ class _RiderInfoState extends State<RiderInfo> {
         const SizedBox(height: 12),
         // display menu buttons
         //_buildButton(context, 'Rider Reviews', 0xFFFFE5BA),
-        //_buildButton(context, 'Pending Deliveries', 0xFFFFE5BA),
-        //_buildButton(context, 'Delivery History', 0xFFFFE5BA),
+        _buildButton(context, 'Pending Deliveries', 0xFFFFE5BA),
+        _buildButton(context, 'My Deliveries', 0xFFFFE5BA),
       ],
     );
   }
@@ -252,6 +254,20 @@ class _RiderInfoState extends State<RiderInfo> {
       child: ElevatedButton(
         onPressed: () {
           // TODO: do something with the menus
+          if (label == 'Pending Deliveries') {
+            Navigator.push(
+              context, MaterialPageRoute(
+                builder: (context) => const PendingDeliveryPage(),
+              ),
+            );
+          }
+          else if (label == 'My Deliveries') {
+            Navigator.push(
+              context, MaterialPageRoute(
+                builder: (context) => MyDeliveries(userID: Provider.of<UserProvider>(context, listen: false).userID!),
+              ),
+            );
+          }
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(colorHex),

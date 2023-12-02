@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:jom_makan/components/rating/get_average_ratings.dart';
 import 'package:jom_makan/pages/foods/food_reviews.dart';
 import 'package:jom_makan/server/cart/add_to_cart.dart';
+import 'package:jom_makan/server/food/get_foods.dart';
 import 'package:jom_makan/server/views/update_views.dart';
+import 'package:jom_makan/stores/favorites_provider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_tags_x/flutter_tags_x.dart';
 
 class FoodDetailsPage extends StatefulWidget {
   final Map<String, dynamic> selectedFood;
@@ -16,6 +19,7 @@ class FoodDetailsPage extends StatefulWidget {
 }
 
 class _FoodDetailsPageState extends State<FoodDetailsPage> {
+  final GetFoods _getFoods = GetFoods();
   final GetAverageRatings _getAvgRatings = GetAverageRatings();
   int quantity = 1;
   String notes = '';
@@ -23,6 +27,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
   int noRatings = 0;
   List<String> preferences = [];
   double totalPrice = 0.0;
+  List<String> foodCategory = [];
 
   @override
   void initState() {
@@ -37,6 +42,8 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
 
     // Calculate initial total price
     _calculateTotalPrice();
+
+    _fetchCategory();
   }
 
   void _updateViewCount() {
@@ -63,6 +70,25 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
     setState(() {
       totalPrice = quantity * double.parse(widget.selectedFood['food_price']);
     });
+  }
+
+  void _fetchCategory() async {
+    Map<String, dynamic> categories = await _getFoods.getCategoryNameByFoodID(int.parse(widget.selectedFood['foodID']));
+    //print(categories);
+    List<String> category = [];
+
+    if (categories['main_category'] != null) {
+      category.add(categories['main_category']);
+    }
+    if (categories['sub_category'] != null) {
+      category.add(categories['sub_category']);
+    }
+
+    if (mounted) {
+      setState(() {
+        foodCategory = category;
+      });
+    }
   }
 
   @override
@@ -120,6 +146,9 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
   }
 
   Widget titleRating() {
+    FavoritesProvider favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
+    int userID = Provider.of<UserProvider>(context, listen: false).userID!;
+
     return Card(
       elevation: 5,
       shape: const RoundedRectangleBorder(
@@ -133,6 +162,68 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 10),
+                    // Category tags
+                    Tags(
+                      spacing: 8,
+                      itemCount: foodCategory.length,
+                      itemBuilder: (index) {
+                        final item = foodCategory[index];
+
+                        return ItemTags(
+                          key: Key(index.toString()),
+                          index: index,
+                          title: item,
+                          textStyle: const TextStyle(fontSize: 12),
+                          combine: ItemTagsCombine.withTextBefore,
+                          activeColor: Colors.blue,
+                          splashColor: Colors.lightBlue,
+                          onPressed: null,
+                        );
+                      }
+                    ),
+                    const SizedBox(width: 8),
+                    // Stall name tag
+                    Tags(
+                      spacing: 8,
+                      itemCount: 1,
+                      itemBuilder: (index) {
+                        return ItemTags(
+                          key: Key(index.toString()),
+                          index: index,
+                          title: widget.selectedFood['stall_name'],
+                          textStyle: const TextStyle(fontSize: 12),
+                          combine: ItemTagsCombine.withTextBefore,
+                          activeColor: Colors.green,
+                          splashColor: Colors.lightGreen,
+                          onPressed: null,
+                        );
+                      }
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 10),
+                IconButton(
+                  icon: Icon(
+                    favoritesProvider.isFavorite(int.parse(widget.selectedFood['foodID']))
+                      ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
+                  ),
+                  onPressed: () async {
+                    String status = await favoritesProvider.toggleFavorite(int.parse(widget.selectedFood['foodID']), userID);
+                    setState(() {});
+                    showSnackbarMessage(status);
+                  }
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -211,6 +302,50 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
         ),
       ),
     );
+  }
+
+  void showSnackbarMessage(String status) {
+    switch (status) {
+      case 'add success':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Food added to favorites.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      case 'add failure':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error while adding food to favorites. Try again later.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      case 'remove success':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Food removed from favorites.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      case 'remove failure':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error while removing food from favorites. Try again later.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unknown error occurred. Try again later.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+    }
   }
 
   Widget adjustQuantity() {

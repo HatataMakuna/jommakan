@@ -17,17 +17,29 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
   final List<ChatMessage> _messages = [];
-  Map<String, dynamic> _responses = {};
+  List<Map<String, dynamic>> _responsesList = [];
 
   @override
   void initState() {
     super.initState();
     _loadResponses();
+    _initMessage();
+  }
+
+  void _initMessage() {
+    _addMessage('Hello! How can I help you today?', false);
   }
 
   void _loadResponses() async {
     String data = await rootBundle.loadString('assets/responses.json');
-    _responses = json.decode(data);
+    final responses = json.decode(data)['responses'];
+    List<Map<String, dynamic>> typedResponses = [];
+    for (final response in responses) {
+      typedResponses.add(response);
+    }
+    setState(() {
+      _responsesList = typedResponses;
+    });
   }
 
   @override
@@ -35,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Customer Support',
+          'JomMakan Customer Support Chatbot',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -65,6 +77,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildComposer() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.all(12.0),
       child: Row(
         children: <Widget>[
           Flexible(
@@ -78,7 +91,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.send),
-            onPressed: () => _handleSubmitted(_textController.text),
+            onPressed: () => _textController.text.isEmpty ? null : _handleSubmitted(_textController.text),
           ),
         ],
       ),
@@ -92,27 +105,30 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _generateResponse(String userMessage) {
-    // Basic logic for bot responses
     String response = ''; // Provide an initial value
-    String lowerCaseUserMessage = userMessage.toLowerCase();
 
-    for (var rule in _responses['responses']) {
-      var trigger = rule['trigger'];
+    for (final responses in _responsesList) {
+      dynamic trigger = responses['trigger'];
+      String lowerCaseUserMessage = userMessage.toLowerCase();
 
       if (trigger is String && lowerCaseUserMessage.contains(trigger)) {
-        response = rule['response'];
+        response = responses['response'];
         break;
       } else if (trigger is List<dynamic>) {
         for (var triggerItem in trigger) {
           if (lowerCaseUserMessage.contains(triggerItem)) {
-            response = rule['response'];
+            response = responses['response'];
             break;
           }
         }
       }
     }
 
-    _addMessage(response.isNotEmpty ? response : _responses['default']['response'], false);
+    if (response.isNotEmpty) {
+      _addMessage(response, false);
+    } else {
+      _addMessage(_responsesList.last['response'], false);
+    }
   }
 
   void _addMessage(String text, bool isUser) {

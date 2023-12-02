@@ -4,24 +4,14 @@ import 'package:jom_makan/consts/category_icons.dart';
 import 'package:jom_makan/model/rating.dart';
 import 'package:jom_makan/model/recommendation.dart';
 import 'package:jom_makan/pages/foods/food_details.dart';
+import 'package:jom_makan/pages/foods/food_list_by_category.dart';
+import 'package:jom_makan/server/food/get_all_foods.dart';
 import 'package:jom_makan/server/food/get_foods.dart';
 import 'package:jom_makan/server/food/get_popular_foods.dart';
 import 'package:jom_makan/server/rating/get_ratings.dart';
+import 'package:jom_makan/stores/favorites_provider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
-
-/*
-  TODO:
-  SELECT ORDER OPTION
-  - Pre-order
-  - Self-collect
-  - Delivery
-  - Order Now
-
-  DISPLAY IN MENU
-*/
-
-// TODO: Populate the home page, make it scrollable
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -33,10 +23,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final Logo _logo = Logo();
   final GetFoods _getFoods = GetFoods();
+  final GetAllFoods _getAllFoods = GetAllFoods();
   final GetPopularFoods _getPopularFoods = GetPopularFoods();
   final FoodRatings _foodRatings = FoodRatings();
-  bool loadingRecommendations = true;
 
+  bool loadingRecommendations = true;
+  bool loadingOtherFoods = true;
+
+  List<Map<String, dynamic>> _allFoods = [];
   List<Map<String, dynamic>> _popularFoods = [];
   List<Map<String, dynamic>> _recommendedFoods = [];
 
@@ -45,6 +39,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _loadPopularFoods();
     _loadRecommendations();
+    _loadFoods();
   }
 
   Future<void> _loadPopularFoods() async {
@@ -77,6 +72,17 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _loadFoods() async {
+    final getAllFoods = await _getAllFoods.getAllFoods();
+    
+    if (mounted) {
+      setState(() {
+        _allFoods = getAllFoods;
+        loadingOtherFoods = false;
+      });
+    }
+  }
+
   int? _getUserID() {
     return Provider.of<UserProvider>(context, listen: false).userID;
   }
@@ -84,9 +90,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: AppBar(
+      appBar: AppBar(
           backgroundColor: Colors.white,
           title: SizedBox(
             height: kToolbarHeight,
@@ -121,20 +125,23 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            _logo.getLogoImageWithCustomSize(299, 60),
-            const SizedBox(height: 10),
-            categoriesList(),
-            const SizedBox(height: 10),
-            popularFoods(),
-            const SizedBox(height: 10),
-            loadingRecommendations ? const Center(child: CircularProgressIndicator()) : youMayLike(),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 15),
+              _logo.getLogoImageWithCustomSize(299, 60),
+              const SizedBox(height: 15),
+              categoriesList(),
+              const SizedBox(height: 15),
+              popularFoods(),
+              const SizedBox(height: 15),
+              loadingRecommendations ? const Center(child: CircularProgressIndicator()) : youMayLike(),
+              const SizedBox(height: 15),
+              loadingOtherFoods ? const Center(child: CircularProgressIndicator()) : getOtherFoods(),
+            ],
+          ),
         ),
       ),
     );
@@ -179,12 +186,21 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        Icon(foodIcons[index]), // put the text below the icon
-                        const SizedBox(height: 2),
-                        Text(foodCategories[index]),
-                      ],
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context, MaterialPageRoute(
+                            builder: (context) => FoodCategoryList(selectedCategory: foodCategories[index]),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Icon(foodIcons[index]), // put the text below the icon
+                          const SizedBox(height: 2),
+                          Text(foodCategories[index]),
+                        ],
+                      ),
                     ),
                   );
                 }
@@ -364,5 +380,132 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  // Get other foods (populate the home page)
+  // Avoid the ListView.builder 
+  Widget getOtherFoods() {
+    FavoritesProvider favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
+    int userID = Provider.of<UserProvider>(context, listen: false).userID!;
+
+    return Column(
+      children: _allFoods.map((food) {
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          elevation: 5,
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FoodDetailsPage(selectedFood: food),
+                ),
+              );
+            },
+            child: Container(
+              constraints: const BoxConstraints(maxHeight: 150),
+              child: ListTile(
+                leading: Image(
+                  image: AssetImage('images/foods/${food['food_image']}'),
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+                title: Text(
+                  '${food['food_name']} - ${food['stall_name']}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 25),
+                    Text(
+                      'Price: RM${double.parse(food['food_price']).toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                    if (int.parse(food['qty_in_stock']) == 0) ...[
+                      const Text(
+                        'Out of stock',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ] else ...[
+                      Text(
+                        '${food['qty_in_stock']} items remaining',
+                        style: const TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                trailing: IconButton(
+                  icon: Icon(
+                    favoritesProvider.isFavorite(int.parse(food['foodID']))
+                      ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
+                  ),
+                  onPressed: () async {
+                    String status = await favoritesProvider.toggleFavorite(int.parse(food['foodID']), userID);
+                    setState(() {});
+                    showSnackbarMessage(status);
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  void showSnackbarMessage(String status) {
+    switch (status) {
+      case 'add success':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Food added to favorites.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      case 'add failure':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error while adding food to favorites. Try again later.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      case 'remove success':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Food removed from favorites.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      case 'remove failure':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error while removing food from favorites. Try again later.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unknown error occurred. Try again later.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+    }
   }
 }

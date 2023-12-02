@@ -2,11 +2,11 @@
     "responses": [
       {
         "trigger": ["hello", "hi", "hihi"],
-        "response": "Hi there! Welcome to our food ordering service. How can I assist you today?"
+        "response": "Hi there! Welcome to the JomMakan food ordering service. How can I assist you today?"
       },
       {
         "trigger": "how are you",
-        "response": "I am a chatbot designed to help you with your food orders. Thanks for asking!"
+        "response": "I'm good, and always here to answer your questions. Thanks for asking!"
       },
       {
         "trigger": "menu",
@@ -14,7 +14,7 @@
       },
       {
         "trigger": "order status",
-        "response": "To check your order status, you can type 'track my order'."
+        "response": "To check your order status, you can go to 'Order history' from the 'Me' page."
       },
       {
         "trigger": "delivery time",
@@ -29,9 +29,20 @@
         "response": "If you need assistance, feel free to ask! You can inquire about the menu, track your order, or ask for help with any issues."
       },
       {
+        "trigger": "opening hours",
+        "response": "Our stalls are open from 7 AM to 5 PM every Monday to Saturday."
+      },
+      {
+        "trigger": "delivery hours",
+        "response": "Our delivery services are open from 10 AM to 5 PM every Monday to Friday."
+      },
+      {
+        "trigger": ["place an order", "place order"],
+        "response": "You can place an order by adding your desired foods to the cart and tap on the Checkout button in the cart page."
+      },
+      {
         "trigger": "default",
         "response": "I'm sorry, but I didn't understand that. If you have a specific question, please ask, and I'll do my best to assist you!"
       }
     ]
 }
-  
