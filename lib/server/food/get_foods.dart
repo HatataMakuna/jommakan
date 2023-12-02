@@ -79,7 +79,6 @@ class GetFoods {
     }
   }
 
-  // TODO: Get the category name from main and sub category of the food (use foodID as input)
   Future<Map<String, dynamic>> getCategoryNameByFoodID(int foodID) async {
     String? mainCategory, subCategory;
     try {

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/foods/food_details.dart';
 import 'package:jom_makan/server/food/get_all_foods.dart';
+import 'package:jom_makan/stores/favorites_provider.dart';
+import 'package:jom_makan/stores/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -95,6 +98,9 @@ class _SearchPageState extends State<SearchPage> {
       itemCount: foundFoods.length,
       itemBuilder: (context, index) {
         Map<String, dynamic> food = foundFoods[index];
+        FavoritesProvider favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
+        int userID = Provider.of<UserProvider>(context, listen: false).userID!;
+
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 8),
           elevation: 5,
@@ -150,11 +156,71 @@ class _SearchPageState extends State<SearchPage> {
                     ],
                   ],
                 ),
+                trailing: IconButton(
+                  icon: Icon(
+                    favoritesProvider.isFavorite(int.parse(food['foodID']))
+                      ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
+                  ),
+                  onPressed: () async {
+                    String status = await favoritesProvider.toggleFavorite(int.parse(food['foodID']), userID);
+                    setState(() {});
+                    showSnackbarMessage(status);
+                  },
+                ),
               ),
             ),
           ),
         );
       }
     );
+  }
+
+  void showSnackbarMessage(String status) {
+    // add success
+    // add failure
+    // remove success
+    // remove failure
+    switch (status) {
+      case 'add success':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Food added to favorites.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      case 'add failure':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error while adding food to favorites. Try again later.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      case 'remove success':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Food removed from favorites.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      case 'remove failure':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error while removing food from favorites. Try again later.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unknown error occurred. Try again later.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+    }
   }
 }
