@@ -18,6 +18,7 @@
 */
 
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/rider/delivery_details.dart';
 import 'package:jom_makan/server/rider/get_pending_delivery.dart';
 
 class PendingDeliveryPage extends StatefulWidget {
@@ -69,154 +70,80 @@ class _PendingDeliveryPageState extends State<PendingDeliveryPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _loadTwo(),
+        child: _loadPendingDeliveryList(),
       ),
-    );
-  }
-
-  Widget _loadTwo() {
-    return Table(
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      border: TableBorder.all(
-        color: Colors.grey,
-        width: 1,
-      ),
-      children: [
-        // Header row
-        const TableRow(
-          decoration: BoxDecoration(
-            color: Color(0xFFE0E0E0),
-          ),
-          children: [
-            TableCell(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Order ID',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            TableCell(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Username',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            TableCell(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Total no. of food ordered',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            TableCell(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Ordered on',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ],
-        ),
-        // Data rows
-        for (int index = 0; index < _deliveryList.length; index++) ...[
-          TableRow(
-            decoration: BoxDecoration(
-              color: index % 2 == 0 ? Colors.white : Colors.grey,
-            ),
-            children: [
-              TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '${_deliveryList[index]['orderID']}',
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ),
-              ),
-              TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '${_deliveryList[index]['username']}',
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ),
-              ),
-              TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '${_deliveryList[index]['foodCount']}',
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ),
-              ),
-              TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '${_deliveryList[index]['orderedOn']}',
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ],
     );
   }
 
   Widget _loadPendingDeliveryList() {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: _deliveryList.length,
-      itemBuilder: (context, index) {
-        final pendingItem = _deliveryList[index];
-        final isEven = index % 2 == 0;
-        final backgroundColor = isEven ? Colors.white : Colors.grey[200];
+    return ListView(
+      children: [
+        // Header
+        Container(
+          color: Colors.blue,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildHeaderCell('Order ID', width: 80),
+              _buildHeaderCell('Username', width: 120),
+              _buildHeaderCell('Total no. of food ordered', width: 120),
+              _buildHeaderCell('Ordered on', width: 120),
+            ],
+          ),
+        ),
+        // Data rows
+        for (int index = 0; index < _deliveryList.length; index++)
+          _buildDeliveryItem(_deliveryList[index]),
+      ],
+    );
+  }
 
-        return Card(
-          elevation: 5,
-          color: backgroundColor,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-            side: BorderSide(
-              color: Colors.grey,
-              width: 1,
+  Widget _buildHeaderCell(String text, {double width = 100}) {
+    return Container(
+      width: width,
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget _buildDeliveryItem(Map<String, dynamic> delivery) {
+    return Card(
+      color: _deliveryList.indexOf(delivery) % 2 == 0 ? Colors.white : const Color(0xFFD3D3D3),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DeliveryDetails(selectedDelivery: delivery),
             ),
-          ),
-          child: ListTile(
-            title: Text(
-              'Order ID: ${pendingItem['orderID']}',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
-            subtitle: Text(
-              '''
-                Username: ${pendingItem['username']}
-                Total no. of foods ordered: ${pendingItem['foodCount']}
-                Ordered on: ${pendingItem['orderedOn']}
-              ''',
-              style: const TextStyle(fontSize: 12),
-            ),
-            onTap: () {
-              // Navigate to the delivery details
-            }
-          ),
-        );
-      },
+          );
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildDataCell('${delivery['orderID']}', width: 80),
+            _buildDataCell('${delivery['username']}', width: 120),
+            _buildDataCell('${delivery['foodCount']}', width: 120),
+            _buildDataCell('${delivery['orderedOn']}', width: 120),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDataCell(String text, {double width = 100}) {
+    return Expanded(
+      child: Container(
+        width: width,
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 12),
+        ),
+      ),
     );
   }
 }

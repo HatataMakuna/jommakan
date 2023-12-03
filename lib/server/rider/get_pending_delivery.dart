@@ -1,10 +1,13 @@
 import 'package:jom_makan/database/db_connection.dart';
+import 'package:jom_makan/server/rider/assign_delivery.dart';
 
 class GetPendingDelivery {
+  final AssignDelivery _assignDelivery = AssignDelivery();
+
   Future<List<Map<String, dynamic>>> getPendingDeliveries() async {
     try {
       var results = await pool.execute('''
-        SELECT o.orderID, u.username, COUNT(od.foodID) as foodCount, d.orderedOn 
+        SELECT o.orderID, u.username, COUNT(od.foodID) as foodCount, d.orderedOn, d.status 
         FROM orders o 
         JOIN users u ON o.userID = u.userID 
         JOIN order_details od ON o.orderID = od.orderID 
@@ -21,12 +24,46 @@ class GetPendingDelivery {
           "username": row.colByName("username"),
           "foodCount": row.colByName("foodCount"),
           "orderedOn": row.colByName("orderedOn"),
+          "status": row.colByName("status"),
         });
       }
 
       return pendingDelivery;
     } catch (e) {
       print('Error while getting pending deliveries: $e');
+      return [];
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getMyDeliveries({required int userID}) async {
+    int riderID = await _assignDelivery.getRiderID(userID: userID);
+
+    try {
+      var results = await pool.execute('''
+        SELECT o.orderID, u.username, COUNT(od.foodID) as foodCount, d.orderedOn, d.status 
+        FROM orders o 
+        JOIN users u ON o.userID = u.userID 
+        JOIN order_details od ON o.orderID = od.orderID 
+        JOIN delivery d ON o.orderID = d.orderID 
+        WHERE d.rider_in_charge = :rider_in_charge 
+        GROUP BY o.orderID
+      ''', {"rider_in_charge": riderID});
+
+      List<Map<String, dynamic>> deliveryItems = [];
+
+      for (final row in results.rows) {
+        deliveryItems.add({
+          "orderID": row.colByName("orderID"),
+          "username": row.colByName("username"),
+          "foodCount": row.colByName("foodCount"),
+          "orderedOn": row.colByName("orderedOn"),
+          "status": row.colByName("status"),
+        });
+      }
+
+      return deliveryItems;
+    } catch (e) {
+      print('Error while getting your deliveries: $e');
       return [];
     }
   }

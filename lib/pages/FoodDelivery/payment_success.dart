@@ -93,7 +93,7 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
       bool isSuccess = await _placeOrder.placeOrder(
         userID: widget.userID, noCutlery: widget.noCutlery,
         cartItems: widget.cartItems, paymentMethod: widget.paymentMethod,
-        totalPrice: widget.totalPrice,
+        totalPrice: widget.totalPrice, orderMethod: widget.orderMethod,
       );
 
       // If the order method is Delivery, add to Delivery database

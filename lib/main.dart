@@ -5,6 +5,7 @@ import 'package:jom_makan/access_denied.dart';
 import 'package:jom_makan/pages/order/order_history.dart';
 import 'package:jom_makan/pages/rider/rider_info.dart';
 import 'package:jom_makan/pages/user/change_password.dart';
+import 'package:jom_makan/stores/favorites_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:jom_makan/stores/user_provider.dart'; // Import the UserProvider class
 import 'package:jom_makan/pages/main/main_page.dart';
@@ -17,8 +18,11 @@ import 'package:jom_makan/pages/Admin/admin_main.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => UserProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => FavoritesProvider()),
+      ],
       child: const MyApp(),
     )
   );

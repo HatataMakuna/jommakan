@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/stores/favorites_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:jom_makan/server/user/login_user.dart';
@@ -168,10 +169,12 @@ class _LoginState extends State<LoginPage> {
 
   void sendUserDetailsToProvider(String username, int userID, String userrole, String email) async {
     UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+    FavoritesProvider favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
     userProvider.setUserName(username);
     userProvider.setUserID(userID);
     userProvider.setUserRole(userrole);
     userProvider.setUserEmail(email);
+    favoritesProvider.fetchFavorites(userID);
   }
 
   void navigateToUserPortal(String userrole) {

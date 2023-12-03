@@ -114,6 +114,8 @@ class _CartPageState extends State<CartPage> {
       onChanged: (String? newValue) {
         setState(() {
           dropdownValue = newValue!;
+          print(dropdownValue);
+          // TODO: Dropdown value failed to pass the exact value
         });
       }
     );
@@ -158,7 +160,7 @@ class _CartPageState extends State<CartPage> {
       itemCount: cartItems.length,
       itemBuilder: (context, index) {
         final cartItem = cartItems[index];
-          
+        
         List<String> preferences = [
           if (int.parse(cartItem['no_vege']) == 1) 'No Vegetarian',
           if (int.parse(cartItem['extra_vege']) == 1) 'Extra Vegetarian',
