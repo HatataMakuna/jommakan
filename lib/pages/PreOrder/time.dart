@@ -20,8 +20,10 @@ class MyApp extends StatelessWidget {
 }
 
 class PreOrderPage extends StatefulWidget {
+  const PreOrderPage({super.key});
+
   @override
-  _PreOrderPageState createState() => _PreOrderPageState();
+  State<StatefulWidget> createState() => _PreOrderPageState();
 }
 
 class _PreOrderPageState extends State<PreOrderPage> {
@@ -155,7 +157,17 @@ class _PreOrderPageState extends State<PreOrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pre-order and Automation Time'),
+        title: const Text(
+          'Pre-order and Automation Time',
+          style: TextStyle(color: Colors.black)
+        ),
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
