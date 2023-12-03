@@ -464,9 +464,9 @@ class QRCodeDisplayPage extends StatelessWidget {
     _addSeat = data;
 
     for (int i = 0; i < _addSeat.length; i++) {
-      String foodNameCorrect = 'foodName: ${_addSeat[i]['confirmationID']}';
-      print('Food Name: ' + foodNameCorrect);
-      print('Date : ${_addSeat[i]['confirmationID']}');
+      // String foodNameCorrect = 'foodName: ${_addSeat[i]['confirmationID']}';
+      // print('Food Name: ' + foodNameCorrect);
+      // print('Date : ${_addSeat[i]['confirmationID']}');
       itemData.add({
         'confirmationID': _addSeat[i]['confirmationID'],
         'row': _addSeat[i]['row'],
@@ -485,6 +485,7 @@ class QRCodeDisplayPage extends StatelessWidget {
       // Add row and col to _addSeat list
       _addSeat[i]['row'] = _addSeat[i]['row'];
       _addSeat[i]['col'] = _addSeat[i]['col'];
+      
     }
 
     // Return the confirmation ID or other data you want to display
@@ -527,44 +528,44 @@ class QRCodeDisplayPage extends StatelessWidget {
             ),
             const SizedBox(height: 20.0),
             const SizedBox(height: 20.0),
-          FutureBuilder<String>(
-            future: _getData(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error loading data');
-              } else {
-                String confirmationID = snapshot.data ?? '';
-                Map<String, dynamic> seatData = _addSeat.isNotEmpty ? _addSeat[0] : {};
+         FutureBuilder<String>(
+  future: _getData(),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return CircularProgressIndicator();
+    } else if (snapshot.hasError) {
+      return Text('Error loading data');
+    } else {
+      Map<String, dynamic> seatData = _addSeat.isNotEmpty ? _addSeat[0] : {};
 
-                return Column(
-                  children: [
-                    Text(
-                      'Confirmation ID: ${seatData['confirmationID']}',
-                      style: TextStyle(fontSize: 15.0),
-                    ),
-                    Text(
-                      'Row: ${seatData['row']}',
-                      style: TextStyle(fontSize: 15.0),
-                    ),
-                    Text(
-                      'Col: ${seatData['col']}',
-                      style: TextStyle(fontSize: 15.0),
-                    ),
-                    Text(
-                      'Location: ${seatData['location']}',
-                      style: TextStyle(fontSize: 15.0),
-                    ),
-                    Text(
-                      'Time: ${seatData['time']}',
-                      style: TextStyle(fontSize: 15.0),
-                    ),
-                  ],
-                );
-              }
-            },
+      return Column(
+        children: [
+          Text(
+            'Confirmation ID: ${seatData['confirmationID']}',
+            style: TextStyle(fontSize: 15.0),
           ),
+          Text(
+            'Row: ${seatData['row']}',
+            style: TextStyle(fontSize: 15.0),
+          ),
+          Text(
+            'Col: ${seatData['col']}',
+            style: TextStyle(fontSize: 15.0),
+          ),
+          Text(
+            'Location: ${seatData['location']}',
+            style: TextStyle(fontSize: 15.0),
+          ),
+          Text(
+            'Time: ${seatData['time']}',
+            style: TextStyle(fontSize: 15.0),
+          ),
+        ],
+      );
+    }
+  },
+),
+
 
 
             const SizedBox(height: 20.0),
