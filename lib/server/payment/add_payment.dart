@@ -86,5 +86,5 @@ class AddPayment {
 }
 
 void main() {
-  print(DateFormat('dd-MMM-yyyy HH:mm:ss').format(DateTime.now()));
+  print(DateFormat('dd-MMM-yyyy hh:mm aa').format(DateTime.now()));
 }

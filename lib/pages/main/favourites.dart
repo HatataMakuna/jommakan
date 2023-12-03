@@ -99,6 +99,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                 title: Text(
                   '${food['food_name']} - ${food['stall_name']}',
                   style: const TextStyle(
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -109,7 +110,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                     Text(
                       'Price: RM${double.parse(food['food_price']).toStringAsFixed(2)}',
                       style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 12,
                       ),
                     ),
                     if (int.parse(food['qty_in_stock']) == 0) ...[
@@ -117,14 +118,14 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         'Out of stock',
                         style: TextStyle(
                           color: Colors.red,
-                          fontSize: 15,
+                          fontSize: 12,
                         ),
                       ),
                     ] else ...[
                       Text(
                         '${food['qty_in_stock']} items remaining',
                         style: const TextStyle(
-                          fontSize: 15,
+                          fontSize: 12,
                         ),
                       ),
                     ],

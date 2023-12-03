@@ -43,46 +43,44 @@ class _BusLayoutState extends State<BusLayout> {
   List<Map<String, dynamic>> _addSeat = [];
   
 
-  final TextEditingController _confirmationIDController = TextEditingController();
+  //final TextEditingController _confirmationIDController = TextEditingController();
   final TextEditingController _rowController = TextEditingController();
-  final TextEditingController _colController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
-var itemData = [];
+  //final TextEditingController _colController = TextEditingController();
+  //final TextEditingController _locationController = TextEditingController();
+  //final TextEditingController _timeController = TextEditingController();
+  var itemData = [];
 
+  Future<String> _getData() async {
+    try {
+      final data = await addSeat.getSeatingData();
+      final state = ['Processing', 'Approve', 'Reject'];
 
+      _addSeat = data;
 
-Future<String> _getData() async {
-  try {
-    final data = await addSeat.getSeatingData();
-    final state = ['Processing', 'Approve', 'Reject'];
+      for (int i = 0; i < _addSeat.length; i++) {
+        String foodNameCorrect = 'foodName: ${_addSeat[i]['confirmationID']}';
+        print('Food Name: ' + foodNameCorrect);
+        print('Date : ${_addSeat[i]['confirmationID']}');
+        itemData.add({
+          'confirmationID': _addSeat[i]['confirmationID'],
+          'row': _addSeat[i]['row'],
+          'col': _addSeat[i]['col'],
+          'location': _addSeat[i]['location'],
+          'time': _addSeat[i]['time'],
+        });
 
-    _addSeat = data;
+        // Add row and col to _addSeat list
+        _addSeat[i]['row'] = _addSeat[i]['row'];
+        _addSeat[i]['col'] = _addSeat[i]['col'];
+      }
 
-    for (int i = 0; i < _addSeat.length; i++) {
-      String foodNameCorrect = 'foodName: ${_addSeat[i]['confirmationID']}';
-      print('Food Name: ' + foodNameCorrect);
-      print('Date : ${_addSeat[i]['confirmationID']}');
-      itemData.add({
-        'confirmationID': _addSeat[i]['confirmationID'],
-        'row': _addSeat[i]['row'],
-        'col': _addSeat[i]['col'],
-        'location': _addSeat[i]['location'],
-        'time': _addSeat[i]['time'],
-      });
-
-      // Add row and col to _addSeat list
-      _addSeat[i]['row'] = _addSeat[i]['row'];
-      _addSeat[i]['col'] = _addSeat[i]['col'];
+      // Return the confirmation ID or other data you want to display
+      return _addSeat.isNotEmpty ? _addSeat[0]['confirmationID'].toString() : '';
+    } catch (e) {
+      print('Error loading promotion data: $e');
+      return ''; // Return an empty string or some default value in case of an error
     }
-
-    // Return the confirmation ID or other data you want to display
-    return _addSeat.isNotEmpty ? _addSeat[0]['confirmationID'].toString() : '';
-  } catch (e) {
-    print('Error loading promotion data: $e');
-    return ''; // Return an empty string or some default value in case of an error
   }
-}
 
   Future<void> generateQRCode(Set<SeatNumber> selectedSeats) async {
     final List<Map<String, Object>> seatsList = selectedSeats
@@ -378,43 +376,39 @@ const SizedBox(height: 12),
   }
 
   // Passing the data to "server/register.dart" for performing the server-side script
- void seatAdded() async {
-  // Generate a unique confirmationID (starting from C0001)
-  String confirmationID =
+  void seatAdded() async {
+    // Generate a unique confirmationID (starting from C0001)
+    String confirmationID =
       'C${DateTime.now().millisecondsSinceEpoch % 10000}'.padLeft(5, '0');
 
-  // Assume that location is always "RedBrick Cafe"
-  String location = 'RedBrick Cafe';
+    // Assume that location is always "RedBrick Cafe"
+    String location = 'RedBrick Cafe';
 
-  // Get the current date and time
-  DateTime now = DateTime.now();
+    // Get the current date and time
+    DateTime now = DateTime.now();
 
-  for (SeatNumber seat in selectedSeats) {
-    int row = seat.rowI;
-    int col = seat.colI;
+    for (SeatNumber seat in selectedSeats) {
+      int row = seat.rowI;
+      int col = seat.colI;
 
-    bool registrationResult = await addSeat.seatAdded(
-      confirmationID: confirmationID,
-      row: row,
-      col: col,
-      location: location,
-      time: now,
-    );
+      bool registrationResult = await addSeat.seatAdded(
+        confirmationID: confirmationID,
+        row: row,
+        col: col,
+        location: location,
+        time: now,
+      );
 
-    if (registrationResult) {
-      // Seat added successfully, you can perform any additional actions here
-      print('Seat added successfully: $seat');
-    } else {
-      // Handle the case when the seat addition fails
-      print('Failed to add seat: $seat');
+      if (registrationResult) {
+        // Seat added successfully, you can perform any additional actions here
+        print('Seat added successfully: $seat');
+      } else {
+        // Handle the case when the seat addition fails
+        print('Failed to add seat: $seat');
+      }
     }
   }
 }
-
-}
-
-
-
 
 // class SelectedSeatsPage extends StatelessWidget {
 //   final Set<SeatNumber> selectedSeats;
@@ -449,11 +443,11 @@ class QRCodeDisplayPage extends StatelessWidget {
   final SeatDisplay addSeat = SeatDisplay();
   List<Map<String, dynamic>> _addSeat = [];
 
-  final TextEditingController _confirmationIDController = TextEditingController();
-  final TextEditingController _rowController = TextEditingController();
-  final TextEditingController _colController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
+  //final TextEditingController _confirmationIDController = TextEditingController();
+  //final TextEditingController _rowController = TextEditingController();
+  //final TextEditingController _colController = TextEditingController();
+  //final TextEditingController _locationController = TextEditingController();
+  //final TextEditingController _timeController = TextEditingController();
   var itemData = [];
 
   Future<String> _getData() async {

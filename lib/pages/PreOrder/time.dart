@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,13 +15,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: PreOrderPage(),
+      home: const PreOrderPage(orderMethod: 'Delivery'),
     );
   }
 }
 
 class PreOrderPage extends StatefulWidget {
-  const PreOrderPage({super.key});
+  final String orderMethod;
+  const PreOrderPage({super.key, required this.orderMethod});
 
   @override
   State<StatefulWidget> createState() => _PreOrderPageState();
@@ -30,12 +32,17 @@ class _PreOrderPageState extends State<PreOrderPage> {
   late String preOrderTime;
   late String deliveryTime;
   String selectedOption = 'None';
+  String currentTime = '';
 
   @override
   void initState() {
     super.initState();
-    preOrderTime = _getInitialTime();
-    deliveryTime = _getInitialTime();
+    preOrderTime = _getCurrentTime();
+    deliveryTime = _getCurrentTime();
+  }
+
+  String _getCurrentTime() {
+    return DateFormat('hh:mm a').format(DateTime.now());
   }
 
   String _getInitialTime() {
@@ -53,6 +60,12 @@ class _PreOrderPageState extends State<PreOrderPage> {
     } else {
       throw Exception('Failed to load world time');
     }
+  }
+
+  String formatTime(TimeOfDay time) {
+    final dateTime = DateTime(2022, 1, 1, time.hour, time.minute);
+    final dateFormat = DateFormat('hh:mm a');
+    return dateFormat.format(dateTime);
   }
 
   Future<void> _selectTime(BuildContext context, String option) async {
@@ -78,10 +91,10 @@ class _PreOrderPageState extends State<PreOrderPage> {
             if (option == 'Order Now') {
               selectedOption = 'Order Now';
             } else if (option == 'Pre-order') {
-              preOrderTime = "${picked.hour}:${picked.minute} ${picked.period.toString().split('.')[1]}";
+              preOrderTime = formatTime(picked);
               selectedOption = 'Pre-order';
             } else if (option == 'Delivery') {
-              deliveryTime = "${picked.hour}:${picked.minute} ${picked.period.toString().split('.')[1]}";
+              deliveryTime = formatTime(picked);
               selectedOption = 'Delivery';
             }
           });

@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/Booking/booking_main.dart';
 import 'package:jom_makan/pages/FoodDelivery/address.dart';
 import 'package:jom_makan/pages/FoodDelivery/credit_payment.dart';
 import 'package:jom_makan/pages/FoodDelivery/payment_methods.dart';
 import 'package:jom_makan/pages/FoodDelivery/payment_success.dart';
+import 'package:jom_makan/pages/PreOrder/time.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
+
+/*
+TODO:
+preorder => link to select time
+delivery => show delivery charges
+else => link to booking seat
+*/
 
 class PaymentPage extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
@@ -131,17 +140,28 @@ class _PaymentPageState extends State<PaymentPage> {
               }
             }
           ),
-          //leading: null, // Set leading to null
-          //automaticallyImplyLeading: false, // Disable the back button
         ),
         body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                // delivery
-                _loadDeliveryContent(),
-                const Divider(),
+                // delivery only content
+                if (widget.orderMethod == 'Delivery') ...[
+                  _loadDeliveryContent(),
+                  const Divider(),
+                ]
+                // pre-order only content
+                else if (widget.orderMethod == 'Pre-Order') ...[
+                  _selectPreOrderTimeButton(),
+                  const Divider(),
+                ]
+                // order now and self pick-up content
+                else ...[
+                  _bookSeatButton(),
+                  const Divider(),
+                ],
+
                 // display cart items
                 _loadOrderSummary(),
                 const Divider(),
@@ -163,7 +183,51 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  // Delivery section
+  // Select time [for Pre-Order only]
+  Widget _selectPreOrderTimeButton() {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context, MaterialPageRoute(
+            builder: (context) => PreOrderPage(orderMethod: widget.orderMethod),
+          ),
+        );
+      },
+      child: const Text('Select Pre-Order Time'),
+    );
+  }
+
+  // Book seats [for Order Now and Self Pick-Up]
+  Widget _bookSeatButton() {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context, MaterialPageRoute(
+            builder: (context) => const BusLayout(),
+          ),
+        );
+      },
+      child: const Text('Book Your Seat'),
+    );
+  }
+
+  Widget _loadSeatsContent() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Selected Seats',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        // display seats
+      ],
+    );
+  }
+
+  // Delivery address [for Delivery only]
   Widget _loadDeliveryContent() {
     return Column(
       children: [
@@ -188,12 +252,6 @@ class _PaymentPageState extends State<PaymentPage> {
                 }
               ),
             ),
-            /* Expanded(
-              child: Text(
-                widget.selectedAddress.isNotEmpty ? widget.selectedAddress : 'No address selected',
-                style: const TextStyle(fontSize: 16),
-              ),
-            ), */
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
