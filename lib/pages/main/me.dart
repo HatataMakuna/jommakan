@@ -69,8 +69,6 @@ class MePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: ElevatedButton(
         onPressed: () {
-          // TODO: Customer Service Chatbot? - Populate the JSON file
-          // list of foods, stalls??
           if (label == 'Edit profile') {
             // Navigate to edit profile page
             // Navigator.of(context).pushNamed('/user/edit-profile');

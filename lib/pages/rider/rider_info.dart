@@ -6,8 +6,6 @@ import 'package:jom_makan/server/rider/register_as_rider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
-// TODO: REFER SDA PDF FILE
-
 class RiderInfo extends StatefulWidget {
   const RiderInfo({super.key});
 
@@ -253,7 +251,6 @@ class _RiderInfoState extends State<RiderInfo> {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ElevatedButton(
         onPressed: () {
-          // TODO: do something with the menus
           if (label == 'Pending Deliveries') {
             Navigator.push(
               context, MaterialPageRoute(

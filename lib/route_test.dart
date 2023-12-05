@@ -4,6 +4,7 @@ import 'package:jom_makan/pages/Admin/admin_main.dart';
 import 'package:jom_makan/pages/order/order_history.dart';
 import 'package:jom_makan/pages/user/change_password.dart';
 import 'package:jom_makan/stores/favorites_provider.dart';
+//import 'package:jom_makan/stores/selected_time_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:jom_makan/stores/user_provider.dart'; // Import the UserProvider class
 import 'package:jom_makan/pages/main/main_page.dart';
@@ -18,6 +19,7 @@ void main() => runApp(
     providers: [
       ChangeNotifierProvider(create: (context) => UserProvider()),
       ChangeNotifierProvider(create: (context) => FavoritesProvider()),
+      //ChangeNotifierProvider(create: (context) => SelectedTimeNotifier()),
     ],
     child: const MyApp(),
   )

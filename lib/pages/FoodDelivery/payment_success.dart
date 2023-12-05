@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/FoodDelivery/location/map.dart';
 import 'package:jom_makan/pages/foodDelivery/widgets/profile_tile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:jom_makan/pages/main/home.dart';
 import 'package:jom_makan/server/order/place_order.dart';
 import 'package:jom_makan/server/payment/add_payment.dart';
 import 'package:jom_makan/server/rider/add_delivery.dart';
@@ -216,31 +217,60 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
+                if (widget.orderMethod == 'Delivery') ...[
+                  GestureDetector(
+                    child: Container(
+                      height: 40.0,
+                      width: 220,
+                      decoration: BoxDecoration(
+                        color: const Color(0xfffeb324),
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Track Your Order",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => const Location(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                ],
                 GestureDetector(
                   child: Container(
-                    height: 40.0,
+                    height: 40,
                     width: 220,
                     decoration: BoxDecoration(
                       color: const Color(0xfffeb324),
-                      borderRadius: BorderRadius.circular(25.0),
+                      borderRadius: BorderRadius.circular(25),
                     ),
                     child: const Center(
                       child: Text(
-                        "Track Your Order",
+                        'Return to Home Page',
                         style: TextStyle(
-                          fontSize: 18.0,
+                          fontSize: 16,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
                     ),
                   ),
                   onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => const Location(),
+                    Navigator.push(
+                      context, MaterialPageRoute(
+                        builder: (BuildContext context) => const HomePage(),
                       ),
                     );
-                  },
+                  }
                 ),
               ],
             ),

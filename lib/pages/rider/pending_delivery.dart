@@ -1,5 +1,4 @@
 /*
-  TODO: (tasks)
   - List all the orders with "delivery" pending status (in progress) [get the list of pending orders with delivery method from the database]
   - Let riders to choose which they want to deliver [show confirmation]
   - Do not allow rider to choose when they had one delivery in progress
@@ -55,14 +54,14 @@ class _PendingDeliveryPageState extends State<PendingDeliveryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
           'Pending Deliveries',
           style: TextStyle(color: Colors.black),
         ),
         leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.of(context).pop();
           },

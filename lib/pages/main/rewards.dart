@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/stores/user_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -54,7 +56,10 @@ class RewardsPageState extends State<RewardsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      UserCard(userName: 'Chun Wai', userPoints: userPoints),
+                      UserCard(
+                        userName: Provider.of<UserProvider>(context, listen: false).userName!, 
+                        userPoints: userPoints
+                      ),
                       const SizedBox(height: 16),
                       const Text(
                         'Your Rewards',
