@@ -192,6 +192,8 @@ class _PaymentPageState extends State<PaymentPage> {
                 // order now and self pick-up content
                 else ...[
                   _bookSeatButton(),
+                  const SizedBox(height: 12),
+                  _loadSeatsContent(),
                   // display seat numbers
                   const Divider(),
                 ],
@@ -233,13 +235,13 @@ class _PaymentPageState extends State<PaymentPage> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const BusLayout()));
-        },
+        onPressed: () => navigateToSelectSeatPage(),
         child: const Text('Book Your Seat'),
       ),
     );
   }
+
+  // TODO: navigate to seat and set controller state
 
   Widget _loadSeatsContent() {
     return Row(
@@ -253,6 +255,16 @@ class _PaymentPageState extends State<PaymentPage> {
           ),
         ),
         // display seat numbers
+        ValueListenableBuilder(
+          valueListenable: selectedSeatsNotifier,
+          builder: (context, selectedSeat, child) {
+            print('Rebuilding ValueListenableBuilder: $selectedSeat');
+            return Text(
+              selectedSeat.isNotEmpty ? selectedSeat : 'Not selected',
+              style: const TextStyle(fontSize: 14),
+            );
+          }
+        ),
       ],
     );
   }
@@ -571,13 +583,29 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   // Navigations
-  void navigateToSelectTimePage() async {
+  void navigateToSelectSeatPage() async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PreOrderPage(
-          orderMethod: widget.orderMethod, selectedTimeNotifier: selectedTimeNotifier
-        ),
+        builder: (context) => BusLayout(selectedSeatsNotifier: selectedSeatsNotifier),
+      ),
+    );
+
+    if (result != null && result is String) {
+      setState(() {
+        selectedSeatsNotifier.value = result;
+      });
+    }
+  }
+
+  void navigateToSelectTimePage() async {
+    final result = await Navigator.push(
+      context, MaterialPageRoute(
+        builder: (context) {
+          return PreOrderPage(
+            orderMethod: widget.orderMethod, selectedTimeNotifier: selectedTimeNotifier
+          );
+        }
       ),
     );
 

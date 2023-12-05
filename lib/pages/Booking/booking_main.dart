@@ -3,15 +3,11 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:jom_makan/pages/Booking/qr_display.dart';
 import 'package:jom_makan/server/seatDisplay/seatDisplay.dart';
-//import 'package:photo_view/photo_view.dart';
-
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
-//import 'package:jom_makan/components/logo.dart';
-//import 'package:qr_flutter/qr_flutter.dart';
 import 'package:http/http.dart' as http;
 
-void main() {
+/* void main() {
   runApp(const BookSeatPage());
 }
 
@@ -28,10 +24,11 @@ class BookSeatPage extends StatelessWidget {
       home: const BusLayout(),
     );
   }
-}
+} */
 
 class BusLayout extends StatefulWidget {
-  const BusLayout({Key? key}) : super(key: key);
+  ValueNotifier<String> selectedSeatsNotifier;
+  BusLayout({super.key, required this.selectedSeatsNotifier});
 
   @override
   State<BusLayout> createState() => _BusLayoutState();
@@ -41,46 +38,9 @@ class _BusLayoutState extends State<BusLayout> {
   Set<SeatNumber> selectedSeats = {};
   Uint8List? qrCodeBytes; // Use Uint8List to store image bytes
   final SeatDisplay addSeat = SeatDisplay();
-  List<Map<String, dynamic>> _addSeat = [];
   
-  //final TextEditingController _confirmationIDController = TextEditingController();
   final TextEditingController _rowController = TextEditingController();
-  //final TextEditingController _colController = TextEditingController();
-  //final TextEditingController _locationController = TextEditingController();
-  //final TextEditingController _timeController = TextEditingController();
   var itemData = [];
-
-  Future<String> _getData() async {
-    try {
-      final data = await addSeat.getSeatingData();
-      final state = ['Processing', 'Approve', 'Reject'];
-
-      _addSeat = data;
-
-      for (int i = 0; i < _addSeat.length; i++) {
-        String foodNameCorrect = 'foodName: ${_addSeat[i]['confirmationID']}';
-        print('Food Name: ' + foodNameCorrect);
-        print('Date : ${_addSeat[i]['confirmationID']}');
-        itemData.add({
-          'confirmationID': _addSeat[i]['confirmationID'],
-          'row': _addSeat[i]['row'],
-          'col': _addSeat[i]['col'],
-          'location': _addSeat[i]['location'],
-          'time': _addSeat[i]['time'],
-        });
-
-        // Add row and col to _addSeat list
-        _addSeat[i]['row'] = _addSeat[i]['row'];
-        _addSeat[i]['col'] = _addSeat[i]['col'];
-      }
-
-      // Return the confirmation ID or other data you want to display
-      return _addSeat.isNotEmpty ? _addSeat[0]['confirmationID'].toString() : '';
-    } catch (e) {
-      print('Error loading promotion data: $e');
-      return ''; // Return an empty string or some default value in case of an error
-    }
-  }
 
   Future<void> generateQRCode(Set<SeatNumber> selectedSeats) async {
     final List<Map<String, Object>> seatsList = selectedSeats
@@ -126,9 +86,12 @@ class _BusLayoutState extends State<BusLayout> {
         builder: (context) => QRCodeDisplayPage(
           qrCodeBytes: qrCodeBytes!,
           selectedSeats: selectedSeats,
+          selectedSeatsNotifier: widget.selectedSeatsNotifier,
         ),
       ),
-    );
+    ).then((selectedSeats) {
+      Navigator.pop(context, selectedSeats);
+    });
   }
 
   @override
@@ -319,27 +282,12 @@ class _BusLayoutState extends State<BusLayout> {
               ),
             ),
             const SizedBox(height: 12),
-    //         ElevatedButton(
-    //   onPressed: () {
-    //     // This button is removed, as we're displaying the selected seats directly
-    //   },
-    //   style: ButtonStyle(
-    //     backgroundColor: MaterialStateProperty.resolveWith((states) => const Color(0xFFfc4c4e)),
-    //   ),
-    //   child: const Text('Show my selected seat numbers'),
-    // ),
             const SizedBox(height: 12),
             Text(selectedSeats.join(" , ")), // Display selected seat numbers directly
             const SizedBox(height: 12),
             // Add a button to generate the QR code
             ElevatedButton(
-              onPressed: () {
-                print("Selected Seats: $selectedSeats"); // Debug print
-                generateQRCode(selectedSeats);
-                print(selectedSeats);
-                // Navigator.of(context).pop(); // Close the dialog
-                seatAdded();
-              },
+              onPressed: () => showSeatConfirmation(),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith((states) => const Color(0xFFfc4c4e)),
               ),
@@ -369,6 +317,35 @@ class _BusLayoutState extends State<BusLayout> {
           ),
         ),
       ),
+    );
+  }
+
+  void showSeatConfirmation() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmation?'),
+          content: Text('Are you sure you want to book the following seat(s): $selectedSeats'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Yes'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+
+                generateQRCode(selectedSeats);
+                seatAdded();
+              },
+            ),
+          ],
+        );
+      }
     );
   }
 
@@ -465,5 +442,13 @@ class UIPage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class SelectedSeatsNotifier extends ValueNotifier<List<String>> {
+  SelectedSeatsNotifier() : super([]);
+
+  void updateSeats(List<String> newSeats) {
+    value = newSeats;
   }
 }

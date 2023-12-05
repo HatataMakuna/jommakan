@@ -7,8 +7,11 @@ import 'package:photo_view/photo_view.dart';
 class QRCodeDisplayPage extends StatefulWidget {
   final Uint8List qrCodeBytes;
   final Set<SeatNumber> selectedSeats;
+  final ValueNotifier<String> selectedSeatsNotifier;
 
-  const QRCodeDisplayPage({super.key, required this.qrCodeBytes, required this.selectedSeats});
+  const QRCodeDisplayPage({
+    super.key, required this.qrCodeBytes, required this.selectedSeats, required this.selectedSeatsNotifier
+  });
 
   @override
   State<StatefulWidget> createState() => _QRCodeDisplayPageState();
@@ -78,6 +81,7 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
 
   @override
   Widget build(BuildContext context) {
+    //widget.updateSelectedSeats();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -96,22 +100,24 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
           children: [
             const Text(
               'Thanks You To Choosing JomMakan',
-              style: TextStyle(fontSize: 15),
+              style: TextStyle(fontSize: 14),
             ),
             _loadQrCode(),
             _loadSeatDetails(),
             const SizedBox(height: 10),
             Text(
               'Selected Seats: ${widget.selectedSeats.join(", ")}',
-              style: const TextStyle(fontSize: 14.0),
+              style: const TextStyle(fontSize: 12),
             ),
             const SizedBox(height: 10),
             _loadSeatStatus(),
             const SizedBox(height: 10),
             const Text(
               'Location: Red Bricks Cafe',
-              style: TextStyle(fontSize: 14),
+              style: TextStyle(fontSize: 12),
             ),
+            const SizedBox(height: 8),
+            _backToPaymentPage(),
           ],
         ),
       ),
@@ -153,27 +159,27 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
               children: [
                 const Text(
                   'Seat Details',
-                  style: TextStyle(fontSize: 13),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   'Confirmation ID: ${seatDetail['confirmationID']}',
-                  style: const TextStyle(fontSize: 13),
+                  style: const TextStyle(fontSize: 12),
                 ),
                 Text(
                   'Row: ${seatDetail['row']}',
-                  style: const TextStyle(fontSize: 13),
+                  style: const TextStyle(fontSize: 12),
                 ),
                 Text(
                   'Col: ${seatDetail['col']}',
-                  style: const TextStyle(fontSize: 13),
+                  style: const TextStyle(fontSize: 12),
                 ),
                 Text(
                   'Location: ${seatDetail['location']}',
-                  style: const TextStyle(fontSize: 13),
+                  style: const TextStyle(fontSize: 12),
                 ),
                 Text(
                   'Time: ${seatDetail['time']}',
-                  style: const TextStyle(fontSize: 13),
+                  style: const TextStyle(fontSize: 12),
                 ),
               ],
             ),
@@ -197,13 +203,24 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
               String seatStatus = snapshot.data ?? 'Available';
               return Text(
                 'Seat ${seat.rowI}-${seat.colI}: $seatStatus',
-                style: const TextStyle(fontSize: 18.0),
+                style: const TextStyle(fontSize: 12),
               );
             }
           },
         );
       }).toList(),
     );
+  }
+
+  Widget _backToPaymentPage() {
+    return ElevatedButton(
+      onPressed: () => _goBack(),
+      child: const Text('Back to Payment Page'),
+    );
+  }
+
+  void _goBack() {
+    Navigator.pop(context, widget.selectedSeats.join(", "));
   }
 }
 
