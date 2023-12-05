@@ -9,10 +9,11 @@ import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
 /*
-TODO:
-preorder => link to select time
-delivery => show delivery charges
-else => link to booking seat
+[/] preorder => link to select time
+[/] delivery => show delivery charges
+[/] else => link to booking seat
+
+[/] MAKE IT SCROLLABLE
 */
 
 class PaymentPage extends StatefulWidget {
@@ -29,8 +30,12 @@ class PaymentPage extends StatefulWidget {
 
 class _PaymentPageState extends State<PaymentPage> {
   double totalPrice = 0.0;
+  double deliveryFees = 0.0;
+  double subtotal = 0.0;
   ValueNotifier<String> selectedAddressNotifier = ValueNotifier<String>('');
   ValueNotifier<String> selectedPaymentMethodNotifier = ValueNotifier<String>('');
+  ValueNotifier<String> selectedTimeNotifier = ValueNotifier<String>('');
+  ValueNotifier<String> selectedSeatsNotifier = ValueNotifier<String>('');
   //String paymentMethod = '';
   
   @override
@@ -45,10 +50,22 @@ class _PaymentPageState extends State<PaymentPage> {
       setState(() {
         // Reset totalPrice to zero before recalculating
         totalPrice = 0.0;
+        deliveryFees = 0.0;
+        subtotal = 0.0;
 
         // Recalculate totalPrice based on the new cart items
         for (final cartItem in widget.cartItems) {
           totalPrice += int.parse(cartItem['quantity']) * double.parse(cartItem['food_price']);
+
+          // If the order method is delivery, extra 5% delivery charges is applied
+          if (widget.orderMethod == 'Delivery') {
+            deliveryFees = totalPrice * 0.05;
+            subtotal = double.parse((totalPrice + deliveryFees).toStringAsFixed(1));
+          }
+          // Else, no extra charges is applied
+          else {
+            subtotal = double.parse(totalPrice.toStringAsFixed(1));
+          }
         }
       });
     }
@@ -154,11 +171,28 @@ class _PaymentPageState extends State<PaymentPage> {
                 // pre-order only content
                 else if (widget.orderMethod == 'Pre-Order') ...[
                   _selectPreOrderTimeButton(),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Pre-Order Time:'),
+                      ValueListenableBuilder(
+                        valueListenable: selectedTimeNotifier,
+                        builder: (context, selectedTime, child) {
+                          return Text(
+                            selectedTime.isNotEmpty ? selectedTime : 'Not selected',
+                            style: const TextStyle(fontSize: 14),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                   const Divider(),
                 ]
                 // order now and self pick-up content
                 else ...[
                   _bookSeatButton(),
+                  // display seat numbers
                   const Divider(),
                 ],
 
@@ -180,34 +214,30 @@ class _PaymentPageState extends State<PaymentPage> {
             ),
           ),
         ),
-    );
+      );
   }
 
   // Select time [for Pre-Order only]
   Widget _selectPreOrderTimeButton() {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context, MaterialPageRoute(
-            builder: (context) => PreOrderPage(orderMethod: widget.orderMethod),
-          ),
-        );
-      },
-      child: const Text('Select Pre-Order Time'),
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () => navigateToSelectTimePage(),
+        child: const Text('Select Pre-Order Time'),
+      ),
     );
   }
 
   // Book seats [for Order Now and Self Pick-Up]
   Widget _bookSeatButton() {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context, MaterialPageRoute(
-            builder: (context) => const BusLayout(),
-          ),
-        );
-      },
-      child: const Text('Book Your Seat'),
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const BusLayout()));
+        },
+        child: const Text('Book Your Seat'),
+      ),
     );
   }
 
@@ -222,7 +252,7 @@ class _PaymentPageState extends State<PaymentPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        // display seats
+        // display seat numbers
       ],
     );
   }
@@ -234,23 +264,22 @@ class _PaymentPageState extends State<PaymentPage> {
         const Text(
           'Delivery Address',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 15,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 8),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: ValueListenableBuilder(
-                valueListenable: selectedAddressNotifier,
-                builder: (context, selectedAddress, child) {
-                  return Text(
-                    selectedAddress.isNotEmpty ? selectedAddress : 'No address selected',
-                    style: const TextStyle(fontSize: 16),
-                  );
-                }
-              ),
+            ValueListenableBuilder(
+              valueListenable: selectedAddressNotifier,
+              builder: (context, selectedAddress, child) {
+                return Text(
+                  selectedAddress.isNotEmpty ? selectedAddress : 'No address selected',
+                  style: const TextStyle(fontSize: 12),
+                );
+              }
             ),
             IconButton(
               icon: const Icon(Icons.edit),
@@ -272,18 +301,25 @@ class _PaymentPageState extends State<PaymentPage> {
         const Text(
           'Order Summary',
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 15,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 8),
         // Load cart list
         // ignore: sized_box_for_whitespace
-        _buildCartList(),
-        const SizedBox(height: 10),
+        Container(
+          height: 200,
+          child: _buildCartList(),
+        ),
+        const SizedBox(height: 8),
         // Load Total Price
         _buildTotalPrice(),
-        const SizedBox(height: 10),
+        const SizedBox(height: 8),
+        _buildDeliveryFees(),
+        const SizedBox(height: 8),
+        _buildSubtotal(),
+        const SizedBox(height: 8),
         // Load No Cutlery Request
         _buildNoCutlery(),
       ],
@@ -291,6 +327,53 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildCartList() {
+    List<Map<String, dynamic>> cartItems = widget.cartItems;
+
+    return SingleChildScrollView(
+      child: Column(
+        children: cartItems.map((cartItem) {
+          List<String> preferences = [
+            if (int.parse(cartItem['no_vege']) == 1) 'No Vegetarian',
+            if (int.parse(cartItem['extra_vege']) == 1) 'Extra Vegetarian',
+            if (int.parse(cartItem['no_spicy']) == 1) 'No Spicy',
+            if (int.parse(cartItem['extra_spicy']) == 1) 'Extra Spicy',
+          ].where((preference) => preference.isNotEmpty).toList();
+
+          return ListTile(
+            leading: Image(
+              image: AssetImage('images/foods/${cartItem['food_image']}'),
+              width: 80,
+              height: 80,
+            ),
+            title: Text(
+              cartItem['food_name'] ?? '',
+              style: const TextStyle(fontSize: 12),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Quantity: ${cartItem['quantity'] ?? ''}',
+                  style: const TextStyle(fontSize: 12),
+                ),
+                const SizedBox(height: 8),
+                _buildPreferencesList(preferences),
+                const SizedBox(height: 8),
+                _buildAdditionalNotes(cartItem),
+              ],
+            ),
+            // ignore: sized_box_for_whitespace
+            trailing: Text(
+              'Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 12),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+/*   Widget _buildCartList() {
     List<Map<String, dynamic>> cartItems = widget.cartItems;
 
     return ListView.builder(
@@ -339,7 +422,7 @@ class _PaymentPageState extends State<PaymentPage> {
         );
       },
     );
-  }
+  } */
 
   Widget _buildPreferencesList(List<String> preferences) {
     if (preferences.isNotEmpty) {
@@ -377,22 +460,64 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildTotalPrice() {
-    return ListTile(
-      leading: const Text(
-        'Total Price: ',
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Total Price: ',
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-      ),
-      trailing: Text(
-        'RM ${totalPrice.toStringAsFixed(2)}',
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Colors.red,
+        Text(
+          'RM ${totalPrice.toStringAsFixed(2)}',
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
         ),
-      ),
+      ],
+    );
+  }
+
+  Widget _buildDeliveryFees() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Delivery Fees: ',
+          style: TextStyle(fontSize: 13),
+        ),
+        Text(
+          'RM ${deliveryFees.toStringAsFixed(2)}',
+          style: const TextStyle(fontSize: 13),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubtotal() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Subtotal: (after rounding adjustment)',
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          'RM ${subtotal.toStringAsFixed(2)}',
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+        ),
+      ],
     );
   }
 
@@ -408,13 +533,13 @@ class _PaymentPageState extends State<PaymentPage> {
       leading: const Text(
         'No Cutlery Requested?',
         style: TextStyle(
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: FontWeight.bold,
         ),
       ),
       trailing: Text(
         noCutleryRequest,
-        style: const TextStyle(fontSize: 14),
+        style: const TextStyle(fontSize: 13),
       ),
     );
   }
@@ -446,10 +571,26 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   // Navigations
-  void navigateToAddressPage() async {
+  void navigateToSelectTimePage() async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
+        builder: (context) => PreOrderPage(
+          orderMethod: widget.orderMethod, selectedTimeNotifier: selectedTimeNotifier
+        ),
+      ),
+    );
+
+    if (result != null && result is String) {
+      setState(() {
+        selectedTimeNotifier.value = result;
+      });
+    }
+  }
+
+  void navigateToAddressPage() async {
+    final result = await Navigator.push(
+      context, MaterialPageRoute(
         builder: (context) => AddressPage(selectedAddressNotifier: selectedAddressNotifier),
       ),
     );
@@ -458,14 +599,12 @@ class _PaymentPageState extends State<PaymentPage> {
       setState(() {
         selectedAddressNotifier.value = result; // Update the selected address
       });
-      //print('Selected Address: $result');
     }
   }
 
   void navigateToPaymentMethodPage() async {
     final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const PaymentMethodPage()),
+      context, MaterialPageRoute(builder: (context) => const PaymentMethodPage()),
     );
 
     if (result != null && result is String) {
@@ -483,7 +622,7 @@ class _PaymentPageState extends State<PaymentPage> {
         noCutlery: widget.noCutlery,
         cartItems: widget.cartItems,
         paymentMethod: selectedPaymentMethodNotifier.value,
-        totalPrice: totalPrice,
+        totalPrice: subtotal,
         orderMethod: widget.orderMethod,
         address: selectedAddressNotifier.value,
       ),

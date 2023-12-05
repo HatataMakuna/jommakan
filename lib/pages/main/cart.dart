@@ -1,5 +1,3 @@
-// TODO: Do something with the order methods?
-
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/FoodDelivery/payment_main.dart';
 import 'package:jom_makan/pages/cart/edit_cart.dart';
