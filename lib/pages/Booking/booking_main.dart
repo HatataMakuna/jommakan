@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:jom_makan/pages/Booking/qr_display.dart';
-import 'package:jom_makan/server/seatDisplay/seatDisplay.dart';
+import 'package:jom_makan/server/seat_display/seat_display.dart';
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:jom_makan/stores/seatlist_provider.dart';
+import 'package:provider/provider.dart';
 
 /* void main() {
   runApp(const BookSeatPage());
@@ -27,11 +29,11 @@ class BookSeatPage extends StatelessWidget {
 } */
 
 class BusLayout extends StatefulWidget {
-  ValueNotifier<String> selectedSeatsNotifier;
-  BusLayout({super.key, required this.selectedSeatsNotifier});
+  final ValueNotifier<String> selectedSeatsNotifier;
+  const BusLayout({super.key, required this.selectedSeatsNotifier});
 
   @override
-  State<BusLayout> createState() => _BusLayoutState();
+  State<StatefulWidget> createState() => _BusLayoutState();
 }
 
 class _BusLayoutState extends State<BusLayout> {
@@ -350,7 +352,7 @@ class _BusLayoutState extends State<BusLayout> {
   }
 
   // Passing the data to "server/register.dart" for performing the server-side script
-  void seatAdded() async {
+  void seatAdded() {
     // Generate a unique confirmationID (starting from C0001)
     String confirmationID =
       'C${DateTime.now().millisecondsSinceEpoch % 10000}'.padLeft(5, '0');
@@ -361,11 +363,25 @@ class _BusLayoutState extends State<BusLayout> {
     // Get the current date and time
     DateTime now = DateTime.now();
 
+    List<Map<String, dynamic>> seatsList = [];
+
+    // TODO: don't call the add seat to database function yet, put in place order function
     for (SeatNumber seat in selectedSeats) {
       int row = seat.rowI;
       int col = seat.colI;
 
-      bool registrationResult = await addSeat.seatAdded(
+      Map<String, dynamic> seatData = {
+        'confirmationID': confirmationID,
+        'row': row,
+        'col': col,
+        'location': location,
+        'time': now,
+      };
+
+      seatsList.add(seatData);
+
+      // TODO: Call this function will add the seat data to the database
+      /* bool registrationResult = await addSeat.seatAdded(
         confirmationID: confirmationID,
         row: row,
         col: col,
@@ -379,34 +395,13 @@ class _BusLayoutState extends State<BusLayout> {
       } else {
         // Handle the case when the seat addition fails
         print('Failed to add seat: $seat');
-      }
+      } */
     }
+
+    // Store the selected seat details to the provider
+    Provider.of<SeatListProvider>(context, listen: false).setSeatList(seatsList);
   }
 }
-
-// class SelectedSeatsPage extends StatelessWidget {
-//   final Set<SeatNumber> selectedSeats;
-
-//   const SelectedSeatsPage({Key? key, required this.selectedSeats}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Selected Seats'),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Text('Selected Seats: ${selectedSeats.join(", ")}'),
-//             // You can add more widgets or actions based on the selected seats data
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class UIPage extends StatelessWidget {
   final String logoUrl;

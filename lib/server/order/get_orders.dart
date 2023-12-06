@@ -14,7 +14,7 @@ class GetOrders {
         JOIN orders o ON od.orderID = o.orderID
         JOIN payments p ON o.paymentID = p.paymentID
         WHERE o.userID = :userID
-        ORDER BY p.payment_date DESC
+        ORDER BY od.odetailsID DESC;
       ''';
       var results = await pool.execute(query, {"userID": userID});
 

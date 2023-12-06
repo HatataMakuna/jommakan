@@ -1,10 +1,14 @@
 import 'package:jom_makan/database/db_connection.dart';
 import 'package:jom_makan/server/cart/clear_cart.dart';
+import 'package:jom_makan/server/food/edit_stock.dart';
 import 'package:jom_makan/server/payment/add_payment.dart';
+import 'package:jom_makan/server/seat_display/seat_display.dart';
 
 class PlaceOrder {
   final ClearCart _clearCart = ClearCart();
   final AddPayment _addPayment = AddPayment();
+  final SeatDisplay _seatDisplay = SeatDisplay();
+  final EditStock _editStock = EditStock();
   late int orderID;
 
   Future<bool> placeOrder({
@@ -13,6 +17,7 @@ class PlaceOrder {
     required String paymentMethod,
     required double totalPrice,
     required String orderMethod,
+    required List<Map<String, dynamic>> selectedSeats,
   }) async {
     //String formattedDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
 
@@ -83,6 +88,21 @@ class PlaceOrder {
           "extra_spicy": extraSpicy ? 1 : 0,
           "notes": cartItem['notes']
         });
+
+        // Deduct the quantity in stock
+        _editStock.editStock(foodID: int.parse(cartItem['foodID']), quantity: int.parse(cartItem['quantity']));
+      }
+
+      // Add the selected seats to database
+      for (var seat in selectedSeats) {
+        _seatDisplay.seatAdded(
+          confirmationID: seat['confirmationID'],
+          row: seat['row'],
+          col: seat['col'],
+          location: seat['location'],
+          time: seat['time'],
+          orderID: orderID,
+        );
       }
 
       // clear the user cart after placing the order

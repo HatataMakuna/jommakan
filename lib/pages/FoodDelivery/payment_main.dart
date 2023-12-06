@@ -8,14 +8,6 @@ import 'package:jom_makan/pages/PreOrder/time.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
-/*
-[/] preorder => link to select time
-[/] delivery => show delivery charges
-[/] else => link to booking seat
-
-[/] MAKE IT SCROLLABLE
-*/
-
 class PaymentPage extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
   final bool noCutlery;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/foods/food_details.dart';
 
 // ignore: must_be_immutable
 class OrderDetailsPage extends StatelessWidget {

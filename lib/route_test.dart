@@ -4,6 +4,7 @@ import 'package:jom_makan/pages/Admin/admin_main.dart';
 import 'package:jom_makan/pages/order/order_history.dart';
 import 'package:jom_makan/pages/user/change_password.dart';
 import 'package:jom_makan/stores/favorites_provider.dart';
+import 'package:jom_makan/stores/seatlist_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:jom_makan/stores/user_provider.dart'; // Import the UserProvider class
 import 'package:jom_makan/pages/main/main_page.dart';
@@ -18,7 +19,7 @@ void main() => runApp(
     providers: [
       ChangeNotifierProvider(create: (context) => UserProvider()),
       ChangeNotifierProvider(create: (context) => FavoritesProvider()),
-      //ChangeNotifierProvider(create: (context) => SelectedTimeNotifier()),
+      ChangeNotifierProvider(create: (context) => SeatListProvider()),
     ],
     child: const MyApp(),
   )
@@ -37,16 +38,6 @@ class MyApp extends StatelessWidget {
       Provider.of<UserProvider>(context, listen: false).setUserEmail('testing@tarc.edu.my');
       Provider.of<FavoritesProvider>(context, listen: false).fetchFavorites(1);
     });
-
-    /* Future.delayed(Duration.zero, () {
-      Provider.of<UserProvider>(context, listen: false).setUserName('Jm_admin');
-      Provider.of<UserProvider>(context, listen: false).setUserID(2);
-      Provider.of<UserProvider>(context, listen: false).setUserRole('Admin');
-    }); */
-    
-    // Access the user name from the provider
-    //String? userName = Provider.of<UserProvider>(context).userName;
-    //int? userID = Provider.of<UserProvider>(context, listen: false).userID;
 
     bool hasRequiredRole(BuildContext context, String requiredRole) {
       String? userRole = Provider.of<UserProvider>(context).userRole;
