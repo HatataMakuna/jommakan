@@ -96,7 +96,8 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
         userID: widget.userID, noCutlery: widget.noCutlery,
         cartItems: widget.cartItems, paymentMethod: widget.paymentMethod,
         totalPrice: widget.totalPrice, orderMethod: widget.orderMethod,
-        selectedSeats: Provider.of<SeatListProvider>(context, listen: false).seatList
+        selectedSeats: Provider.of<SeatListProvider>(context, listen: false).seatList,
+        seatQrBytes: Provider.of<SeatListProvider>(context, listen: false).qrCodeBytes,
       );
 
       // If the order method is Delivery, add to Delivery database
@@ -219,7 +220,7 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                       color: Color(0xfffeb324),
                     ),
                     title: Text(widget.paymentMethod),
-                    subtitle: const Text("PNB Card ending ***6"), // TODO: Change the subtitle depend on payment method
+                    subtitle: const Text("PNB Card ending ***6"), 
                   ),
                 ),
                 const SizedBox(height: 10),

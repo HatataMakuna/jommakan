@@ -7,12 +7,12 @@ import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 
 class QRCodeDisplayPage extends StatefulWidget {
-  final Uint8List qrCodeBytes;
+  //final Uint8List qrCodeBytes;
   final Set<SeatNumber> selectedSeats;
   final ValueNotifier<String> selectedSeatsNotifier;
 
   const QRCodeDisplayPage({
-    super.key, required this.qrCodeBytes, required this.selectedSeats, required this.selectedSeatsNotifier
+    super.key, required this.selectedSeats, required this.selectedSeatsNotifier
   });
 
   @override
@@ -145,11 +145,12 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
   }
 
   Widget _loadQrCode() {
+    Uint8List qrCode = Provider.of<SeatListProvider>(context, listen: false).qrCodeBytes;
     return SizedBox(
       height: 200,
       width: 200,
       child: PhotoView(
-        imageProvider: MemoryImage(widget.qrCodeBytes),
+        imageProvider: MemoryImage(qrCode),
         minScale: PhotoViewComputedScale.contained * 0.8,
         maxScale: PhotoViewComputedScale.covered * 2,
         backgroundDecoration: const BoxDecoration(color: Colors.white),

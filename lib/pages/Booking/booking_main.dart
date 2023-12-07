@@ -9,8 +9,13 @@ import 'package:http/http.dart' as http;
 import 'package:jom_makan/stores/seatlist_provider.dart';
 import 'package:provider/provider.dart';
 
-/* void main() {
-  runApp(const BookSeatPage());
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => SeatListProvider(),
+      child: const BookSeatPage(),
+    )
+  );
 }
 
 class BookSeatPage extends StatelessWidget {
@@ -23,10 +28,10 @@ class BookSeatPage extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const BusLayout(),
+      home: BusLayout(selectedSeatsNotifier: ValueNotifier<String>(''),),
     );
   }
-} */
+}
 
 class BusLayout extends StatefulWidget {
   final ValueNotifier<String> selectedSeatsNotifier;
@@ -83,10 +88,14 @@ class _BusLayoutState extends State<BusLayout> {
   }
 
   void goToQrDisplayPage(Set<SeatNumber> selectedSeats) {
+    //print('QR code bytes: $qrCodeBytes');
+    // Store the QR code bytes to provider
+    Provider.of<SeatListProvider>(context, listen: false).setQrCodeBytes(qrCodeBytes!);
+
     Navigator.push(
       context, MaterialPageRoute(
         builder: (context) => QRCodeDisplayPage(
-          qrCodeBytes: qrCodeBytes!,
+          //qrCodeBytes: qrCodeBytes!,
           selectedSeats: selectedSeats,
           selectedSeatsNotifier: widget.selectedSeatsNotifier,
         ),
@@ -365,7 +374,6 @@ class _BusLayoutState extends State<BusLayout> {
 
     List<Map<String, dynamic>> seatsList = [];
 
-    // TODO: don't call the add seat to database function yet, put in place order function
     for (SeatNumber seat in selectedSeats) {
       int row = seat.rowI;
       int col = seat.colI;
@@ -379,23 +387,6 @@ class _BusLayoutState extends State<BusLayout> {
       };
 
       seatsList.add(seatData);
-
-      // TODO: Call this function will add the seat data to the database
-      /* bool registrationResult = await addSeat.seatAdded(
-        confirmationID: confirmationID,
-        row: row,
-        col: col,
-        location: location,
-        time: now,
-      );
-
-      if (registrationResult) {
-        // Seat added successfully, you can perform any additional actions here
-        print('Seat added successfully: $seat');
-      } else {
-        // Handle the case when the seat addition fails
-        print('Failed to add seat: $seat');
-      } */
     }
 
     // Store the selected seat details to the provider

@@ -113,7 +113,6 @@ class _CartPageState extends State<CartPage> {
         setState(() {
           dropdownValue = newValue!;
           print(dropdownValue);
-          // TODO: Dropdown value failed to pass the exact value
         });
       }
     );

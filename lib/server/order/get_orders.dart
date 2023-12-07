@@ -8,7 +8,7 @@ class GetOrders {
         SELECT
           od.odetailsID, f.food_image, f.food_name, od.price, od.quantity, 
           o.status, od.no_vege, od.extra_vege, od.no_spicy, od.extra_spicy, 
-          od.notes, p.payment_date, p.payment_method
+          od.notes, p.payment_date, p.payment_method, o.seatqr_bytes 
         FROM order_details od 
         JOIN foods f ON od.foodID = f.foodID
         JOIN orders o ON od.orderID = o.orderID
@@ -34,6 +34,7 @@ class GetOrders {
           'notes': row.colByName("notes"),
           'date': row.colByName("payment_date"),
           'payment': row.colByName("payment_method"),
+          'seatqr_bytes': row.colByName("seatqr_bytes"),
         });
       }
       
@@ -49,8 +50,8 @@ class GetOrders {
     try {
       String query = '''
         SELECT
-          od.odetailsID, f.food_image, f.food_name, od.price, od.quantity, 
-          od.no_vege, od.extra_vege, od.no_spicy, od.extra_spicy, od.notes, s.stall_name 
+          od.odetailsID, f.food_image, f.food_name, od.price, od.quantity, od.no_vege, 
+          od.extra_vege, od.no_spicy, od.extra_spicy, od.notes, s.stall_name 
         FROM order_details od 
         JOIN foods f ON od.foodID = f.foodID 
         JOIN stalls s ON f.stallID = s.stallID 

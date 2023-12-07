@@ -233,8 +233,6 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  // TODO: navigate to seat and set controller state
-
   Widget _loadSeatsContent() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
