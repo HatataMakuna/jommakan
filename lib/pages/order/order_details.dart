@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 
 // ignore: must_be_immutable
 class OrderDetailsPage extends StatelessWidget {
@@ -46,13 +50,17 @@ class OrderDetailsPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               _title(),
-              const SizedBox(height: 16),
               if (preferences.isNotEmpty) ...[
-                _loadPreferences(preferences),
                 const SizedBox(height: 16),
+                _loadPreferences(preferences),
               ],
               if (notes.isNotEmpty) ...[
+                const SizedBox(height: 16),
                 _loadAdditionalNotes(notes),
+              ],
+              if (selectedOrderItem['seatqr_bytes'] != null) ...[
+                const SizedBox(height: 16),
+                _loadSeatQr(),
               ],
             ],
           ),
@@ -208,6 +216,22 @@ class OrderDetailsPage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _loadSeatQr() {
+    // Convert the base64 string to a Uint8List
+    Uint8List qrCodeBytes = base64Decode(selectedOrderItem['seatqr_bytes']);
+
+    return SizedBox(
+      height: 200,
+      width: 200,
+      child: PhotoView(
+        imageProvider: MemoryImage(qrCodeBytes),
+        minScale: PhotoViewComputedScale.contained * 0.8,
+        maxScale: PhotoViewComputedScale.covered * 2,
+        backgroundDecoration: const BoxDecoration(color: Colors.white),
       ),
     );
   }

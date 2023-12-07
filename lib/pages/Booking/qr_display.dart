@@ -1,14 +1,19 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:jom_makan/components/logo.dart';
-import 'package:jom_makan/server/seatDisplay/seatDisplay.dart';
+import 'package:jom_makan/server/seat_display/seat_display.dart';
+import 'package:jom_makan/stores/seatlist_provider.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:provider/provider.dart';
 
 class QRCodeDisplayPage extends StatefulWidget {
-  final Uint8List qrCodeBytes;
+  //final Uint8List qrCodeBytes;
   final Set<SeatNumber> selectedSeats;
+  final ValueNotifier<String> selectedSeatsNotifier;
 
-  const QRCodeDisplayPage({super.key, required this.qrCodeBytes, required this.selectedSeats});
+  const QRCodeDisplayPage({
+    super.key, required this.selectedSeats, required this.selectedSeatsNotifier
+  });
 
   @override
   State<StatefulWidget> createState() => _QRCodeDisplayPageState();
@@ -17,14 +22,24 @@ class QRCodeDisplayPage extends StatefulWidget {
 class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
   final Logo _logo = Logo();
   final SeatDisplay addSeat = SeatDisplay();
-  List<Map<String, dynamic>> _addSeat = [];
+  List<Map<String, dynamic>> seatsList = [];
 
   var itemData = [];
 
   @override
   void initState() {
     super.initState();
-    _getSeatData();
+    _getSelectedSeats();
+  }
+
+  void _getSelectedSeats() {
+    // Fetch the selected seat list from the provider
+    List<Map<String, dynamic>> selectedData = Provider.of<SeatListProvider>(context, listen: false).seatList;
+    if (mounted) {
+      setState(() {
+        seatsList = selectedData;
+      });
+    }
   }
 
   void _getSeatData() async {
@@ -54,7 +69,7 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
 
       if (mounted) {
         setState(() {
-          _addSeat = selectedData;
+          seatsList = selectedData;
         });
       }
       //print('Selected Seat: ${widget.selectedSeats}');
@@ -68,7 +83,7 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
   Future<String> getSeatStatus(SeatNumber seat) async {
     // Use your logic to get the current status of the seat
     // For example, you can use the _addSeat list to get the status
-    for (var seatData in _addSeat) {
+    for (var seatData in seatsList) {
       if (seatData['row'] == seat.rowI && seatData['col'] == seat.colI) {
         return seatData['status'] ?? 'Unknown';
       }
@@ -78,6 +93,7 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
 
   @override
   Widget build(BuildContext context) {
+    //widget.updateSelectedSeats();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -96,22 +112,24 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
           children: [
             const Text(
               'Thanks You To Choosing JomMakan',
-              style: TextStyle(fontSize: 15),
+              style: TextStyle(fontSize: 14),
             ),
             _loadQrCode(),
             _loadSeatDetails(),
             const SizedBox(height: 10),
             Text(
               'Selected Seats: ${widget.selectedSeats.join(", ")}',
-              style: const TextStyle(fontSize: 14.0),
+              style: const TextStyle(fontSize: 12),
             ),
             const SizedBox(height: 10),
             _loadSeatStatus(),
             const SizedBox(height: 10),
             const Text(
               'Location: Red Bricks Cafe',
-              style: TextStyle(fontSize: 14),
+              style: TextStyle(fontSize: 12),
             ),
+            const SizedBox(height: 8),
+            _backToPaymentPage(),
           ],
         ),
       ),
@@ -127,11 +145,12 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
   }
 
   Widget _loadQrCode() {
+    Uint8List qrCode = Provider.of<SeatListProvider>(context, listen: false).qrCodeBytes;
     return SizedBox(
       height: 200,
       width: 200,
       child: PhotoView(
-        imageProvider: MemoryImage(widget.qrCodeBytes),
+        imageProvider: MemoryImage(qrCode),
         minScale: PhotoViewComputedScale.contained * 0.8,
         maxScale: PhotoViewComputedScale.covered * 2,
         backgroundDecoration: const BoxDecoration(color: Colors.white),
@@ -144,36 +163,36 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
     return SizedBox(
       height: 150,
       child: PageView.builder(
-        itemCount: _addSeat.length,
+        itemCount: seatsList.length,
         itemBuilder: (context, index) {
-          final seatDetail = _addSeat[index];
+          final seatDetail = seatsList[index];
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
                   'Seat Details',
-                  style: TextStyle(fontSize: 13),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   'Confirmation ID: ${seatDetail['confirmationID']}',
-                  style: const TextStyle(fontSize: 13),
+                  style: const TextStyle(fontSize: 12),
                 ),
                 Text(
                   'Row: ${seatDetail['row']}',
-                  style: const TextStyle(fontSize: 13),
+                  style: const TextStyle(fontSize: 12),
                 ),
                 Text(
                   'Col: ${seatDetail['col']}',
-                  style: const TextStyle(fontSize: 13),
+                  style: const TextStyle(fontSize: 12),
                 ),
                 Text(
                   'Location: ${seatDetail['location']}',
-                  style: const TextStyle(fontSize: 13),
+                  style: const TextStyle(fontSize: 12),
                 ),
                 Text(
-                  'Time: ${seatDetail['time']}',
-                  style: const TextStyle(fontSize: 13),
+                  'Time: ${seatDetail['time'].toString().substring(0, 19)}',
+                  style: const TextStyle(fontSize: 12),
                 ),
               ],
             ),
@@ -197,13 +216,24 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
               String seatStatus = snapshot.data ?? 'Available';
               return Text(
                 'Seat ${seat.rowI}-${seat.colI}: $seatStatus',
-                style: const TextStyle(fontSize: 18.0),
+                style: const TextStyle(fontSize: 12),
               );
             }
           },
         );
       }).toList(),
     );
+  }
+
+  Widget _backToPaymentPage() {
+    return ElevatedButton(
+      onPressed: () => _goBack(),
+      child: const Text('Back to Payment Page'),
+    );
+  }
+
+  void _goBack() {
+    Navigator.pop(context, widget.selectedSeats.join(", "));
   }
 }
 

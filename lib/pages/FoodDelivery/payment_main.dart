@@ -8,14 +8,6 @@ import 'package:jom_makan/pages/PreOrder/time.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
-/*
-[/] preorder => link to select time
-[/] delivery => show delivery charges
-[/] else => link to booking seat
-
-[/] MAKE IT SCROLLABLE
-*/
-
 class PaymentPage extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
   final bool noCutlery;
@@ -192,6 +184,8 @@ class _PaymentPageState extends State<PaymentPage> {
                 // order now and self pick-up content
                 else ...[
                   _bookSeatButton(),
+                  const SizedBox(height: 12),
+                  _loadSeatsContent(),
                   // display seat numbers
                   const Divider(),
                 ],
@@ -233,9 +227,7 @@ class _PaymentPageState extends State<PaymentPage> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const BusLayout()));
-        },
+        onPressed: () => navigateToSelectSeatPage(),
         child: const Text('Book Your Seat'),
       ),
     );
@@ -253,6 +245,16 @@ class _PaymentPageState extends State<PaymentPage> {
           ),
         ),
         // display seat numbers
+        ValueListenableBuilder(
+          valueListenable: selectedSeatsNotifier,
+          builder: (context, selectedSeat, child) {
+            print('Rebuilding ValueListenableBuilder: $selectedSeat');
+            return Text(
+              selectedSeat.isNotEmpty ? selectedSeat : 'Not selected',
+              style: const TextStyle(fontSize: 14),
+            );
+          }
+        ),
       ],
     );
   }
@@ -571,13 +573,29 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   // Navigations
-  void navigateToSelectTimePage() async {
+  void navigateToSelectSeatPage() async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PreOrderPage(
-          orderMethod: widget.orderMethod, selectedTimeNotifier: selectedTimeNotifier
-        ),
+        builder: (context) => BusLayout(selectedSeatsNotifier: selectedSeatsNotifier),
+      ),
+    );
+
+    if (result != null && result is String) {
+      setState(() {
+        selectedSeatsNotifier.value = result;
+      });
+    }
+  }
+
+  void navigateToSelectTimePage() async {
+    final result = await Navigator.push(
+      context, MaterialPageRoute(
+        builder: (context) {
+          return PreOrderPage(
+            orderMethod: widget.orderMethod, selectedTimeNotifier: selectedTimeNotifier
+          );
+        }
       ),
     );
 

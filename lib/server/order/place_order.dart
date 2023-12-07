@@ -1,10 +1,17 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:jom_makan/database/db_connection.dart';
 import 'package:jom_makan/server/cart/clear_cart.dart';
+import 'package:jom_makan/server/food/edit_stock.dart';
 import 'package:jom_makan/server/payment/add_payment.dart';
+import 'package:jom_makan/server/seat_display/seat_display.dart';
 
 class PlaceOrder {
   final ClearCart _clearCart = ClearCart();
   final AddPayment _addPayment = AddPayment();
+  final SeatDisplay _seatDisplay = SeatDisplay();
+  final EditStock _editStock = EditStock();
   late int orderID;
 
   Future<bool> placeOrder({
@@ -13,6 +20,8 @@ class PlaceOrder {
     required String paymentMethod,
     required double totalPrice,
     required String orderMethod,
+    required List<Map<String, dynamic>> selectedSeats,
+    required Uint8List seatQrBytes,
   }) async {
     //String formattedDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
 
@@ -23,16 +32,19 @@ class PlaceOrder {
     }
 
     try {
+      String seatQrBytesBase64 = base64Encode(seatQrBytes);
+      
       // Insert into the orders table
       var result = await pool.execute('''
-        INSERT INTO orders (userID, noCutlery, paymentID, total_price, order_method) 
-        VALUES (:userID, :noCutlery, :payment, :total_price, :order_method)
+        INSERT INTO orders (userID, noCutlery, paymentID, total_price, order_method, seatqr_bytes) 
+        VALUES (:userID, :noCutlery, :payment, :total_price, :order_method, :seatqr_bytes)
       ''', {
         "userID": userID,
         "noCutlery": noCutlery ? 1 : 0,
         "payment": paymentID,
         "total_price": totalPrice,
         "order_method": orderMethod,
+        "seatqr_bytes": seatQrBytesBase64,
       });
 
       // Get the last order ID
@@ -46,28 +58,24 @@ class PlaceOrder {
         } else {
           noVege = false;
         }
-        print(noVege);
 
         if (cartItem['extra_vege'] == 1) {
           extraVege = true;
         } else {
           extraVege = false;
         }
-        print(extraVege);
 
         if (cartItem['no_spicy'] == 1) {
           noSpicy = true;
         } else {
           noSpicy = false;
         }
-        print(noSpicy);
 
         if (cartItem['extra_spicy'] == 1) {
           extraSpicy = true;
         } else {
           extraSpicy = false;
         }
-        print(extraSpicy);
 
         await pool.execute('''
           INSERT INTO order_details (orderID, foodID, quantity, price, no_vege, extra_vege, no_spicy, extra_spicy, notes) 
@@ -83,6 +91,21 @@ class PlaceOrder {
           "extra_spicy": extraSpicy ? 1 : 0,
           "notes": cartItem['notes']
         });
+
+        // Deduct the quantity in stock
+        _editStock.editStock(foodID: int.parse(cartItem['foodID']), quantity: int.parse(cartItem['quantity']));
+      }
+
+      // Add the selected seats to database
+      for (var seat in selectedSeats) {
+        _seatDisplay.seatAdded(
+          confirmationID: seat['confirmationID'],
+          row: seat['row'],
+          col: seat['col'],
+          location: seat['location'],
+          time: seat['time'],
+          orderID: orderID,
+        );
       }
 
       // clear the user cart after placing the order

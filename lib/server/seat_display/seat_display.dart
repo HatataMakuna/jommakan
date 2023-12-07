@@ -1,27 +1,25 @@
 import 'package:jom_makan/database/db_connection.dart';
 
 class SeatDisplay {
-  Future<bool> seatAdded({
-    required String confirmationID, required int row, required int col, required String location, required DateTime time,
+  void seatAdded({
+    required String confirmationID, required int row, required int col,
+    required String location, required DateTime time, required int orderID
   }) async {
     try {
-      var result = await pool.execute(
-        'INSERT INTO seatNumber (confirmationID, row, col, location, time)'
-        ' VALUES (:confirmationID, :row, :col, :location, :time)',
+      await pool.execute(
+        'INSERT INTO seatNumber (confirmationID, row, col, location, time, orderID)'
+        ' VALUES (:confirmationID, :row, :col, :location, :time, :orderID)',
         {
           "confirmationID": confirmationID,
           "row": row,
           "col": col,
           "location": location,
           "time": time,
+          "orderID": orderID,
         },
       );
-
-      // Check if the insertion was successful
-      return result.affectedRows.toInt() == 1;
     } catch (e) {
-      print("Error while adding Seating: $e");
-      return false;
+      print("Error while adding seat details: $e");
     }
   }
 

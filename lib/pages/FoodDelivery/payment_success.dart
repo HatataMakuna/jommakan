@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/FoodDelivery/location/map.dart';
 import 'package:jom_makan/pages/foodDelivery/widgets/profile_tile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:jom_makan/pages/main/home.dart';
+import 'package:jom_makan/pages/main/main_page.dart';
 import 'package:jom_makan/server/order/place_order.dart';
 import 'package:jom_makan/server/payment/add_payment.dart';
 import 'package:jom_makan/server/rider/add_delivery.dart';
+import 'package:jom_makan/stores/seatlist_provider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -95,6 +96,8 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
         userID: widget.userID, noCutlery: widget.noCutlery,
         cartItems: widget.cartItems, paymentMethod: widget.paymentMethod,
         totalPrice: widget.totalPrice, orderMethod: widget.orderMethod,
+        selectedSeats: Provider.of<SeatListProvider>(context, listen: false).seatList,
+        seatQrBytes: Provider.of<SeatListProvider>(context, listen: false).qrCodeBytes,
       );
 
       // If the order method is Delivery, add to Delivery database
@@ -104,6 +107,10 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
 
       setState(() {
         if (isSuccess) {
+          // Reset the seat list
+          Provider.of<SeatListProvider>(context, listen: false).reset();
+
+          // Delay the screen by 3 seconds to display the success message
           Future.delayed(const Duration(seconds: 3)).then((_) => goToDialog());
         } else {
           // Display the error while processing order message
@@ -213,7 +220,7 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                       color: Color(0xfffeb324),
                     ),
                     title: Text(widget.paymentMethod),
-                    subtitle: const Text("PNB Card ending ***6"), // TODO: Change the subtitle depend on payment method
+                    subtitle: const Text("PNB Card ending ***6"), 
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -267,7 +274,7 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                   onTap: () {
                     Navigator.push(
                       context, MaterialPageRoute(
-                        builder: (BuildContext context) => const HomePage(),
+                        builder: (BuildContext context) => const MainPage(),
                       ),
                     );
                   }
