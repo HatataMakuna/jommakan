@@ -66,7 +66,7 @@ class _ScanQRCodeState extends State<ScanQRCode> {
               controller: cameraController,
               onDetect: (result) {
                 final List<Barcode> barcodes = result.barcodes;
-                final Uint8List? image = result.image;
+                //final Uint8List? image = result.image;
                 for (final barcode in barcodes) {
                   if (mounted) {
                     setState(() {
@@ -77,13 +77,13 @@ class _ScanQRCodeState extends State<ScanQRCode> {
               },
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 40),
           if (_qrResult != null) ...[
             Text(
-              'QR Code Result: $_qrResult',
+              'JomMakan username: $_qrResult',
               style: const TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
           ],
         ],
       ),
