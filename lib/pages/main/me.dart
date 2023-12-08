@@ -6,12 +6,6 @@ import 'package:jom_makan/pages/user/edit_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 
-/*
-TODO:
-scan qr code
-show qr code (just show profile name)
-*/
-
 class MePage extends StatelessWidget {
   const MePage({super.key});
   
