@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/chatbot/chat_screen.dart';
+import 'package:jom_makan/pages/qr_code/scan_qrcode.dart';
+import 'package:jom_makan/pages/qr_code/show_qrcode.dart';
 import 'package:jom_makan/pages/user/edit_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:jom_makan/stores/user_provider.dart';
@@ -25,7 +27,7 @@ class MePage extends StatelessWidget {
               const Icon(Icons.account_circle, size: 95),
               const SizedBox(width: 50),
               Text(
-                '$userName',
+                userName,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -42,6 +44,10 @@ class MePage extends StatelessWidget {
                 _buildButton(context, 'Edit profile', 0xFFC2EAFF),
                 _buildButton(context, 'Change password', 0xFFC2EAFF),
                 _buildButton(context, 'Order history', 0xFFC2EAFF),
+
+                // Light orange buttons
+                _buildButton(context, 'Scan QR code', 0xFFFBBF77),
+                _buildButton(context, 'Show QR code', 0xFFFBBF77),
                 
                 // Light yellow buttons
                 _buildButton(context, 'Rider info', 0xFFFFE5BA),
@@ -64,6 +70,7 @@ class MePage extends StatelessWidget {
 
   Widget _buildButton(BuildContext context, String label, int colorHex) {
     int userID = Provider.of<UserProvider>(context).userID!;
+    String userName = Provider.of<UserProvider>(context).userName!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -83,6 +90,20 @@ class MePage extends StatelessWidget {
           }
           else if (label == 'Order history') {
             Navigator.of(context).pushNamed('/user/order-history');
+          }
+          else if (label == 'Scan QR code') {
+            Navigator.push(
+              context, MaterialPageRoute(
+                builder: (context) => const ScanQRCode(),
+              ),
+            );
+          }
+          else if (label == 'Show QR code') {
+            Navigator.push(
+              context, MaterialPageRoute(
+                builder: (context) => ShowQRCode(username: userName),
+              ),
+            );
           }
           else if (label == 'Rider info') {
             Navigator.of(context).pushNamed('/rider/rider-info');
