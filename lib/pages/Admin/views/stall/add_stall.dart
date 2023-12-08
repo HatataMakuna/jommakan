@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:jom_makan/pages/Admin/views/stall/renewStall.dart';
 import 'package:jom_makan/server/promotion.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:jom_makan/server/renewStall/renew.dart';
@@ -65,9 +66,9 @@ class _RenewStallState extends State<AddStall> {
             const SizedBox(height: 20),
             stallNameField(),
             const SizedBox(height: 20),
-             stallOwnerField(),
+            stallOwnerField(),
             const SizedBox(height: 20),
-             totalStaffField(),
+            totalStaffField(),
             const SizedBox(height: 20),
             canteenField(),
             const SizedBox(height: 20),
@@ -98,14 +99,14 @@ class _RenewStallState extends State<AddStall> {
 
    Widget stallOwnerField() {
     return TextField(
-      controller: _stallNameController,
+      controller: _stallOwnerController,
       decoration: const InputDecoration(labelText: 'Stall Owner'),
     );
   }
 
    Widget totalStaffField() {
     return TextField(
-      controller: _stallNameController,
+      controller: _totalStaffController,
       decoration: const InputDecoration(labelText: 'Total Staff'),
     );
   }
@@ -268,13 +269,14 @@ void _pickPDF() async {
     setState(() {});
   }
 
-  // Navigate to login page
-  void goToLogin() {
-    print("Navigating to login page");
-    setState(() {
-      Navigator.pushNamed(context, '/user/login');
-    });
-  }
+  void goToLogin(BuildContext context) {
+  print("Button pressed. Navigating to Renew Staff page");
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => RenewStallView()),
+  );
+}
+
 
   // // Error Messages
   // String? _emailErrorText() {
@@ -362,10 +364,12 @@ void _pickPDF() async {
               },
               child: const Text('OK'),
             ),
-            ElevatedButton(
-              onPressed: goToLogin,
-              child: const Text('Go to Login'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     goToLogin;
+            //   },
+            //   child: const Text('Go to Renew Staff Page'),
+            // ),
           ]
         );
       }

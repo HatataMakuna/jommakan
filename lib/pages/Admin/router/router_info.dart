@@ -21,19 +21,16 @@ typedef OnRouteView = Widget Function(
 
 class RouteInfo extends GoRoute {
   final String title;
-  // 菜单Icon
+  
   final IconData? icon;
   final List<RouteInfo> children;
-  // 路由信息是否存在于菜单
   final bool menu;
   final bool view;
-  // 标题是否固定在导航栏
   final bool affix;
 
-  // 标题是否存在面包屑
+
   final bool breadcrumb;
 
-  // 运行时动态参数，可存储
   final Map<String, dynamic> runtimePair = {};
 
   RouteInfo(
@@ -95,7 +92,7 @@ final fixedRoute = [
   RouteInfo(
       path: '/login',
       name: 'login',
-      title: '登录',
+      title: 'Login',
       onRouteView: (context, state) => LoginView())
 ];
 // 管理后台路由 如首页、列表、等
@@ -191,12 +188,6 @@ final menuRoute = [
         name: 'transaction_pay_config',
         title: 'Payment Method',
         onRouteView: (context, state) => PaymentSearch(),
-      ),
-      RouteInfo(
-        path: 'refund',
-        name: 'transaction_refund',
-        title: 'Refund',
-        onRouteView: (context, state) => SchoolView(),
       ),
       RouteInfo(
         path: 'log',

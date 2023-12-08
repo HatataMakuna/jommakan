@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:jom_makan/pages/Admin/views/promotion/list.dart';
 import 'package:jom_makan/server/promotion.dart';
 
 class AddPromotion extends StatefulWidget {
@@ -301,10 +302,11 @@ class _PromotionState extends State<AddPromotion> {
 
   // Navigate to login page
   void goToLogin() {
-    print("Navigating to login page");
-    setState(() {
-      Navigator.pushNamed(context, '/user/login');
-    });
+    // print("Navigating to login page");
+  //   Navigator.push(
+  //   context,
+  //   MaterialPageRoute(builder: (context) => UserList()),
+  // );
   }
 
   // // Error Messages
@@ -397,10 +399,10 @@ class _PromotionState extends State<AddPromotion> {
               },
               child: const Text('OK'),
             ),
-            ElevatedButton(
-              onPressed: goToLogin,
-              child: const Text('Go to Login'),
-            ),
+            // ElevatedButton(
+            //   onPressed: goToLogin,
+            //   child: const Text('Go to Promotion Page'),
+            // ),
           ]
         );
       }

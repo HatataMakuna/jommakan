@@ -236,10 +236,10 @@ class _AddFoodState extends State<AddFood> {
               },
               child: const Text('OK'),
             ),
-            ElevatedButton(
-              onPressed: goToLogin,
-              child: const Text('Go to Login'),
-            ),
+            // ElevatedButton(
+            //   onPressed: goToLogin,
+            //   child: const Text('Go to Login'),
+            // ),
           ]
         );
       }
