@@ -217,24 +217,6 @@ final menuRoute = [
         title: 'Renew Stall',
         onRouteView: (context, state) => RenewStallView(),
       ),
-      RouteInfo(
-        path: 'video',
-        name: 'data_center_video',
-        title: '视频库',
-        onRouteView: (context, state) => SchoolView(),
-      ),
-      RouteInfo(
-        path: 'import-question',
-        name: 'data_center_import_question',
-        title: '题库导入',
-        onRouteView: (context, state) => SchoolView(),
-      ),
-      RouteInfo(
-        path: 'import-video',
-        name: 'data_center_import_video',
-        title: '视频导入',
-        onRouteView: (context, state) => SchoolView(),
-      ),
     ],
   )
 ];
