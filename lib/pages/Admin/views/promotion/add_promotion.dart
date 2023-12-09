@@ -123,30 +123,130 @@ class _PromotionState extends State<AddPromotion> {
   Widget foodIdField() {
     return TextField(
       controller: _foodIdController,
-      decoration: const InputDecoration(labelText: 'FoodId'),
+      decoration: InputDecoration(labelText: 'FoodId',
+      errorText:_foodIDText(),
+      ),
+      onChanged: (value) => _validateFoodID(value),
     );
   }
+
+  // Error Messages
+  String? _foodIDText() {
+  final text = _foodIdController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Food ID';
+  } else if (!RegExp(r'^F0[\w-]+$').hasMatch(text)) {
+    return 'FoodId must start with F0';
+  }
+  return null;
+}
+
+// Validations
+  void _validateFoodID(String value) {
+    setState(() => isTyping = true);
+  }
+
 
   Widget foodNameField() {
     return TextField(
       controller: _foodNameController,
-      decoration: const InputDecoration(labelText: 'FoodName'),
+      decoration: InputDecoration(labelText: 'FoodName',
+      errorText:_foodNameText(),
+      ),
+      onChanged: (value) => _validateFoodName(value),
     );
+  }
+
+
+  // Error Messages
+  String? _foodNameText() {
+  final text = _foodNameController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Food Name';
+  }
+  return null;
+}
+
+// Validations
+  void _validateFoodName(String value) {
+    setState(() => isTyping = true);
   }
 
   Widget foodPriceField() {
     return TextField(
       controller: _foodPriceController,
-      decoration: const InputDecoration(labelText: 'FoodPrice'),
+      decoration: InputDecoration(labelText: 'FoodPrice',
+   errorText:_foodPriceText(),
+      ),
+      onChanged: (value) => _validateFoodPrice(value),
     );
+  }
+
+  // Error Messages
+ String? _foodPriceText() {
+  final text = _foodPriceController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Food Price';
+  }
+
+  // Check if the entered value is a valid double with two decimal places
+  final RegExp regex = RegExp(r'^\d+(\.\d{1,2})?$');
+  if (!regex.hasMatch(text)) {
+    return 'Please enter a valid number for Food Price with up to two decimal places';
+  }
+
+  return null;
+}
+
+// Validations
+  void _validateFoodPrice(String value) {
+    setState(() => isTyping = true);
   }
 
   Widget foodPromotionField() {
     return TextField(
       controller: _foodPromotionController,
-      decoration: const InputDecoration(labelText: 'FoodPromotion'),
+      decoration: InputDecoration(labelText: 'FoodPromotion', 
+      errorText:_foodPromotionText(),
+      ),
+      onChanged: (value) => _validateFoodPromotion(value),
     );
   }
+
+  // Error Messages
+ String? _foodPromotionText() {
+  final foodPriceText = _foodPriceController.value.text;
+  final promotionPriceText = _foodPromotionController.value.text;
+
+  if (promotionPriceText.isEmpty) {
+    return 'Please enter Food Promotion';
+  }
+
+  // Check if the entered value is a valid double with two decimal places
+  final RegExp regex = RegExp(r'^\d+(\.\d{1,2})?$');
+  if (!regex.hasMatch(promotionPriceText)) {
+    return 'Please enter a valid number for Food Promotion with up to two decimal places';
+  }
+
+  // Parse the values as doubles for comparison
+  final double? foodPrice = double.tryParse(foodPriceText);
+  final double? promotionPrice = double.tryParse(promotionPriceText);
+
+  // Check if promotion price is less than food price
+  if (foodPrice != null && promotionPrice != null && promotionPrice >= foodPrice) {
+    return 'Promotion price should be less than the food price';
+  }
+
+  return null;
+}
+
+
+// Validations
+  void _validateFoodPromotion(String value) {
+    setState(() => isTyping = true);
+  }
+
+
 
   @override
   Widget datePromotionField() {
@@ -155,9 +255,12 @@ class _PromotionState extends State<AddPromotion> {
       children: [
         TextField(
           controller: _datePromotionController,
-          decoration: InputDecoration(labelText: 'Date Promotion'),
-          readOnly: true,
+          decoration: InputDecoration(labelText: 'Date Promotion',
+          errorText:_datePromotionText(),
+      ),
+      readOnly: true,
           onTap: () => _selectDateAndTime(context),
+          onChanged: (value) => _validateDatePromotion(value),
         ),
         if (_errorMessage.isNotEmpty)
           Padding(
@@ -171,26 +274,100 @@ class _PromotionState extends State<AddPromotion> {
     );
   }
 
+  // Error Messages
+  String? _datePromotionText() {
+  final text = _datePromotionController.value.text;
+  if (text.isEmpty) {
+    return 'Please Select the Date Promotion';
+  }
+  return null;
+}
+
+// Validations
+  void _validateDatePromotion(String value) {
+    setState(() => isTyping = true);
+  }
+
 
   Widget quantityField() {
     return TextField(
       controller: _quantityController,
-      decoration: const InputDecoration(labelText: 'Quantity'),
+      decoration: InputDecoration(labelText: 'Quantity',
+    errorText:_quantityText(),
+      ),
+      onChanged: (value) => _validateQuantity(value),
     );
+  }
+
+  // Error Messages
+ String? _quantityText() {
+  final text = _quantityController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Food Quantity';
+  }
+
+  // Check if the entered value is a valid integer
+  final int? quantity = int.tryParse(text);
+  if (quantity == null) {
+    return 'Please enter a valid integer for Food Quantity';
+  }
+
+  return null;
+}
+
+// Validations
+  void _validateQuantity(String value) {
+    setState(() => isTyping = true);
   }
 
   Widget foodStallField() {
     return TextField(
       controller: _foodStallController,
-      decoration: const InputDecoration(labelText: 'FoodStall'),
+      decoration: InputDecoration(labelText: 'FoodStall',
+     errorText:_foodStallText(),
+      ),
+      onChanged: (value) => _validateFoodStall(value),
     );
+  }
+
+
+  // Error Messages
+  String? _foodStallText() {
+  final text = _foodStallController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Food Stall';
+  }
+  return null;
+}
+
+// Validations
+  void _validateFoodStall(String value) {
+    setState(() => isTyping = true);
   }
 
   Widget foodDescriptionField() {
     return TextField(
       controller: _foodDescriptionController,
-      decoration: const InputDecoration(labelText: 'FoodDescription'),
+      decoration: InputDecoration(labelText: 'FoodDescription',
+   errorText:_foodDescriptionText(),
+      ),
+      onChanged: (value) => _validateFoodDescription(value),
     );
+  }
+
+
+  // Error Messages
+  String? _foodDescriptionText() {
+  final text = _foodDescriptionController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Food Description';
+  }
+  return null;
+}
+
+// Validations
+  void _validateFoodDescription(String value) {
+    setState(() => isTyping = true);
   }
 
   // Widget emailField() {

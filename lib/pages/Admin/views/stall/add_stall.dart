@@ -86,37 +86,182 @@ class _RenewStallState extends State<AddStall> {
   Widget stallIDField() {
     return TextField(
       controller: _stallIDController,
-      decoration: const InputDecoration(labelText: 'Stall ID'),
+      decoration: InputDecoration(labelText: 'Stall ID',
+    errorText:_stallIDText(),
+      ),
+      onChanged: (value) => _validateStallID(value),
     );
+  }
+
+  // Error Messages
+  String? _stallIDText() {
+  final text = _stallIDController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Stall ID';
+  } else if (!RegExp(r'^S0[\w-]+$').hasMatch(text)) {
+    return 'Stall Id must start with S0';
+  }
+  return null;
+}
+
+// Validations
+  void _validateStallID(String value) {
+    setState(() => isTyping = true);
   }
 
   Widget stallNameField() {
     return TextField(
       controller: _stallNameController,
-      decoration: const InputDecoration(labelText: 'Stall Name'),
+      decoration: InputDecoration(labelText: 'Stall Name',
+    errorText:_stallNameText(),
+      ),
+      onChanged: (value) => _validatestallName(value),
     );
+  }
+
+
+  // Error Messages
+  String? _stallNameText() {
+  final text = _stallNameController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Stall Name';
+  }
+  return null;
+}
+
+// Validations
+  void _validatestallName(String value) {
+    setState(() => isTyping = true);
   }
 
    Widget stallOwnerField() {
     return TextField(
       controller: _stallOwnerController,
-      decoration: const InputDecoration(labelText: 'Stall Owner'),
+      decoration: InputDecoration(labelText: 'Stall Owner',
+    errorText:_stallOwnerText(),
+      ),
+      onChanged: (value) => _validatestallOwner(value),
     );
+  }
+
+
+  // Error Messages
+  String? _stallOwnerText() {
+  final text = _stallOwnerController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Stall Owner';
+  }
+  return null;
+}
+
+// Validations
+  void _validatestallOwner(String value) {
+    setState(() => isTyping = true);
   }
 
    Widget totalStaffField() {
     return TextField(
       controller: _totalStaffController,
-      decoration: const InputDecoration(labelText: 'Total Staff'),
+      decoration: InputDecoration(labelText: 'Total Staff',
+    errorText:_totalStaffText(),
+      ),
+      onChanged: (value) => _validateTotalStaff(value),
     );
   }
 
+  // Error Messages
+ String? _totalStaffText() {
+  final text = _totalStaffController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Total Staff';
+  }
+
+  // Check if the entered value is a valid integer
+  final int? quantity = int.tryParse(text);
+  if (quantity == null) {
+    return 'Please enter a valid integer for Total Staff';
+  }
+
+  return null;
+}
+
+// Validations
+  void _validateTotalStaff(String value) {
+    setState(() => isTyping = true);
+  }
+
+   String? selectedCanteen;
+
+  final List<String> canteenChoices = [
+    'RedBrick Cafe',
+    'YumYum Cafe',
+    'East Campus Cafe',
+    'Swimming Pool Cafe',
+    'CITC Cafe',
+  ];
+
+  @override
   Widget canteenField() {
-    return TextField(
-      controller: _canteenController,
-      decoration: const InputDecoration(labelText: 'Canteen'),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: _canteenController,
+          decoration: InputDecoration(labelText: 'Canteen',
+          errorText:_canteenText(),
+          ),
+          readOnly: true,
+          onTap: () {
+            _selectCanteen(context);
+          },
+          onChanged: (value) => _validateCanteen(value),
+        ),
+      ],
     );
   }
+
+   // Error Messages
+  String? _canteenText() {
+  final text = _canteenController.value.text;
+  if (text.isEmpty) {
+    return 'Please Select the Canteen';
+  }
+  return null;
+}
+
+// Validations
+  void _validateCanteen(String value) {
+    setState(() => isTyping = true);
+  }
+
+  Future<void> _selectCanteen(BuildContext context) async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Canteen'),
+          content: Column(
+            children: canteenChoices.map((canteen) {
+              return ListTile(
+                title: Text(canteen),
+                onTap: () {
+                  Navigator.pop(context, canteen);
+                },
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+
+    if (result != null) {
+      setState(() {
+        selectedCanteen = result;
+        _canteenController.text = result;
+      });
+    }
+  }
+
 
  Widget hygieneLevelField() {
   return Column(
