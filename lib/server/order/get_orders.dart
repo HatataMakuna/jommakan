@@ -8,7 +8,7 @@ class GetOrders {
         SELECT
           od.odetailsID, f.food_image, f.food_name, od.price, od.quantity, 
           o.status, od.no_vege, od.extra_vege, od.no_spicy, od.extra_spicy, 
-          od.notes, p.payment_date, p.payment_method, o.seatqr_bytes 
+          od.notes, p.payment_date, p.payment_method, o.seat_numbers 
         FROM order_details od 
         JOIN foods f ON od.foodID = f.foodID
         JOIN orders o ON od.orderID = o.orderID
@@ -34,7 +34,7 @@ class GetOrders {
           'notes': row.colByName("notes"),
           'date': row.colByName("payment_date"),
           'payment': row.colByName("payment_method"),
-          'seatqr_bytes': row.colByName("seatqr_bytes"),
+          'seat_numbers': row.colByName("seat_numbers"),
         });
       }
       

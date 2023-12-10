@@ -93,6 +93,7 @@ dependencies:
   path_provider: ^2.1.1
   photo_view: ^0.14.0
   mobile_scanner: ^3.5.5
+  qr: ^3.0.1
   # qr_code_scanner: ^1.0.1
 
 dev_dependencies:

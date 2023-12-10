@@ -86,7 +86,8 @@ class _PaymentPageState extends State<PaymentPage> {
             builder: (context) => CreditCardPage(
               noCutlery: widget.noCutlery, cartItems: widget.cartItems,
               totalPrice: totalPrice, orderMethod: widget.orderMethod,
-              address: selectedAddressNotifier.value
+              address: selectedAddressNotifier.value,
+              selectedSeatsNotifier: selectedSeatsNotifier,
             ),
           ),
         );
@@ -643,6 +644,7 @@ class _PaymentPageState extends State<PaymentPage> {
         totalPrice: subtotal,
         orderMethod: widget.orderMethod,
         address: selectedAddressNotifier.value,
+        seatNumbers: selectedSeatsNotifier.value,
       ),
     ));
   }

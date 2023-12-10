@@ -25,6 +25,7 @@ void main() {
           totalPrice: 0.0,
           orderMethod: 'Delivery',
           address: '',
+          seatNumbers: '',
         ),
       )
     ),
@@ -39,11 +40,12 @@ class PaymentSuccessPage extends StatefulWidget {
   final double totalPrice;
   final String orderMethod;
   final String address;
+  final String seatNumbers;
 
   const PaymentSuccessPage({
-    super.key, required this.userID, required this.noCutlery,
-    required this.cartItems, required this.paymentMethod,
-    required this.totalPrice, required this.orderMethod, required this.address,
+    super.key, required this.userID, required this.noCutlery, required this.cartItems,
+    required this.paymentMethod, required this.totalPrice, required this.orderMethod,
+    required this.address, required this.seatNumbers,
   });
 
   /*
@@ -97,7 +99,8 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
         cartItems: widget.cartItems, paymentMethod: widget.paymentMethod,
         totalPrice: widget.totalPrice, orderMethod: widget.orderMethod,
         selectedSeats: Provider.of<SeatListProvider>(context, listen: false).seatList,
-        seatQrBytes: Provider.of<SeatListProvider>(context, listen: false).qrCodeBytes,
+        seatNumbers: widget.seatNumbers,
+        //seatQrBytes: Provider.of<SeatListProvider>(context, listen: false).qrCodeBytes,
       );
 
       // If the order method is Delivery, add to Delivery database
