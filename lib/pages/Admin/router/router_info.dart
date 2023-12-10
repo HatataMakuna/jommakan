@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jom_makan/pages/Admin/views/course/list.dart';
 import 'package:jom_makan/pages/Admin/views/payment/paymentList.dart';
 import 'package:jom_makan/pages/Admin/views/payment/paymentList2.dart';
 import 'package:jom_makan/pages/Admin/views/payment/paymentList3.dart';
@@ -15,7 +14,6 @@ import 'package:jom_makan/pages/Admin/views/promotion/list.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jom_makan/pages/Admin/views/index.dart';
 import 'package:jom_makan/pages/Admin/views/login/login.dart';
-import 'package:jom_makan/pages/user/login.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -211,7 +209,7 @@ final menuRoute = [
     name: 'Log Out',
     title: 'Log Out',
     onRouteView: (context, state) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         // Add your logout logic here
         Provider.of<UserProvider>(context, listen: false).logout();
 

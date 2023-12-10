@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -80,7 +79,7 @@ class _ScanQRCodeState extends State<ScanQRCode> {
           const SizedBox(height: 40),
           if (_qrResult != null) ...[
             Text(
-              'JomMakan username: $_qrResult',
+              'QR code result: $_qrResult',
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 40),

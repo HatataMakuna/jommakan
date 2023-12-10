@@ -223,12 +223,18 @@ class OrderDetailsPage extends StatelessWidget {
     //Uint8List qrCodeBytes = base64Decode(selectedOrderItem['seatqr_bytes']);
 
     return SizedBox(
-      height: 200,
-      width: 200,
-      child: QrImageView(
-        data: selectedOrderItem['seat_numbers'],
-        version: 5,
-        size: 200.0,
+      height: 300,
+      width: 300,
+      child: Column(
+        children: [
+          QrImageView(
+            data: selectedOrderItem['seat_numbers'],
+            version: 5,
+            size: 200.0,
+          ),
+          const SizedBox(height: 20),
+          const Text('Scan me for seat number(s)', style: TextStyle(fontSize: 14)),
+        ],
       ),
       
       /* PhotoView(
