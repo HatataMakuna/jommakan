@@ -60,8 +60,8 @@ class _ShowQRCodeState extends State<ShowQRCode> {
         children: [
           QrImageView(
             data: widget.username,
-            version: QrVersions.auto,
-            size: 200.0,
+            version: 5,
+            size: 300.0,
           ),
           const SizedBox(height: 20),
           Text('Username: ${widget.username}'),

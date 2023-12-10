@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:jom_makan/model/seat_number.dart';
 import 'package:jom_makan/pages/Booking/qr_display.dart';
 import 'package:jom_makan/server/seat_display/seat_display.dart';
 import 'package:book_my_seat/book_my_seat.dart';
@@ -46,7 +47,7 @@ class _BusLayoutState extends State<BusLayout> {
   Uint8List? qrCodeBytes; // Use Uint8List to store image bytes
   final SeatDisplay addSeat = SeatDisplay();
   
-  final TextEditingController _rowController = TextEditingController();
+  //final TextEditingController _rowController = TextEditingController();
   var itemData = [];
 
   Future<void> generateQRCode(Set<SeatNumber> selectedSeats) async {
@@ -60,7 +61,9 @@ class _BusLayoutState extends State<BusLayout> {
     .toList();
 
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:5000/generate_qr'),
+      Uri.parse('http://10.0.2.2:5000/generate_qr'),
+      // Windows: http://127.0.0.1:5000/...
+      // Android: http://10.0.2.2:5000/...
       // Uri.parse('http://your-flask-server-ip:5000/generate_qr'),
       headers: <String, String>{
         'Content-Type': 'application/json',
@@ -90,7 +93,7 @@ class _BusLayoutState extends State<BusLayout> {
   void goToQrDisplayPage(Set<SeatNumber> selectedSeats) {
     //print('QR code bytes: $qrCodeBytes');
     // Store the QR code bytes to provider
-    Provider.of<SeatListProvider>(context, listen: false).setQrCodeBytes(qrCodeBytes!);
+    //Provider.of<SeatListProvider>(context, listen: false).setQrCodeBytes(qrCodeBytes!);
 
     Navigator.push(
       context, MaterialPageRoute(
@@ -112,217 +115,204 @@ class _BusLayoutState extends State<BusLayout> {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 16),
-            const Text("Please Select Your Seat"),
-            const SizedBox(height: 32),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: SizedBox(
-                width: double.maxFinite,
-                height: 500,
-                child: SeatLayoutWidget(
-                  onSeatStateChanged: (rowI, colI, seatState) {
-                    if (seatState == SeatState.selected) {
-                      selectedSeats.add(SeatNumber(rowI: rowI, colI: colI));
-                    } else {
-                      selectedSeats.remove(SeatNumber(rowI: rowI, colI: colI));
-                    }
-                    setState(() {}); // Trigger a rebuild when seats are selected/deselected
-                  },
-                  stateModel: const SeatLayoutStateModel(
-                    rows: 10,
-                    cols: 7,
-                    seatSvgSize: 45,
-                    pathSelectedSeat: 'assets/seat_selected.svg',
-                    pathDisabledSeat: 'assets/seat_disabled.svg',
-                    pathSoldSeat: 'assets/seat_sold.svg',
-                    pathUnSelectedSeat: 'assets/seat_unselected.svg',
-                    currentSeatsState: [
-                      [
-                        SeatState.disabled,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.empty,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.sold,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 16),
+              const Text("Please Select Your Seat"),
+              const SizedBox(height: 32),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SizedBox(
+                  width: double.maxFinite,
+                  height: 500,
+                  child: SeatLayoutWidget(
+                    onSeatStateChanged: (rowI, colI, seatState) {
+                      if (seatState == SeatState.selected) {
+                        selectedSeats.add(SeatNumber(rowI: rowI, colI: colI));
+                      } else {
+                        selectedSeats.remove(SeatNumber(rowI: rowI, colI: colI));
+                      }
+                      setState(() {}); // Trigger a rebuild when seats are selected/deselected
+                    },
+                    stateModel: const SeatLayoutStateModel(
+                      rows: 10,
+                      cols: 7,
+                      seatSvgSize: 45,
+                      pathSelectedSeat: 'assets/seat_selected.svg',
+                      pathDisabledSeat: 'assets/seat_disabled.svg',
+                      pathSoldSeat: 'assets/seat_sold.svg',
+                      pathUnSelectedSeat: 'assets/seat_unselected.svg',
+                      currentSeatsState: [
+                        [
+                          SeatState.disabled,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.empty,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.sold,
+                        ],
+                        [
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.empty,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                        ],
+                        [
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.empty,
+                          SeatState.sold,
+                          SeatState.sold,
+                          SeatState.sold,
+                        ],
+                        [
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.empty,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                        ],
+                        [
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.empty,
+                          SeatState.unselected,
+                          SeatState.sold,
+                          SeatState.sold,
+                        ],
+                        [
+                          SeatState.sold,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.empty,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                        ],
+                        [
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.empty,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                        ],
+                        [
+                          SeatState.sold,
+                          SeatState.sold,
+                          SeatState.unselected,
+                          SeatState.empty,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                        ],
+                        [
+                          SeatState.empty,
+                          SeatState.empty,
+                          SeatState.empty,
+                          SeatState.empty,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.sold,
+                        ],
+                        [
+                          SeatState.unselected,
+                          SeatState.unselected,
+                          SeatState.sold,
+                          SeatState.sold,
+                          SeatState.sold,
+                          SeatState.unselected,
+                          SeatState.unselected,
+                        ],
                       ],
-                      [
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.empty,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                      ],
-                      [
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.empty,
-                        SeatState.sold,
-                        SeatState.sold,
-                        SeatState.sold,
-                      ],
-                      [
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.empty,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                      ],
-                      [
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.empty,
-                        SeatState.unselected,
-                        SeatState.sold,
-                        SeatState.sold,
-                      ],
-                      [
-                        SeatState.sold,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.empty,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                      ],
-                      [
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.empty,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                      ],
-                      [
-                        SeatState.sold,
-                        SeatState.sold,
-                        SeatState.unselected,
-                        SeatState.empty,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                      ],
-                      [
-                        SeatState.empty,
-                        SeatState.empty,
-                        SeatState.empty,
-                        SeatState.empty,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.sold,
-                      ],
-                      [
-                        SeatState.unselected,
-                        SeatState.unselected,
-                        SeatState.sold,
-                        SeatState.sold,
-                        SeatState.sold,
-                        SeatState.unselected,
-                        SeatState.unselected,
-                      ],
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 15,
-                        height: 15,
-                        color: Colors.grey.shade700,
-                      ),
-                      const SizedBox(width: 2),
-                      const Text('Disabled')
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 15,
-                        height: 15,
-                        color: Colors.lightBlueAccent,
-                      ),
-                      const SizedBox(width: 2),
-                      const Text('Sold')
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 15,
-                        height: 15,
-                        decoration: BoxDecoration(border: Border.all(color: const Color(0xff0FFF50))),
-                      ),
-                      const SizedBox(width: 2),
-                      const Text('Available')
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 15,
-                        height: 15,
-                        color: const Color(0xff0FFF50),
-                      ),
-                      const SizedBox(width: 2),
-                      const Text('Selected by you')
-                    ],
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 15,
+                          height: 15,
+                          color: Colors.grey.shade700,
+                        ),
+                        const SizedBox(width: 2),
+                        const Text('Disabled')
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 15,
+                          height: 15,
+                          color: Colors.lightBlueAccent,
+                        ),
+                        const SizedBox(width: 2),
+                        const Text('Sold')
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 15,
+                          height: 15,
+                          decoration: BoxDecoration(border: Border.all(color: const Color(0xff0FFF50))),
+                        ),
+                        const SizedBox(width: 2),
+                        const Text('Available')
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 15,
+                          height: 15,
+                          color: const Color(0xff0FFF50),
+                        ),
+                        const SizedBox(width: 2),
+                        const Text('Selected by you')
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            const SizedBox(height: 12),
-            Text(selectedSeats.join(" , ")), // Display selected seat numbers directly
-            const SizedBox(height: 12),
-            // Add a button to generate the QR code
-            ElevatedButton(
-              onPressed: () => showSeatConfirmation(),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith((states) => const Color(0xFFfc4c4e)),
-              ),
-              child: const Text('Generate QR Code'),
-            ),
-            const SizedBox(height: 20),
-            // Display the QR code using QrImage
-            if (qrCodeBytes != null)
-              Image.memory(
-                qrCodeBytes!,
-                width: 200.0,
-                height: 200.0,
-              ),
-              Column(
-                children: [
-                  TextField(
-                    controller: _rowController,
-                    onTap: () {
-                      setState(() {
-                        selectedSeats.map((seat) => '${seat.rowI}').join(' ');
-                      });
-                    },
-                  ),
-                ],
+              const SizedBox(height: 12),
+              const SizedBox(height: 12),
+              Text(selectedSeats.join(" , ")), // Display selected seat numbers directly
+              const SizedBox(height: 12),
+              // Add a button to generate the QR code
+              ElevatedButton(
+                onPressed: () {
+                  if (selectedSeats.isEmpty) {
+                    const snackBar = SnackBar(content: Text('Please select your seat(s)'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  } else {
+                    showSeatConfirmation();
+                  }
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith((states) => const Color(0xFFfc4c4e)),
+                ),
+                child: const Text('Generate QR Code'),
               ),
             ],
           ),
@@ -349,8 +339,7 @@ class _BusLayoutState extends State<BusLayout> {
               child: const Text('Yes'),
               onPressed: () async {
                 Navigator.of(context).pop();
-
-                generateQRCode(selectedSeats);
+                goToQrDisplayPage(selectedSeats);
                 seatAdded();
               },
             ),
