@@ -76,52 +76,235 @@ class _AddFoodState extends State<AddFood> {
   Widget foodNameField() {
     return TextField(
       controller: _foodNameController,
-      decoration: const InputDecoration(labelText: 'FoodName'),
+      decoration: InputDecoration(labelText: 'FoodName',
+     errorText:_foodNameText(),
+      ),
+      onChanged: (value) => _validateFoodName(value),
     );
   }
+
+
+  // Error Messages
+  String? _foodNameText() {
+  final text = _foodNameController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Food Name';
+  }
+  return null;
+}
+
+// Validations
+  void _validateFoodName(String value) {
+    setState(() => isTyping = true);
+  }
+
 
   Widget stallIDField() {
     return TextField(
       controller: _stallIDController,
-      decoration: const InputDecoration(labelText: 'StallID'),
+      decoration: InputDecoration(labelText: 'StallID',
+    errorText:_stallIDText(),
+      ),
+      onChanged: (value) => _validateStallID(value),
     );
   }
 
-  Widget mainCategoryField() {
-    return TextField(
-      controller: _mainCategoryController,
-      decoration: const InputDecoration(labelText: 'MainCategory'),
-    );
+  // Error Messages
+ String? _stallIDText() {
+  final text = _stallIDController.text;
+  if (text.isEmpty) {
+    return 'Please enter Stall ID';
   }
+
+  // Check if the entered value is one of the allowed values
+  final int? stallID = int.tryParse(text);
+  if (stallID == null || !isValidStallID(stallID)) {
+    return 'Please enter a valid Stall ID (1. Kedai Masakan Malaysia, 2. YumYum Cafe, or 3. East Campus Cafe)';
+  }
+
+  return null;
+}
+
+bool isValidStallID(int value) {
+  // Define the allowed stall IDs
+  final List<int> allowedStallIDs = [1, 2, 3];
+
+  // Check if the entered value is in the list of allowed stall IDs
+  return allowedStallIDs.contains(value);
+}
+
+
+// Validations
+  void _validateStallID(String value) {
+    setState(() => isTyping = true);
+  }
+
+  Widget mainCategoryField() {
+  return TextField(
+    controller: _mainCategoryController,
+    decoration: InputDecoration(labelText: 'MainCategory',
+     errorText: _mainCategoryText(),
+     ),
+    onChanged: (value) => _validateMainCategory2(value),
+  );
+}
+
+// Error Messages
+String? _mainCategoryText() {
+  final text = _mainCategoryController.text;
+  if (text.isEmpty) {
+    return 'Please enter Main Category';
+  }
+
+  // Check if the entered value is one of the allowed values
+  final int? mainCategory = int.tryParse(text);
+  if (mainCategory == null || !_validateMainCategory(mainCategory)) {
+    return '(1.Rice, 2.Noodle, 3.Bread, 4.Cake, 5.Drinks, 6.Spaghetti, 7.Pizza, 8.Burger, 9.Sushi, or 10.Western)';
+  }
+
+  return null;
+}
+
+bool _validateMainCategory(int value) {
+  // Define the allowed Main Category
+  final List<int> allowedMainCategories = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  // Check if the entered value is in the list of allowed main categories
+  return allowedMainCategories.contains(value);
+}
+
+// Validations
+void _validateMainCategory2(String value) {
+  setState(() => isTyping = true);
+}
 
   Widget subCategoryField() {
     return TextField(
       controller: _subCategoryController,
-      decoration: const InputDecoration(labelText: 'SubCategory'),
+      decoration: InputDecoration(labelText: 'SubCategory',
+     errorText: _subCategoryText(),
+     ),
+    onChanged: (value) => _validatesubCategory2(value),
+  );
+}
+
+// Error Messages
+String? _subCategoryText() {
+  final text = _subCategoryController.text;
+  if (text.isEmpty) {
+    return 'Please enter Main Category';
+  }
+
+  // Check if the entered value is one of the allowed values
+  final int? subCategory = int.tryParse(text);
+  if (subCategory == null || !_validatesubCategory(subCategory)) {
+    return '(1.Rice, 2.Noodle, 3.Bread, 4.Cake, 5.Drinks, 6.Spaghetti, 7.Pizza, 8.Burger, 9.Sushi, or 10.Western)';
+  }
+
+  return null;
+}
+
+bool _validatesubCategory(int value) {
+  // Define the allowed Main Category
+  final List<int> allowedSubCategories = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  // Check if the entered value is in the list of allowed main categories
+  return allowedSubCategories.contains(value);
+}
+
+// Validations
+void _validatesubCategory2(String value) {
+  setState(() => isTyping = true);
+}
+
+   Widget foodPriceField() {
+    return TextField(
+      controller: _foodPriceController,
+      decoration: InputDecoration(labelText: 'FoodPrice',
+   errorText:_foodPriceText(),
+      ),
+      onChanged: (value) => _validateFoodPrice(value),
     );
   }
 
-  Widget foodPriceField() {
-    return TextField(
-      controller: _foodPriceController,
-      decoration: const InputDecoration(labelText: 'FoodPrice'),
-    );
+  // Error Messages
+ String? _foodPriceText() {
+  final text = _foodPriceController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Food Price';
+  }
+
+  // Check if the entered value is a valid double with two decimal places
+  final RegExp regex = RegExp(r'^\d+(\.\d{1,2})?$');
+  if (!regex.hasMatch(text)) {
+    return 'Please enter a valid number for Food Price with up to two decimal places';
+  }
+
+  return null;
+}
+
+// Validations
+  void _validateFoodPrice(String value) {
+    setState(() => isTyping = true);
   }
 
   Widget qtyInStockField() {
     return TextField(
       controller: _qtyInStockController,
-      decoration: const InputDecoration(labelText: 'qtyInStock'),
+      decoration: InputDecoration(labelText: 'qtyInStock',
+    errorText:_quantityText(),
+      ),
+      onChanged: (value) => _validateQuantity(value),
     );
+  }
+
+  // Error Messages
+ String? _quantityText() {
+  final text = _qtyInStockController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Food Quantity';
+  }
+
+  // Check if the entered value is a valid integer
+  final int? quantity = int.tryParse(text);
+  if (quantity == null) {
+    return 'Please enter a valid integer for Food Quantity';
+  }
+
+  return null;
+}
+
+// Validations
+  void _validateQuantity(String value) {
+    setState(() => isTyping = true);
   }
 
   Widget foodImageField() {
     return TextField(
       controller: _foodImageController,
-      decoration: const InputDecoration(labelText: 'FoodImage'),
+      decoration: InputDecoration(labelText: 'FoodImage',
+     errorText:_foodImageText(),
+      ),
+      onChanged: (value) => _validateFoodImage(value),
     );
   }
 
+
+  // Error Messages
+  String? _foodImageText() {
+  final text = _foodImageController.value.text;
+  if (text.isEmpty) {
+    return 'Please enter Food Image';
+  }
+  return null;
+}
+
+// Validations
+  void _validateFoodImage(String value) {
+    setState(() => isTyping = true);
+  }
+
+  
   // Register Button
   Widget registerButton() {
     return ElevatedButton(
@@ -236,10 +419,10 @@ class _AddFoodState extends State<AddFood> {
               },
               child: const Text('OK'),
             ),
-            ElevatedButton(
-              onPressed: goToLogin,
-              child: const Text('Go to Login'),
-            ),
+            // ElevatedButton(
+            //   onPressed: goToLogin,
+            //   child: const Text('Go to Login'),
+            // ),
           ]
         );
       }

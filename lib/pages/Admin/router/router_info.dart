@@ -15,25 +15,25 @@ import 'package:jom_makan/pages/Admin/views/promotion/list.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jom_makan/pages/Admin/views/index.dart';
 import 'package:jom_makan/pages/Admin/views/login/login.dart';
+import 'package:jom_makan/pages/user/login.dart';
+import 'package:jom_makan/stores/user_provider.dart';
+import 'package:provider/provider.dart';
 
 typedef OnRouteView = Widget Function(
     BuildContext context, GoRouterState state);
 
 class RouteInfo extends GoRoute {
   final String title;
-  // 菜单Icon
+  
   final IconData? icon;
   final List<RouteInfo> children;
-  // 路由信息是否存在于菜单
   final bool menu;
   final bool view;
-  // 标题是否固定在导航栏
   final bool affix;
 
-  // 标题是否存在面包屑
+
   final bool breadcrumb;
 
-  // 运行时动态参数，可存储
   final Map<String, dynamic> runtimePair = {};
 
   RouteInfo(
@@ -95,7 +95,7 @@ final fixedRoute = [
   RouteInfo(
       path: '/login',
       name: 'login',
-      title: '登录',
+      title: 'Login',
       onRouteView: (context, state) => LoginView())
 ];
 // 管理后台路由 如首页、列表、等
@@ -193,12 +193,6 @@ final menuRoute = [
         onRouteView: (context, state) => PaymentSearch(),
       ),
       RouteInfo(
-        path: 'refund',
-        name: 'transaction_refund',
-        title: 'Refund',
-        onRouteView: (context, state) => SchoolView(),
-      ),
-      RouteInfo(
         path: 'log',
         name: 'transaction_log',
         title: 'Transaction Details',
@@ -217,26 +211,23 @@ final menuRoute = [
         title: 'Renew Stall',
         onRouteView: (context, state) => RenewStallView(),
       ),
-      RouteInfo(
-        path: 'video',
-        name: 'data_center_video',
-        title: '视频库',
-        onRouteView: (context, state) => SchoolView(),
-      ),
-      RouteInfo(
-        path: 'import-question',
-        name: 'data_center_import_question',
-        title: '题库导入',
-        onRouteView: (context, state) => SchoolView(),
-      ),
-      RouteInfo(
-        path: 'import-video',
-        name: 'data_center_import_video',
-        title: '视频导入',
-        onRouteView: (context, state) => SchoolView(),
-      ),
     ],
-  )
+  ),
+  RouteInfo(
+  path: '/log-out',
+  name: 'Log Out',
+  title: 'Log Out',
+  onRouteView: (context, state) {
+    // Add your logout logic here
+    Provider.of<UserProvider>(context, listen: false).logout();
+
+   
+
+    // Return an empty container or widget as the view for the '/log-out' route
+    return Container();
+  },
+),
+
 ];
 
 class AdminRouter {
