@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 // Class to hold current user information
 class UserProvider extends ChangeNotifier {
@@ -39,5 +40,14 @@ class UserProvider extends ChangeNotifier {
     _userRole = null;
     _userEmail = null;
     notifyListeners();
+
+    /* WidgetsBinding.instance!.addPostFrameCallback((_) {
+      // Clear user information on logout
+      _userName = null;
+      _userID = null;
+      _userRole = null;
+      _userEmail = null;
+      notifyListeners();
+    }); */
   }
 }

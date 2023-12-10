@@ -19,8 +19,7 @@ import 'package:jom_makan/pages/user/login.dart';
 import 'package:jom_makan/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
-typedef OnRouteView = Widget Function(
-    BuildContext context, GoRouterState state);
+typedef OnRouteView = Widget Function(BuildContext context, GoRouterState state);
 
 class RouteInfo extends GoRoute {
   final String title;
@@ -31,22 +30,15 @@ class RouteInfo extends GoRoute {
   final bool view;
   final bool affix;
 
-
   final bool breadcrumb;
 
   final Map<String, dynamic> runtimePair = {};
 
-  RouteInfo(
-      {required String path,
-      required String name,
-      OnRouteView? onRouteView,
-      required this.title,
-      this.menu = true,
-      this.affix = false,
-      this.breadcrumb = true,
-      this.view = true,
-      this.children = const <RouteInfo>[],
-      this.icon})
+  RouteInfo({
+    required String path, required String name, OnRouteView? onRouteView,
+    required this.title, this.menu = true, this.affix = false, this.breadcrumb = true,
+    this.view = true, this.children = const <RouteInfo>[], this.icon
+  })
       : super(
             path: path,
             name: name,
@@ -98,7 +90,8 @@ final fixedRoute = [
       title: 'Login',
       onRouteView: (context, state) => LoginView())
 ];
-// 管理后台路由 如首页、列表、等
+
+// Manage menu routes such as home page, list etc.
 final menuRoute = [
   RouteInfo(
       path: '/index',
@@ -214,20 +207,22 @@ final menuRoute = [
     ],
   ),
   RouteInfo(
-  path: '/log-out',
-  name: 'Log Out',
-  title: 'Log Out',
-  onRouteView: (context, state) {
-    // Add your logout logic here
-    Provider.of<UserProvider>(context, listen: false).logout();
+    path: '/log-out',
+    name: 'Log Out',
+    title: 'Log Out',
+    onRouteView: (context, state) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        // Add your logout logic here
+        Provider.of<UserProvider>(context, listen: false).logout();
 
-   
+        // Use pushReplacementNamed to replace the current route with a new one
+        Navigator.of(context).pushReplacementNamed('/user/login');
+      });
 
-    // Return an empty container or widget as the view for the '/log-out' route
-    return Container();
-  },
-),
-
+      // Return an empty container or widget as the view for the '/log-out' route
+      return Container();
+    },
+  ),
 ];
 
 class AdminRouter {
@@ -279,7 +274,6 @@ class AdminRouter {
     return _instance;
   }
 }
-
 
 extension AdminString on String {
   bool eq(dynamic d) {
