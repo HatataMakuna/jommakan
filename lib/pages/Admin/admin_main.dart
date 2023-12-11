@@ -21,8 +21,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
     super.initState();
 
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
