@@ -29,6 +29,17 @@ class _AdminMainPageState extends State<AdminMainPage> {
   }
 
   @override
+  void dispose() {
+    // User leaves the admin portal, change back to portrait mode only
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     ThemeData themeData = ThemeData(
         primarySwatch: Colors.blue,
