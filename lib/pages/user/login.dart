@@ -112,12 +112,12 @@ class _LoginState extends State<LoginPage> {
   Widget loginBtn(BuildContext context) {
     return ElevatedButton(
       onPressed: () => _performLogin(context), // go to user dashboard / home
-      child: const Text('Login'),
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
       ),
+      child: const Text('Login'),
     );
   }
 

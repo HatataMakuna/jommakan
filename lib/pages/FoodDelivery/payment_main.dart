@@ -78,6 +78,9 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void handlePayment() {
+    print(selectedAddressNotifier.value);
+    print(selectedTimeNotifier.value);
+    print(selectedSeatsNotifier.value);
     switch (selectedPaymentMethodNotifier.value) {
       case 'Debit/Credit card':
         Navigator.push(
@@ -201,7 +204,11 @@ class _PaymentPageState extends State<PaymentPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => handlePayment(),
+                    onPressed: () => selectedAddressNotifier.value != '' || 
+                      selectedTimeNotifier.value != '' || 
+                      selectedSeatsNotifier.value != ''
+                      ? handlePayment()
+                      : displayIncompleteStepMessage(),
                     child: Text(getPaymentButtonLabel()),
                   ),
                 ),
@@ -249,7 +256,7 @@ class _PaymentPageState extends State<PaymentPage> {
         ValueListenableBuilder(
           valueListenable: selectedSeatsNotifier,
           builder: (context, selectedSeat, child) {
-            print('Rebuilding ValueListenableBuilder: $selectedSeat');
+            //print('Rebuilding ValueListenableBuilder: $selectedSeat');
             return Text(
               selectedSeat.isNotEmpty ? selectedSeat : 'Not selected',
               style: const TextStyle(fontSize: 14),
@@ -295,6 +302,35 @@ class _PaymentPageState extends State<PaymentPage> {
         ),
       ],
     );
+  }
+
+  void displayIncompleteStepMessage() {
+    switch (widget.orderMethod) {
+      case 'Pre-Order': 
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select your pre-order time'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      case 'Delivery':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please enter your address'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select your seat'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+    }
   }
 
   // Order Summary section
@@ -375,57 +411,6 @@ class _PaymentPageState extends State<PaymentPage> {
       ),
     );
   }
-
-/*   Widget _buildCartList() {
-    List<Map<String, dynamic>> cartItems = widget.cartItems;
-
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      scrollDirection: Axis.vertical,
-      itemCount: cartItems.length,
-      itemBuilder: (context, index) {
-        final cartItem = cartItems[index];
-
-        List<String> preferences = [
-          if (int.parse(cartItem['no_vege']) == 1) 'No Vegetarian',
-          if (int.parse(cartItem['extra_vege']) == 1) 'Extra Vegetarian',
-          if (int.parse(cartItem['no_spicy']) == 1) 'No Spicy',
-          if (int.parse(cartItem['extra_spicy']) == 1) 'Extra Spicy',
-        ].where((preference) => preference.isNotEmpty).toList();
-
-        return ListTile(
-          leading: Image(
-            image: AssetImage('images/foods/${cartItem['food_image']}'),
-            width: 80,
-            height: 80,
-          ),
-          title: Text(
-            cartItem['food_name'] ?? '',
-            style: const TextStyle(fontSize: 12),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Quantity: ${cartItem['quantity'] ?? ''}',
-                style: const TextStyle(fontSize: 12),
-              ),
-              const SizedBox(height: 8),
-              _buildPreferencesList(preferences),
-              const SizedBox(height: 8),
-              _buildAdditionalNotes(cartItem),
-            ],
-          ),
-          // ignore: sized_box_for_whitespace
-          trailing: Text(
-            'Price: RM ${(int.parse(cartItem['quantity']) * double.parse(cartItem['food_price'])).toStringAsFixed(2)}',
-            style: const TextStyle(fontSize: 12),
-          ),
-        );
-      },
-    );
-  } */
 
   Widget _buildPreferencesList(List<String> preferences) {
     if (preferences.isNotEmpty) {

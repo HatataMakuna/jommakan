@@ -162,7 +162,16 @@ class _AddReviewPageState extends State<AddReviewPage> {
                         child: const Text('Yes'),
                         onPressed: () {
                           Navigator.of(context).pop(); // Close the dialog
-                          saveReview();
+                          if (rating != 0) {
+                            saveReview();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please select number of stars to rate.'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          }
                         },
                       ),
                     ],
@@ -172,8 +181,51 @@ class _AddReviewPageState extends State<AddReviewPage> {
             },
             child: const Text('Submit Review'),
           ),
+          if (widget.currentUserReview != null) ...[
+            const SizedBox(height: 16),
+            _deleteReviewButton(),
+          ],
         ],
       ),
+    );
+  }
+
+  Widget _deleteReviewButton() {
+    return ElevatedButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Confirm Delete Review?'),
+              content: const Text('Are you sure you want to delete your review?'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('No'),
+                  onPressed:() {
+                    Navigator.of(context).pop(); // Close the dialog
+                  }
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  ),
+                  child: const Text('Yes'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                    // Do something
+                    deleteReview();
+                  }
+                ),
+              ],
+            );
+          }
+        );
+      },
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+      ),
+      child: const Text('Delete Review'),
     );
   }
 
@@ -201,6 +253,15 @@ class _AddReviewPageState extends State<AddReviewPage> {
     showSaveReviewStatus(isSuccess);
   }
 
+  void deleteReview() async {
+    bool isSuccess;
+    isSuccess = await _addOrModifyReview.deleteReview(
+      int.parse(widget.currentUserReview!['ratingID'])
+    );
+
+    showDeleteReviewStatus(isSuccess);
+  }
+
   // Show message whether the review has been saved successfully
   void showSaveReviewStatus(bool isSuccess) {
     if (isSuccess) {
@@ -214,6 +275,7 @@ class _AddReviewPageState extends State<AddReviewPage> {
               ElevatedButton(
                 child: const Text('Ok'),
                 onPressed: () {
+                  Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
               ),
@@ -235,6 +297,52 @@ class _AddReviewPageState extends State<AddReviewPage> {
               ElevatedButton(
                 child: const Text('Ok'),
                 onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void showDeleteReviewStatus(bool isSuccess) {
+    if (isSuccess) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Your review has been deleted successfully'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+    else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Sorry'),
+            content: const Text(
+              'There is an error while we\'re trying to delete your review. Please try again later.'
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
               ),

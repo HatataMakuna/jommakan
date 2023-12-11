@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/Admin/views/logout.dart';
 import 'package:jom_makan/pages/Admin/views/payment/paymentList.dart';
 import 'package:jom_makan/pages/Admin/views/payment/paymentList2.dart';
 import 'package:jom_makan/pages/Admin/views/payment/paymentList3.dart';
@@ -14,8 +15,6 @@ import 'package:jom_makan/pages/Admin/views/promotion/list.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jom_makan/pages/Admin/views/index.dart';
 import 'package:jom_makan/pages/Admin/views/login/login.dart';
-import 'package:jom_makan/stores/user_provider.dart';
-import 'package:provider/provider.dart';
 
 typedef OnRouteView = Widget Function(BuildContext context, GoRouterState state);
 
@@ -208,18 +207,7 @@ final menuRoute = [
     path: '/log-out',
     name: 'Log Out',
     title: 'Log Out',
-    onRouteView: (context, state) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        // Add your logout logic here
-        Provider.of<UserProvider>(context, listen: false).logout();
-
-        // Use pushReplacementNamed to replace the current route with a new one
-        Navigator.of(context).pushReplacementNamed('/user/login');
-      });
-
-      // Return an empty container or widget as the view for the '/log-out' route
-      return Container();
-    },
+    onRouteView: (context, state) => const LogoutView(),
   ),
 ];
 
