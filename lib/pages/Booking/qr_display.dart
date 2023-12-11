@@ -1,10 +1,10 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:jom_makan/components/logo.dart';
+import 'package:jom_makan/model/seat_number.dart';
 import 'package:jom_makan/server/seat_display/seat_display.dart';
 import 'package:jom_makan/stores/seatlist_provider.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class QRCodeDisplayPage extends StatefulWidget {
   //final Uint8List qrCodeBytes;
@@ -145,16 +145,21 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
   }
 
   Widget _loadQrCode() {
-    Uint8List qrCode = Provider.of<SeatListProvider>(context, listen: false).qrCodeBytes;
+    //Uint8List qrCode = Provider.of<SeatListProvider>(context, listen: false).qrCodeBytes;
     return SizedBox(
       height: 200,
       width: 200,
-      child: PhotoView(
+      child: QrImageView(
+        data: widget.selectedSeats.join(", "),
+        version: 5,
+        size: 200.0,
+      ),
+      /* PhotoView(
         imageProvider: MemoryImage(qrCode),
         minScale: PhotoViewComputedScale.contained * 0.8,
         maxScale: PhotoViewComputedScale.covered * 2,
         backgroundDecoration: const BoxDecoration(color: Colors.white),
-      ),
+      ), */
     );
   }
 
@@ -234,25 +239,5 @@ class _QRCodeDisplayPageState extends State<QRCodeDisplayPage> {
 
   void _goBack() {
     Navigator.pop(context, widget.selectedSeats.join(", "));
-  }
-}
-
-class SeatNumber {
-  final int rowI;
-  final int colI;
-
-  const SeatNumber({required this.rowI, required this.colI});
-
-  @override
-  bool operator == (Object other) {
-    return rowI == (other as SeatNumber).rowI && colI == other.colI;
-  }
-
-  @override
-  int get hashCode => rowI.hashCode;
-
-  @override
-  String toString() {
-    return '[$rowI][$colI]';
   }
 }

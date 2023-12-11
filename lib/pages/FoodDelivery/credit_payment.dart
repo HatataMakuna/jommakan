@@ -10,10 +10,12 @@ class CreditCardPage extends StatefulWidget {
   final double totalPrice;
   final String orderMethod;
   final String address;
+  final ValueNotifier<String> selectedSeatsNotifier;
 
   const CreditCardPage({
     super.key, required this.noCutlery, required this.cartItems,
     required this.totalPrice, required this.orderMethod, required this.address,
+    required this.selectedSeatsNotifier,
   });
 
   @override
@@ -367,6 +369,7 @@ String? _bankNameText() {
                 totalPrice: widget.totalPrice,
                 orderMethod: widget.orderMethod,
                 address: widget.address,
+                seatNumbers: widget.selectedSeatsNotifier.value,
               ),
             ),
           );
