@@ -13,7 +13,7 @@ class IndexView extends AdminView {
   State<StatefulWidget> createState() => _IndexView();
 }
 // AdminStateView<IndexView>
-class _IndexView extends State<IndexView> {
+class _IndexView extends AdminStateView<IndexView> {
   late AdminTableController<dynamic> controller;
   var itemData = [];
   final Food foodDisplay = Food();
@@ -147,11 +147,5 @@ class _IndexView extends State<IndexView> {
         fixedHeader: true,
       ),
     );
-  }
-  
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }
