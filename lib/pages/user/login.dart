@@ -144,6 +144,20 @@ class _LoginState extends State<LoginPage> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
+    if (email == '') {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Please enter your email'),
+        duration: Duration(seconds: 2),
+      ));
+      return;
+    } else if (password == '') {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Please enter your password'),
+        duration: Duration(seconds: 2),
+      ));
+      return;
+    }
+
     // Call the loginUser function from LoginUser class
     var loginResult = await _loginUser.loginUser(email: email, password: password);
     //print(loginResult);

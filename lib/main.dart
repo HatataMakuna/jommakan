@@ -2,6 +2,7 @@
 // THE OFFICIAL ROUTES PAGE
 import 'package:flutter/material.dart';
 import 'package:jom_makan/access_denied.dart';
+import 'package:jom_makan/pages/Admin/admin_portal.dart';
 import 'package:jom_makan/pages/order/order_history.dart';
 import 'package:jom_makan/pages/rider/rider_info.dart';
 import 'package:jom_makan/pages/user/change_password.dart';
@@ -61,8 +62,8 @@ class MyApp extends StatelessWidget {
         '/search': (context) => hasRequiredRole(context, 'User') ? const SearchPage() : const AccessDeniedPage(),
         '/rider/rider-info': (context) => hasRequiredRole(context, 'User') ? const RiderInfo() : const AccessDeniedPage(),
 
-        // Admin only
-        '/admin': (context) => hasRequiredRole(context, 'Admin') ? const AdminMainPage() : const AccessDeniedPage(),
+        // Admin only - AdminMainPage()
+        '/admin': (context) => hasRequiredRole(context, 'Admin') ? const AdminPortal() : const AccessDeniedPage(),
       },
     );
   }

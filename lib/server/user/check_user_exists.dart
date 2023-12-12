@@ -3,9 +3,16 @@ import 'package:jom_makan/database/db_connection.dart';
 class CheckUserExists {
   Future<bool> checkUser({required String email}) async {
     try {
-      var result = await pool.execute("SELECT * FROM users WHERE email = :email", {"email": email});
+      var result = await pool.execute("SELECT username FROM users WHERE email = :email", {"email": email});
 
-      if (result.isNotEmpty) {
+      List<Map<String, dynamic>> results = [];
+      for (final row in result.rows) {
+        results.add({
+          "username": row.colAt(0),
+        });
+      }
+
+      if (results.isNotEmpty) {
         return true;
       } else {
         return false;

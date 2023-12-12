@@ -68,7 +68,9 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: _isButtonEnabled ? _resetPassword : null,
+            onPressed: !_isButtonEnabled ? null : () {
+              _resetPassword();
+            },
             // send the reset password link to the input email
             child: const Text('Reset Password'),
           ),
