@@ -162,66 +162,70 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(width: 10),
-                    // Category tags
-                    Tags(
-                      spacing: 8,
-                      itemCount: foodCategory.length,
-                      itemBuilder: (index) {
-                        final item = foodCategory[index];
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(width: 10),
+                      // Category tags
+                      Tags(
+                        spacing: 8,
+                        itemCount: foodCategory.length,
+                        itemBuilder: (index) {
+                          final item = foodCategory[index];
 
-                        return ItemTags(
-                          key: Key(index.toString()),
-                          index: index,
-                          title: item,
-                          textStyle: const TextStyle(fontSize: 12),
-                          combine: ItemTagsCombine.withTextBefore,
-                          activeColor: Colors.blue,
-                          splashColor: Colors.lightBlue,
-                          onPressed: null,
-                        );
-                      }
-                    ),
-                    const SizedBox(width: 8),
-                    // Stall name tag
-                    Tags(
-                      spacing: 8,
-                      itemCount: 1,
-                      itemBuilder: (index) {
-                        return ItemTags(
-                          key: Key(index.toString()),
-                          index: index,
-                          title: widget.selectedFood['stall_name'],
-                          textStyle: const TextStyle(fontSize: 12),
-                          combine: ItemTagsCombine.withTextBefore,
-                          activeColor: Colors.green,
-                          splashColor: Colors.lightGreen,
-                          onPressed: null,
-                        );
-                      }
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 10),
-                IconButton(
-                  icon: Icon(
-                    favoritesProvider.isFavorite(int.parse(widget.selectedFood['foodID']))
-                      ? Icons.favorite : Icons.favorite_border,
-                    color: Colors.red,
+                          return ItemTags(
+                            key: Key(index.toString()),
+                            index: index,
+                            title: item,
+                            textStyle: const TextStyle(fontSize: 12),
+                            combine: ItemTagsCombine.withTextBefore,
+                            activeColor: Colors.blue,
+                            splashColor: Colors.lightBlue,
+                            onPressed: null,
+                          );
+                        }
+                      ),
+                      const SizedBox(width: 8),
+                      // Stall name tag
+                      Tags(
+                        spacing: 8,
+                        itemCount: 1,
+                        itemBuilder: (index) {
+                          return ItemTags(
+                            key: Key(index.toString()),
+                            index: index,
+                            title: widget.selectedFood['stall_name'],
+                            textStyle: const TextStyle(fontSize: 12),
+                            combine: ItemTagsCombine.withTextBefore,
+                            activeColor: Colors.green,
+                            splashColor: Colors.lightGreen,
+                            onPressed: null,
+                          );
+                        }
+                      ),
+                    ],
                   ),
-                  onPressed: () async {
-                    String status = await favoritesProvider.toggleFavorite(int.parse(widget.selectedFood['foodID']), userID);
-                    setState(() {});
-                    showSnackbarMessage(status);
-                  }
-                ),
-              ],
+                  const SizedBox(width: 10),
+                  IconButton(
+                    icon: Icon(
+                      favoritesProvider.isFavorite(int.parse(widget.selectedFood['foodID']))
+                        ? Icons.favorite : Icons.favorite_border,
+                      color: Colors.red,
+                    ),
+                    onPressed: () async {
+                      String status = await favoritesProvider.toggleFavorite(int.parse(widget.selectedFood['foodID']), userID);
+                      setState(() {});
+                      showSnackbarMessage(status);
+                    }
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -248,8 +252,8 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                   ),
                 );
               },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Wrap(
+                //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
                     'Average Rating: ',
@@ -259,7 +263,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                     averageRating.toStringAsFixed(2),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 16,
                       color: Colors.blue,
                     ),
                   ),

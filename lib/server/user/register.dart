@@ -7,15 +7,6 @@ class Register {
     required String password,
   }) async {
     try {
-      // Check if the user already exists
-      final existingUser = await getUserByEmail(email);
-      print('Existing user: ' + existingUser.toString());
-      if (existingUser) {
-        // User with this email already exists, registration failed
-        return false;
-      }
-
-      // User doesn't exist, proceed with registration
       // Insert new user into the database
       var result = await pool.execute(
         'INSERT INTO users (username, email, password) VALUES (:name, :email, :password)',

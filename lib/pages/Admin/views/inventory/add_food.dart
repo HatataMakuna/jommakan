@@ -6,11 +6,11 @@ class AddFood extends StatefulWidget {
   const AddFood({super.key});
 
   @override
-  _AddFoodState createState() => _AddFoodState();
+  State<StatefulWidget> createState() => _AddFoodState();
 }
 
 class _AddFoodState extends State<AddFood> {
-   final TextEditingController _foodIDController = TextEditingController();
+  //final TextEditingController _foodIDController = TextEditingController();
   final TextEditingController _foodNameController = TextEditingController();
   final TextEditingController _stallIDController = TextEditingController();
   final TextEditingController _mainCategoryController = TextEditingController();
@@ -336,50 +336,17 @@ void _validatesubCategory2(String value) {
           },
         );
       },
-      child: const Text('Register Now'),
       style: ElevatedButton.styleFrom(
         elevation: 5, // Set the elevation (depth) of the button
         shadowColor: Colors.black, // Set the shadow color
       ),
+      child: const Text('Register Now'),
     );
-  }
-
-  // Validations
-  void _validateEmail(String value) {
-    setState(() => isTyping = true);
-  }
-
-  void _validatePassword(String value) {
-    setState(() {});
-  }
-
-  void _validateRepeatPassword(String value) {
-    setState(() {});
-  }
-
-  // Navigate to login page
-  void goToLogin() {
-    print("Navigating to login page");
-    setState(() {
-      Navigator.pushNamed(context, '/user/login');
-    });
-  }
-
-  // Check whether the registration form has any empty fields
-  bool _hasEmptyFields() {
-    return _foodIDController.text.isEmpty || 
-      _foodNameController.text.isEmpty ||
-      _stallIDController.text.isEmpty ||
-      _mainCategoryController.text.isEmpty ||
-      _subCategoryController.text.isEmpty ||
-      _foodPriceController.text.isEmpty ||
-      _qtyInStockController.text.isEmpty ||
-      _foodImageController.text.isEmpty;
   }
 
   // Passing the data to "server/register.dart" for performing the server-side script
   void foodRegister() async {
-    String foodId = _foodIDController.text;
+    //String foodId = _foodIDController.text;
     String foodName = _foodNameController.text;
     String stallID = _stallIDController.text;
     String mainCategory = _mainCategoryController.text;
@@ -387,7 +354,6 @@ void _validatesubCategory2(String value) {
     String foodPrice = _foodPriceController.text;
     String qtyInStock = _qtyInStockController.text;
     String foodImage = _foodImageController.text;
-   
 
     bool registrationResult = await _registerFood.foodRegister(
       foodName: foodName, stallID: int.parse(stallID),
@@ -419,10 +385,6 @@ void _validatesubCategory2(String value) {
               },
               child: const Text('OK'),
             ),
-            // ElevatedButton(
-            //   onPressed: goToLogin,
-            //   child: const Text('Go to Login'),
-            // ),
           ]
         );
       }
@@ -449,10 +411,4 @@ void _validatesubCategory2(String value) {
       }
     );
   }
-
-  // @override
-  // void dispose() {
-  //   _emailController.dispose();
-  //   super.dispose();
-  // }
 }

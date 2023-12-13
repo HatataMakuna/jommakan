@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:jom_makan/pages/Admin/views/stall/renewStall.dart';
-import 'package:jom_makan/server/promotion.dart';
+//import 'package:intl/intl.dart';
+//import 'package:jom_makan/pages/Admin/views/stall/renew_stall.dart';
+//import 'package:jom_makan/server/promotion.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:jom_makan/server/renewStall/renew.dart';
 
@@ -13,10 +13,10 @@ class AddStall extends StatefulWidget {
 }
 
 class _RenewStallState extends State<AddStall> {
-   late TextEditingController _stallIDController = TextEditingController();
+  late TextEditingController _stallIDController = TextEditingController();
   late TextEditingController _stallNameController = TextEditingController();
-   late TextEditingController _stallOwnerController = TextEditingController();
-    late TextEditingController _totalStaffController = TextEditingController();
+  late TextEditingController _stallOwnerController = TextEditingController();
+  late TextEditingController _totalStaffController = TextEditingController();
   late TextEditingController _canteenController = TextEditingController();
   late TextEditingController _hygieneLevelController = TextEditingController();
   late bool isTyping = false;
@@ -24,13 +24,13 @@ class _RenewStallState extends State<AddStall> {
   late String _errorMessage;
 
 
- @override
+  @override
   void initState() {
     super.initState();
     _stallIDController = TextEditingController();
     _stallNameController = TextEditingController();
-     _stallOwnerController = TextEditingController();
-      _totalStaffController = TextEditingController();
+    _stallOwnerController = TextEditingController();
+    _totalStaffController = TextEditingController();
     _canteenController = TextEditingController();
     _hygieneLevelController = TextEditingController();
 
@@ -38,7 +38,6 @@ class _RenewStallState extends State<AddStall> {
     _registerRenew = Renew();
     _errorMessage = '';
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +85,9 @@ class _RenewStallState extends State<AddStall> {
   Widget stallIDField() {
     return TextField(
       controller: _stallIDController,
-      decoration: InputDecoration(labelText: 'Stall ID',
-    errorText:_stallIDText(),
+      decoration: InputDecoration(
+        labelText: 'Stall ID',
+        errorText:_stallIDText(),
       ),
       onChanged: (value) => _validateStallID(value),
     );
@@ -95,16 +95,16 @@ class _RenewStallState extends State<AddStall> {
 
   // Error Messages
   String? _stallIDText() {
-  final text = _stallIDController.value.text;
-  if (text.isEmpty) {
-    return 'Please enter Stall ID';
-  } else if (!RegExp(r'^S0[\w-]+$').hasMatch(text)) {
-    return 'Stall Id must start with S0';
+    final text = _stallIDController.value.text;
+    if (text.isEmpty) {
+      return 'Please enter Stall ID';
+    } else if (!RegExp(r'^S0[\w-]+$').hasMatch(text)) {
+      return 'Stall Id must start with S0';
+    }
+    return null;
   }
-  return null;
-}
 
-// Validations
+  // Validations
   void _validateStallID(String value) {
     setState(() => isTyping = true);
   }
@@ -119,22 +119,21 @@ class _RenewStallState extends State<AddStall> {
     );
   }
 
-
   // Error Messages
   String? _stallNameText() {
-  final text = _stallNameController.value.text;
-  if (text.isEmpty) {
-    return 'Please enter Stall Name';
+    final text = _stallNameController.value.text;
+    if (text.isEmpty) {
+      return 'Please enter Stall Name';
+    }
+    return null;
   }
-  return null;
-}
 
-// Validations
+  // Validations
   void _validatestallName(String value) {
     setState(() => isTyping = true);
   }
 
-   Widget stallOwnerField() {
+  Widget stallOwnerField() {
     return TextField(
       controller: _stallOwnerController,
       decoration: InputDecoration(labelText: 'Stall Owner',
@@ -144,53 +143,53 @@ class _RenewStallState extends State<AddStall> {
     );
   }
 
-
   // Error Messages
   String? _stallOwnerText() {
-  final text = _stallOwnerController.value.text;
-  if (text.isEmpty) {
-    return 'Please enter Stall Owner';
+    final text = _stallOwnerController.value.text;
+    if (text.isEmpty) {
+      return 'Please enter Stall Owner';
+    }
+    return null;
   }
-  return null;
-}
 
-// Validations
+  // Validations
   void _validatestallOwner(String value) {
     setState(() => isTyping = true);
   }
 
-   Widget totalStaffField() {
+  Widget totalStaffField() {
     return TextField(
       controller: _totalStaffController,
-      decoration: InputDecoration(labelText: 'Total Staff',
-    errorText:_totalStaffText(),
+      decoration: InputDecoration(
+        labelText: 'Total Staff',
+        errorText:_totalStaffText(),
       ),
       onChanged: (value) => _validateTotalStaff(value),
     );
   }
 
   // Error Messages
- String? _totalStaffText() {
-  final text = _totalStaffController.value.text;
-  if (text.isEmpty) {
-    return 'Please enter Total Staff';
+  String? _totalStaffText() {
+    final text = _totalStaffController.value.text;
+    if (text.isEmpty) {
+      return 'Please enter Total Staff';
+    }
+
+    // Check if the entered value is a valid integer
+    final int? quantity = int.tryParse(text);
+    if (quantity == null) {
+      return 'Please enter a valid integer for Total Staff';
+    }
+
+    return null;
   }
 
-  // Check if the entered value is a valid integer
-  final int? quantity = int.tryParse(text);
-  if (quantity == null) {
-    return 'Please enter a valid integer for Total Staff';
-  }
-
-  return null;
-}
-
-// Validations
+  // Validations
   void _validateTotalStaff(String value) {
     setState(() => isTyping = true);
   }
 
-   String? selectedCanteen;
+  String? selectedCanteen;
 
   final List<String> canteenChoices = [
     'RedBrick Cafe',
@@ -200,7 +199,6 @@ class _RenewStallState extends State<AddStall> {
     'CITC Cafe',
   ];
 
-  @override
   Widget canteenField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,16 +218,16 @@ class _RenewStallState extends State<AddStall> {
     );
   }
 
-   // Error Messages
+  // Error Messages
   String? _canteenText() {
-  final text = _canteenController.value.text;
-  if (text.isEmpty) {
-    return 'Please Select the Canteen';
+    final text = _canteenController.value.text;
+    if (text.isEmpty) {
+      return 'Please Select the Canteen';
+    }
+    return null;
   }
-  return null;
-}
 
-// Validations
+  // Validations
   void _validateCanteen(String value) {
     setState(() => isTyping = true);
   }
@@ -263,104 +261,47 @@ class _RenewStallState extends State<AddStall> {
   }
 
 
- Widget hygieneLevelField() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-     
-      Row(
-        children: [
-          Expanded(
-            child: TextFormField(
-              controller: _hygieneLevelController,
-              readOnly: true,
-              decoration: InputDecoration(
-                hintText: 'Please Submit Government Hygiene Level.PDF',
+  Widget hygieneLevelField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+      
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: _hygieneLevelController,
+                readOnly: true,
+                decoration: const InputDecoration(
+                  hintText: 'Please Submit Government Hygiene Level.PDF',
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: _pickPDF,
-            child: Text('Pick PDF'),
-          ),
-        ],
-      ),
-    ],
-  );
-}
-
-void _pickPDF() async {
-  // Use a file picker library or any other method to allow users to pick a PDF file.
-  // Here, I'm using the `FilePicker` library as an example.
-  FilePickerResult? result = await FilePicker.platform.pickFiles(
-    type: FileType.custom,
-    allowedExtensions: ['pdf'],
-  );
-
-  if (result != null && result.files.isNotEmpty) {
-    setState(() {
-      _hygieneLevelController.text = result.files.first.name ?? '';
-    });
+            const SizedBox(width: 10),
+            ElevatedButton(
+              onPressed: _pickPDF,
+              child: const Text('Pick PDF'),
+            ),
+          ],
+        ),
+      ],
+    );
   }
-}
 
-  
+  void _pickPDF() async {
+    // Use a file picker library or any other method to allow users to pick a PDF file.
+    // Here, I'm using the `FilePicker` library as an example.
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
 
-  // Widget emailField() {
-  //   return TextField(
-  //     controller: _emailController,
-  //     decoration: InputDecoration(
-  //       labelText: 'Email (someone@example.com)',
-  //       errorText: _emailErrorText(),
-  //     ),
-  //     onChanged: (value) => _validateEmail(value),
-  //   );
-  // }
-
-  // Widget passwordField() {
-  //   return TextField(
-  //     controller: _passwordController,
-  //     decoration: InputDecoration(
-  //       labelText: 'Password (minimum 8 characters)',
-  //       errorText: _passwordErrorText(),
-        
-  //       // "Show Password" icon
-  //       suffixIcon: IconButton(
-  //         icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility),
-  //         onPressed: () {
-  //           setState(() {
-  //             _showPassword = !_showPassword;
-  //           });
-  //         },
-  //       ),
-  //     ),
-  //     onChanged: (value) => _validatePassword(value),
-  //     obscureText: !_showPassword, // Hide or show password based on _showPassword value
-  //   );
-  // }
-
-  // Widget repeatPasswordField() {
-  //   return TextField(
-  //     controller: _repeatPasswordController,
-  //     decoration: InputDecoration(
-  //       labelText: 'Repeat Password',
-  //       errorText: _repeatPasswordErrorText(),
-        
-  //       // "Show Password" icon
-  //       suffixIcon: IconButton(
-  //         icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility),
-  //         onPressed: () {
-  //           setState(() {
-  //             _showPassword = !_showPassword;
-  //           });
-  //         },
-  //       ),
-  //     ),
-  //     onChanged: (value) => _validateRepeatPassword(value),
-  //     obscureText: !_showPassword, // Hide or show password based on _showPassword value
-  //   );
-  // }
+    if (result != null && result.files.isNotEmpty) {
+      setState(() {
+        _hygieneLevelController.text = result.files.first.name ?? '';
+      });
+    }
+  }
 
   // Register Button
   Widget registerButton() {
@@ -393,84 +334,12 @@ void _pickPDF() async {
           },
         );
       },
-      child: const Text('Register Now'),
       style: ElevatedButton.styleFrom(
         elevation: 5, // Set the elevation (depth) of the button
         shadowColor: Colors.black, // Set the shadow color
       ),
+      child: const Text('Register Now'),
     );
-  }
-
-  // Validations
-  void _validateEmail(String value) {
-    setState(() => isTyping = true);
-  }
-
-  void _validatePassword(String value) {
-    setState(() {});
-  }
-
-  void _validateRepeatPassword(String value) {
-    setState(() {});
-  }
-
-  void goToLogin(BuildContext context) {
-  print("Button pressed. Navigating to Renew Staff page");
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => RenewStallView()),
-  );
-}
-
-
-  // // Error Messages
-  // String? _emailErrorText() {
-  //   final text = _emailController.value.text;
-  //   if (text.isEmpty) {
-  //     return null;
-  //   } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$').hasMatch(text)) {
-  //     return 'Please enter a valid email';
-  //   }
-  //   return null;
-  // }
-
-  // String? _passwordErrorText() {
-  //   final text = _passwordController.value.text;
-  //   if (text.isEmpty) {
-  //     return null;
-  //   } else if (text.length < 8) {
-  //     return 'Password too short';
-  //   }
-  //   return null;
-  // }
-
-  // String? _repeatPasswordErrorText() {
-  //   if (_isRegistering) {
-  //     final textToCompare = _passwordController.value.text;
-  //     final inputText = _repeatPasswordController.value.text;
-  //     if (inputText != textToCompare) {
-  //       return 'Password does not match';
-  //     } else {
-  //       return null;
-  //     }
-  //   }
-  //   return null;
-  // }
-
-  // // Check whether the registration form has any errors
-  // bool _hasErrors() {
-  //   return _emailErrorText() != null ||
-  //     _passwordErrorText() != null ||
-  //     _repeatPasswordErrorText() != null;
-  // }
-
-  // Check whether the registration form has any empty fields
-  bool _hasEmptyFields() {
-    return _stallIDController.text.isEmpty || 
-      _stallNameController.text.isEmpty ||
-      _stallOwnerController.text.isEmpty ||
-      _totalStaffController.text.isEmpty ||
-      _canteenController.text.isEmpty;
   }
 
   // Passing the data to "server/register.dart" for performing the server-side script
@@ -509,12 +378,6 @@ void _pickPDF() async {
               },
               child: const Text('OK'),
             ),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     goToLogin;
-            //   },
-            //   child: const Text('Go to Renew Staff Page'),
-            // ),
           ]
         );
       }

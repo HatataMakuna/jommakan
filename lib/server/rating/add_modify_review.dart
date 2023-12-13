@@ -38,4 +38,17 @@ class AddOrModifyReview {
       return false;
     }
   }
+
+  Future<bool> deleteReview(int ratingID) async {
+    try {
+      var result = await pool.execute(
+        "DELETE FROM ratings WHERE ratingID = :ratingID", {"ratingID": ratingID}
+      );
+
+      return result.affectedRows.toInt() == 1;
+    } catch (e) {
+      print('Error deleting review: $e');
+      return false;
+    }
+  }
 }

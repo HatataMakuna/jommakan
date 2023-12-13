@@ -23,21 +23,11 @@ class _UserList extends AdminStateView<UserList> {
   late AdminTableController _controller;
   final Promotion _promotion = Promotion();
 
-  // Controller for text fields
-  final TextEditingController _foodIdController = TextEditingController();
-  final TextEditingController _foodNameController = TextEditingController();
-  final TextEditingController _foodPriceController = TextEditingController();
-  final TextEditingController _foodPromotionController = TextEditingController();
-  final TextEditingController _datePromotionController = TextEditingController();
-  final TextEditingController _quantityController = TextEditingController();
-  final TextEditingController _foodStallController = TextEditingController();
-  final TextEditingController _foodDescriptionController = TextEditingController();
-
   var itemData = [];
   final Promotion promo = Promotion();
   List<Map<String, dynamic>> _promoItems = [];
 
-    @override
+  @override
   void initState() {
     super.initState();
     _controller = AdminTableController(items: []);
@@ -49,17 +39,13 @@ class _UserList extends AdminStateView<UserList> {
       final data = await promo.getPromotionData();
       final state = ['Processing', 'Approve', 'Reject'];
 
-
       setState(() {
         _promoItems = data;
- 
-        // Move the logic inside setState after _promoItems has been updated
-        //NameRandom nameRandom = NameRandom();
 
         for (int i = 0; i < _promoItems.length; i++) {
-          String foodNameCorrect = 'foodName: ${_promoItems[i]['foodName']}';
-          print('Food Name: ' + foodNameCorrect);
-          print('Date : ${_promoItems[i]['datePromotion']}');
+          //String foodNameCorrect = 'foodName: ${_promoItems[i]['foodName']}';
+          //print('Food Name: ' + foodNameCorrect);
+          //print('Date : ${_promoItems[i]['datePromotion']}');
           int stateIndex = Random().nextInt(3);
 
           itemData.add({
@@ -90,47 +76,54 @@ class _UserList extends AdminStateView<UserList> {
             fixed: FixedDirection.left
           ),
           AdminTableItem(
-              itemView: onItemView,
-              width: 100,
-              label: "Food Price",
-              prop: 'foodPrice'),
+            itemView: onItemView,
+            width: 100,
+            label: "Food Price",
+            prop: 'foodPrice'
+          ),
           AdminTableItem(
-              itemView: onItemView,
-              width: 200,
-              label: "Food Promotion",
-              prop: 'foodPromotion'),
-              AdminTableItem(
-              itemView: onItemView,
-              width: 200,
-              label: "Date Promotion",
-              prop: 'datePromotion'),
-              AdminTableItem(
-              itemView: onItemView,
-              width: 200,
-              label: "Food Quantity",
-              prop: 'quantity'),
-              
+            itemView: onItemView,
+            width: 200,
+            label: "Food Promotion",
+            prop: 'foodPromotion'
+          ),
           AdminTableItem(
-              itemView: onItemView,
-              width: 200,
-              label: "Food Stall",
-              prop: 'foodStall'),
+            itemView: onItemView,
+            width: 200,
+            label: "Date Promotion",
+            prop: 'datePromotion'
+          ),
           AdminTableItem(
-              itemView: onItemView,
-              width: 100,
-              label: "Food Description",
-              prop: 'foodDescription'),
-              AdminTableItem(
-          itemView: onItemView,
-          width: 200,
-          label: 'Approve',
-          prop: 'state'),
+            itemView: onItemView,
+            width: 200,
+            label: "Food Quantity",
+            prop: 'quantity'
+          ),    
           AdminTableItem(
-              itemView: onItemView,
-              width: 150,
-              label: "More",
-              fixed: FixedDirection.right,
-              prop: 'action'),
+            itemView: onItemView,
+            width: 200,
+            label: "Food Stall",
+            prop: 'foodStall'
+          ),
+          AdminTableItem(
+            itemView: onItemView,
+            width: 100,
+            label: "Food Description",
+            prop: 'foodDescription'
+          ),
+          AdminTableItem(
+            itemView: onItemView,
+            width: 200,
+            label: 'Approve',
+            prop: 'state'
+          ),
+          AdminTableItem(
+            itemView: onItemView,
+            width: 150,
+            label: "More",
+            fixed: FixedDirection.right,
+            prop: 'action'
+          ),
         ]);
         _controller.setNewData(itemData);
       });
@@ -139,7 +132,7 @@ class _UserList extends AdminStateView<UserList> {
     }
   }
   
-  Future<void> _promotionDisplay() async {
+  /* Future<void> _promotionDisplay() async {
     try {
       //final promotion = await _promotion.getPromotionData();
       setState(promotionData) {
@@ -156,9 +149,9 @@ class _UserList extends AdminStateView<UserList> {
       print('Error loading cart items: $error');
       // Handle the error as needed
     }
-  }
-  Widget onItemView(
-      BuildContext context, int index, dynamic data, AdminTableItem item) {
+  } */
+
+  Widget onItemView(BuildContext context, int index, dynamic data, AdminTableItem item) {
     if (index == -1) {
       return Container(
         alignment: Alignment.center,
@@ -168,7 +161,7 @@ class _UserList extends AdminStateView<UserList> {
         ),
       );
     } else {
-      if(item.prop == 'action'){
+      if (item.prop == 'action') {
         return Container(
           alignment: Alignment.center,
           child: Row(
@@ -176,52 +169,49 @@ class _UserList extends AdminStateView<UserList> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-        onTap: () {
-          // Call the function to delete the item at index
-          _deleteItem(index);
-        },
-        child: const Text(
-          "Delete",
-          style: TextStyle(color: Colors.red, fontSize: 15),
-        ),
-      ),
-      const SizedBox(width: 10),
-              GestureDetector(
-        onTap: () {
-          // Call the function to delete the item at index
-          _showQuantityDialog(index);
-        },
-        child: const Text(
-          "Update",
-          style: TextStyle(color: Colors.red, fontSize: 15),
-        ),
-      ),
+                onTap: () {
+                  // Call the function to delete the item at index
+                  _deleteItem(index);
+                },
+                child: const Text(
+                  "Delete",
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                ),
+              ),
+              const SizedBox(width: 10),
+                      GestureDetector(
+                onTap: () {
+                  // Call the function to delete the item at index
+                  _showQuantityDialog(index);
+                },
+                child: const Text(
+                  "Update",
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                ),
+              ),
             ],
           ),
         );
-              
-            
-      
       }
     
-    TextStyle? textStyle;
+      TextStyle? textStyle;
 
-        switch (item.prop) {
-          case 'title':
-            textStyle = const TextStyle(color: Colors.blue);
-            break;
-          default:
-            textStyle = TextStyle(color: AdminColors()
-                .get()
-                .secondaryColor);
-            break;
-        }
-        if(item.prop == 'state'){
-          return Container(
-            alignment: Alignment.center,
-            child: TagView(data[item.prop!], type: AdminButtonType.primary,size: AdminButtonSize.mini,),
-          );
-        }
+      switch (item.prop) {
+        case 'title':
+          textStyle = const TextStyle(color: Colors.blue);
+          break;
+        default:
+          textStyle = TextStyle(color: AdminColors().get().secondaryColor);
+          break;
+      }
+      
+      if (item.prop == 'state') {
+        return Container(
+          alignment: Alignment.center,
+          child: TagView(data[item.prop!], type: AdminButtonType.primary,size: AdminButtonSize.mini,),
+        );
+      }
+
       return Container(
         alignment: Alignment.center,
         child: Text(
@@ -232,82 +222,77 @@ class _UserList extends AdminStateView<UserList> {
     }
   }
 
+  void _showQuantityDialog(int index) {
+    int newQuantity = 0;
 
-
-void _showQuantityDialog(int index) {
-  int newQuantity = 0;
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Update Quantity'),
-        content: TextField(
-          keyboardType: TextInputType.number,
-          onChanged: (value) {
-            newQuantity = int.tryParse(value) ?? 0;
-          },
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Quantity'),
+          content: TextField(
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              newQuantity = int.tryParse(value) ?? 0;
             },
-            child: const Text('Cancel'),
           ),
-          ElevatedButton(
-            onPressed: () {
-              _updateQuantity(index, newQuantity);
-              Navigator.of(context).pop();
-            },
-            child: const Text('Update'),
-          ),
-        ],
-      );
-    },
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _updateQuantity(index, newQuantity);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _updateQuantity(int index, int newQuantity) {
+    setState(() {
+      if (index >= 0 && index < _promoItems.length) {
+        var updatedItem = _promoItems[index];
+        updatedItem['quantity'] = newQuantity;
+
+        // Update the item in the itemData list as well
+        var updatedItemData = itemData.firstWhere(
+          (item) => item['foodId'] == updatedItem['foodID'],
+          orElse: () => {},
+        );
+        if (updatedItemData.isNotEmpty) {
+          updatedItemData['quantity'] = newQuantity;
+        }
+
+        // Update the item in the database
+        _promotion.updateQuantity(updatedItem['foodID'], newQuantity);
+
+        // Update the table controller with the new data
+        _controller.setNewData(itemData);
+      }
+    }
   );
 }
 
-
-
-  void _updateQuantity(int index, int newQuantity) {
-  setState(() {
-    if (index >= 0 && index < _promoItems.length) {
-      var updatedItem = _promoItems[index];
-      updatedItem['quantity'] = newQuantity;
-
-      // Update the item in the itemData list as well
-      var updatedItemData = itemData.firstWhere(
-        (item) => item['foodId'] == updatedItem['foodID'],
-        orElse: () => {},
-      );
-      if (updatedItemData.isNotEmpty) {
-        updatedItemData['quantity'] = newQuantity;
-      }
-
-      // Update the item in the database
-      _promotion.updateQuantity(updatedItem['foodID'], newQuantity);
-
-      // Update the table controller with the new data
-      _controller.setNewData(itemData);
-    }
-  });
-}
-
-
-
- // Function to delete the item at the specified index
+  // Function to delete the item at the specified index
   void _deleteItem(int index) {
     setState(() {
-       if (index >= 0 && index < _promoItems.length) {
-      // Remove the item from the _promoItems list
-      var deletedItem = _promoItems.removeAt(index);
-print('deleteItem:  + $deletedItem');
+      if (index >= 0 && index < _promoItems.length) {
+        // Remove the item from the _promoItems list
+        var deletedItem = _promoItems.removeAt(index);
+        //print('deleteItem:  + $deletedItem');
 
-      // for (int i = 0; i < _promoItems.length; i++) {
-       
-      // Remove the item from the itemData list
-      itemData.removeWhere((item) =>
+        // for (int i = 0; i < _promoItems.length; i++) {
+        
+        // Remove the item from the itemData list
+        itemData.removeWhere((item) =>
           item['foodId'] == deletedItem['foodID'] &&
           item['foodName'] == deletedItem['foodName'] &&
           item['foodPrice'] == deletedItem['foodPrice'] &&
@@ -315,19 +300,17 @@ print('deleteItem:  + $deletedItem');
           item['datePromotion'] == deletedItem['datePromotion'] &&
           item['quantity'] == deletedItem['quantity'] &&
           item['foodStall'] == deletedItem['foodStall'] &&
-          item['foodDescription'] == deletedItem['foodDescription']);
+          item['foodDescription'] == deletedItem['foodDescription']
+        );
        
-       // Delete the item from the database
-      _promotion.deletePromotion(deletedItem['foodID']);
+        // Delete the item from the database
+        _promotion.deletePromotion(deletedItem['foodID']);
 
-
-      // Update the table controller with the new data
-      _controller.setNewData(itemData);
+        // Update the table controller with the new data
+        _controller.setNewData(itemData);
       }
     });
   }
-
-  
 
   @override
   Widget buildForLarge(BuildContext context) {
@@ -343,7 +326,7 @@ print('deleteItem:  + $deletedItem');
                  // Navigate to a new page when the button is pressed
                 Navigator.push(
                  context,
-                MaterialPageRoute(builder: (context) => AddPromotion()));
+                MaterialPageRoute(builder: (context) => const AddPromotion()));
               },
               child: const Text('Add Promotion'),
             ),

@@ -18,7 +18,7 @@ class _CreateAccountState extends State<CreateAccount> {
   bool isTyping = false;
   bool _showPassword = false;
   final Register _register = Register(); // Instantiate Register (server-side) class
-  bool _isRegistering = false;
+  bool _isTypingRepeatPassword = false;
 
   @override
   Widget build(BuildContext context) {
@@ -126,11 +126,6 @@ class _CreateAccountState extends State<CreateAccount> {
     return ElevatedButton(
       // Disable the button if there are errors or empty fields
       onPressed: _hasEmptyFields() || _hasErrors() ? null : () {
-        // Set the registration status to true before showing the dialog
-        setState(() {
-          _isRegistering = true;
-        });
-
         // confirm register
         showDialog(
           context: context,
@@ -172,15 +167,17 @@ class _CreateAccountState extends State<CreateAccount> {
 
   void _validatePassword(String value) {
     setState(() {});
+    if (value.isEmpty) {
+      setState(() => _isTypingRepeatPassword = false);
+    }
   }
 
   void _validateRepeatPassword(String value) {
-    setState(() {});
+    setState(() => _isTypingRepeatPassword = true);
   }
 
   // Navigate to login page
   void goToLogin() {
-    print("Navigating to login page");
     setState(() {
       Navigator.pushNamed(context, '/user/login');
     });
@@ -208,7 +205,7 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   String? _repeatPasswordErrorText() {
-    if (_isRegistering) {
+    if (_isTypingRepeatPassword) {
       final textToCompare = _passwordController.value.text;
       final inputText = _repeatPasswordController.value.text;
       if (inputText != textToCompare) {
@@ -241,16 +238,23 @@ class _CreateAccountState extends State<CreateAccount> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    bool registrationResult = await _register.registerUser(
-      name: name, email: email, password: password,
-    );
+    bool checkEmailResult = await _register.getUserByEmail(email);
 
-    if (registrationResult) {
-      // Registration was successful, handle navigation or other tasks here
-      _showSuccessDialog();
+    if (checkEmailResult) {
+      // If input email already exists, show the email already exists error message
+      _showEmailAlreadyExistsDialog();
     } else {
-      // Registration failed, show an error message or handle it accordingly
-      _showFailureDialog();
+      bool registrationResult = await _register.registerUser(
+        name: name, email: email, password: password,
+      );
+
+      if (registrationResult) {
+        // Registration was successful, handle navigation or other tasks here
+        _showSuccessDialog();
+      } else {
+        // Registration failed, show an error message or handle it accordingly
+        _showFailureDialog();
+      }
     }
   }
 
@@ -265,10 +269,6 @@ class _CreateAccountState extends State<CreateAccount> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                // Reset the registration status when canceling
-                setState(() {
-                  _isRegistering = false;
-                });
                 Navigator.of(context).pop();
               },
               child: const Text('OK'),
@@ -299,6 +299,24 @@ class _CreateAccountState extends State<CreateAccount> {
               child: const Text('Ok'),
             )
           ]
+        );
+      }
+    );
+  }
+
+  void _showEmailAlreadyExistsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Registration Failed'),
+          content: const Text('Your email already exists in our system'),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Ok'),
+            ),
+          ],
         );
       }
     );

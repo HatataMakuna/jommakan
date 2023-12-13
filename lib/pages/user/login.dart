@@ -112,12 +112,12 @@ class _LoginState extends State<LoginPage> {
   Widget loginBtn(BuildContext context) {
     return ElevatedButton(
       onPressed: () => _performLogin(context), // go to user dashboard / home
-      child: const Text('Login'),
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
       ),
+      child: const Text('Login'),
     );
   }
 
@@ -143,6 +143,20 @@ class _LoginState extends State<LoginPage> {
   void _performLogin(BuildContext context) async {
     String email = _emailController.text;
     String password = _passwordController.text;
+
+    if (email == '') {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Please enter your email'),
+        duration: Duration(seconds: 2),
+      ));
+      return;
+    } else if (password == '') {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Please enter your password'),
+        duration: Duration(seconds: 2),
+      ));
+      return;
+    }
 
     // Call the loginUser function from LoginUser class
     var loginResult = await _loginUser.loginUser(email: email, password: password);

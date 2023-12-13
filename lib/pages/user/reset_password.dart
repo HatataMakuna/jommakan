@@ -14,7 +14,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _repeatPasswordController = TextEditingController();
   bool _showPassword = false;
-  bool _isRegistering = false;
+  bool _isTypingRepeatPassword = false;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class _ResetPasswordState extends State<ResetPassword> {
           },
         ),
       ),
-
+      body: loadPasswordFields(),
     );
   }
 
@@ -38,10 +38,12 @@ class _ResetPasswordState extends State<ResetPassword> {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            const SizedBox(height: 20),
             enterNewPasswordField(),
             const SizedBox(height: 20),
             repeatPasswordField(),
             const SizedBox(height: 20),
+            resetPasswordButton(),
             const SizedBox(height: 20),
           ],
         ),
@@ -96,10 +98,6 @@ class _ResetPasswordState extends State<ResetPassword> {
   Widget resetPasswordButton() {
     return ElevatedButton(
       onPressed: _hasEmptyFields() || _hasErrors() ? null : () {
-        setState(() {
-          _isRegistering = true;
-        });
-
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -144,7 +142,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   }
 
   String? _repeatPasswordErrorText() {
-    if (_isRegistering) {
+    if (_isTypingRepeatPassword) {
       final textToCompare = _passwordController.value.text;
       final inputText = _repeatPasswordController.value.text;
       if (inputText != textToCompare) {
@@ -158,10 +156,13 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   void _validatePassword(String value) {
     setState(() {});
+    if (value.isEmpty) {
+      setState(() => _isTypingRepeatPassword = false);
+    }
   }
 
   void _validateRepeatPassword(String value) {
-    setState(() {});
+    setState(() => _isTypingRepeatPassword = true);
   }
 
   bool _hasErrors() {
@@ -192,10 +193,6 @@ class _ResetPasswordState extends State<ResetPassword> {
             actions: <Widget>[
               TextButton(
                 onPressed: () {
-                  // Reset the registration status when canceling
-                  setState(() {
-                    _isRegistering = false;
-                  });
                   Navigator.of(context).pop();
                 },
                 child: const Text('OK'),
