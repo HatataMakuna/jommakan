@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jom_makan/pages/Admin/views/base_views.dart';
-import 'package:jom_makan/pages/Admin/views/inventory/add_food.dart';
+//import 'package:jom_makan/pages/Admin/views/inventory/add_food.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
-import 'package:jom_makan/server/food/food.dart';
+//import 'package:jom_makan/server/food/food.dart';
 
 import 'package:jom_makan/pages/Admin/style/colors.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table.dart';
@@ -22,7 +22,7 @@ class _PaymentSearch extends AdminStateView<YearlySales> {
   late AdminTableController courseController;
 
   // Get the current date in the format 'yyyy-MM-dd'
-String currentDate = DateFormat('MMM').format(DateTime.now());
+  String currentDate = DateFormat('MMM').format(DateTime.now());
 
   var itemData = [];
   final AddPayment paymentDisplay = AddPayment();
@@ -53,28 +53,27 @@ String currentDate = DateFormat('MMM').format(DateTime.now());
       setState(() {
         _paymentItems = data;
 
-
-// Filter data based on the search term
+        // Filter data based on the search term
         if (searchKeyword.isNotEmpty) {
           _paymentItems = _paymentItems.where((item) {
             return item['payment_date'].toLowerCase().contains(searchKeyword.toLowerCase());
           }).toList();
 
-           // Clear the existing data
-      itemData.clear();
+          // Clear the existing data
+          itemData.clear();
         
-        for (int i = 0; i < _paymentItems.length; i++) {
-          String foodNameCorrect = 'foodName: ${_paymentItems[i]['payment_date']}';
-          print('Food Name: ' + foodNameCorrect);
+          for (int i = 0; i < _paymentItems.length; i++) {
+            String foodNameCorrect = 'foodName: ${_paymentItems[i]['payment_date']}';
+            print('Food Name: ' + foodNameCorrect);
 
-          itemData.add({
-            'paymentID': _paymentItems[i]['paymentID'],
-            'payment_method': _paymentItems[i]['payment_method'],
-            'payment_date': _paymentItems[i]['payment_date'],
-            'payment_time': _paymentItems[i]['payment_time'],
-            'total_price': _paymentItems[i]['total_price'],
-          });
-        }
+            itemData.add({
+              'paymentID': _paymentItems[i]['paymentID'],
+              'payment_method': _paymentItems[i]['payment_method'],
+              'payment_date': _paymentItems[i]['payment_date'],
+              'payment_time': _paymentItems[i]['payment_time'],
+              'total_price': _paymentItems[i]['total_price'],
+            });
+          }
         }
 
         paymentController = AdminTableController(items: [
@@ -123,112 +122,107 @@ String currentDate = DateFormat('MMM').format(DateTime.now());
     }
   }
 
-  Widget paymentItemView(
-    BuildContext context, int index, dynamic data, AdminTableItem item) {
-  if (index == -1) {
-    return Container(
-      alignment: Alignment.center,
-      child: Text(
-        item.label,
-        style: TextStyle(color: AdminColors().get().secondaryColor),
-      ),
-    );
-  } else {
-    if (item.prop == 'action') {
+  Widget paymentItemView(BuildContext context, int index, dynamic data, AdminTableItem item) {
+    if (index == -1) {
       return Container(
         alignment: Alignment.center,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () {
-                // Call the function to delete the item at index
-                _deleteItem(index);
-              },
-              child: const Text(
-                "Delete",
-                style: TextStyle(color: Colors.red, fontSize: 15),
+        child: Text(
+          item.label,
+          style: TextStyle(color: AdminColors().get().secondaryColor),
+        ),
+      );
+    } else {
+      if (item.prop == 'action') {
+        return Container(
+          alignment: Alignment.center,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  // Call the function to delete the item at index
+                  _deleteItem(index);
+                },
+                child: const Text(
+                  "Delete",
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            GestureDetector(
-              onTap: () {
-                // Call the function to update the payment method
-                _showSearchDialog();
-              },
-              child: const Text(
-                "Update",
-                style: TextStyle(color: Colors.red, fontSize: 15),
+              const SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  // Call the function to update the payment method
+                  _showSearchDialog();
+                },
+                child: const Text(
+                  "Update",
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
+        );
+      }
+      return Container(
+        alignment: Alignment.center,
+        child: Text(
+          "${paymentController.ofData(index)[item.prop!]}",
+          style: TextStyle(color: AdminColors().get().secondaryColor),
         ),
       );
     }
-    return Container(
-      alignment: Alignment.center,
-      child: Text(
-        "${paymentController.ofData(index)[item.prop!]}",
-        style: TextStyle(color: AdminColors().get().secondaryColor),
-      ),
+  }
+
+  void _showSearchDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Year'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                for (int year = 2020; year <= 2030; year++) // Change the range as needed
+                  ListTile(
+                    title: Text(year.toString()),
+                    onTap: () {
+                      _search(year.toString());
+                      Navigator.of(context).pop();
+                    },
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
-}
-
-
-void _showSearchDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Select Year'),
-        content: SingleChildScrollView(
-          child: Column(
-            children: [
-              for (int year = 2020; year <= 2030; year++) // Change the range as needed
-                ListTile(
-                  title: Text(year.toString()),
-                  onTap: () {
-                    _search(year.toString());
-                    Navigator.of(context).pop();
-                  },
-                ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
-
-
-
-
 
   // Function to delete the item at the specified index
   void _deleteItem(int index) {
     setState(() {
-       if (index >= 0 && index < _paymentItems.length) {
-      // Remove the item from the _promoItems list
-      var deletedItem = _paymentItems.removeAt(index);
-      print('deleteItem:  + $deletedItem');
+      if (index >= 0 && index < _paymentItems.length) {
+        // Remove the item from the _promoItems list
+        var deletedItem = _paymentItems.removeAt(index);
+        print('deleteItem:  + $deletedItem');
 
-      // for (int i = 0; i < _promoItems.length; i++) {
-       
-      // Remove the item from the itemData list
-      itemData.removeWhere((item) =>
+        // for (int i = 0; i < _promoItems.length; i++) {
+        
+        // Remove the item from the itemData list
+        itemData.removeWhere((item) =>
           item['paymentID'] == deletedItem['paymentID'] &&
           item['payment_method'] == deletedItem['payment_method'] &&
           item['payment_date'] == deletedItem['payment_date'] &&
-          item['payment_time'] == deletedItem['payment_time']);
-       
-       // Delete the item from the database
-      paymentDisplay.deletePayment(deletedItem['paymentID']);
+          item['payment_time'] == deletedItem['payment_time']
+        );
+        
+        // Delete the item from the database
+        paymentDisplay.deletePayment(deletedItem['paymentID']);
 
 
-      // Update the table controller with the new data
-    paymentController.setNewData(itemData);
+        // Update the table controller with the new data
+        paymentController.setNewData(itemData);
       }
     });
   }
@@ -240,16 +234,14 @@ void _showSearchDialog() {
         width: size.maxWidth,
         margin: const EdgeInsets.all(20),
         height: size.maxHeight,
-         child: Column(
-          children: [
-            IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-             _showSearchDialog();
-             
-            },
-          ),
-      
+          child: Column(
+            children: [
+              IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                _showSearchDialog();
+              },
+            ),
             const SizedBox(height: 10), // Add some space between button and table
             Expanded(
               child: AdminTable(
@@ -264,17 +256,16 @@ void _showSearchDialog() {
   }
 
   void _updatePaymentMethod(int index, String newPaymentMethod) {
-  // Update the UI
-  setState(() {
-    _paymentItems[index]['payment_method'] = newPaymentMethod;
+    // Update the UI
+    setState(() {
+      _paymentItems[index]['payment_method'] = newPaymentMethod;
 
-    // Update the table controller with the new data
-    paymentController.setNewData(itemData);
-  });
+      // Update the table controller with the new data
+      paymentController.setNewData(itemData);
+    });
 
-  // Update the backend
-  String paymentID = _paymentItems[index]['paymentID'];
-  paymentDisplay.updatePaymentMethod(paymentID, newPaymentMethod);
-}
-
+    // Update the backend
+    String paymentID = _paymentItems[index]['paymentID'];
+    paymentDisplay.updatePaymentMethod(paymentID, newPaymentMethod);
+  }
 }

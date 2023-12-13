@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:jom_makan/pages/Admin/views/promotion/list.dart';
+//import 'package:jom_makan/pages/Admin/views/promotion/list.dart';
 import 'package:jom_makan/server/promotion.dart';
 
 class AddPromotion extends StatefulWidget {
@@ -11,7 +11,7 @@ class AddPromotion extends StatefulWidget {
 }
 
 class _PromotionState extends State<AddPromotion> {
-   late TextEditingController _foodIdController = TextEditingController();
+  late TextEditingController _foodIdController = TextEditingController();
   late TextEditingController _foodNameController = TextEditingController();
   late TextEditingController _foodPriceController = TextEditingController();
   late TextEditingController _foodPromotionController = TextEditingController();
@@ -23,8 +23,7 @@ class _PromotionState extends State<AddPromotion> {
   late Promotion _registerPromotion = Promotion();
   late String _errorMessage;
 
-
- @override
+  @override
   void initState() {
     super.initState();
     _foodIdController = TextEditingController();
@@ -40,15 +39,15 @@ class _PromotionState extends State<AddPromotion> {
     _errorMessage = '';
   }
 
-  
-   Future<void> _selectDateAndTime(BuildContext context) async {
+  Future<void> _selectDateAndTime(BuildContext context) async {
     DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 1),
     );
-     if (selectedDate != null) {
+
+    if (selectedDate != null) {
       // ignore: use_build_context_synchronously
       TimeOfDay? selectedTime = await showTimePicker(
         context: context,
@@ -132,20 +131,19 @@ class _PromotionState extends State<AddPromotion> {
 
   // Error Messages
   String? _foodIDText() {
-  final text = _foodIdController.value.text;
-  if (text.isEmpty) {
-    return 'Please enter Food ID';
-  } else if (!RegExp(r'^F0[\w-]+$').hasMatch(text)) {
-    return 'FoodId must start with F0';
+    final text = _foodIdController.value.text;
+    if (text.isEmpty) {
+      return 'Please enter Food ID';
+    } else if (!RegExp(r'^F0[\w-]+$').hasMatch(text)) {
+      return 'FoodId must start with F0';
+    }
+    return null;
   }
-  return null;
-}
 
-// Validations
+  // Validations
   void _validateFoodID(String value) {
     setState(() => isTyping = true);
   }
-
 
   Widget foodNameField() {
     return TextField(
@@ -157,17 +155,16 @@ class _PromotionState extends State<AddPromotion> {
     );
   }
 
-
   // Error Messages
   String? _foodNameText() {
-  final text = _foodNameController.value.text;
-  if (text.isEmpty) {
-    return 'Please enter Food Name';
+    final text = _foodNameController.value.text;
+    if (text.isEmpty) {
+      return 'Please enter Food Name';
+    }
+    return null;
   }
-  return null;
-}
 
-// Validations
+  // Validations
   void _validateFoodName(String value) {
     setState(() => isTyping = true);
   }
@@ -175,30 +172,28 @@ class _PromotionState extends State<AddPromotion> {
   Widget foodPriceField() {
     return TextField(
       controller: _foodPriceController,
-      decoration: InputDecoration(labelText: 'FoodPrice',
-   errorText:_foodPriceText(),
-      ),
+      decoration: InputDecoration(labelText: 'FoodPrice', errorText:_foodPriceText()),
       onChanged: (value) => _validateFoodPrice(value),
     );
   }
 
   // Error Messages
- String? _foodPriceText() {
-  final text = _foodPriceController.value.text;
-  if (text.isEmpty) {
-    return 'Please enter Food Price';
+  String? _foodPriceText() {
+    final text = _foodPriceController.value.text;
+    if (text.isEmpty) {
+      return 'Please enter Food Price';
+    }
+
+    // Check if the entered value is a valid double with two decimal places
+    final RegExp regex = RegExp(r'^\d+(\.\d{1,2})?$');
+    if (!regex.hasMatch(text)) {
+      return 'Please enter a valid number for Food Price with up to two decimal places';
+    }
+
+    return null;
   }
 
-  // Check if the entered value is a valid double with two decimal places
-  final RegExp regex = RegExp(r'^\d+(\.\d{1,2})?$');
-  if (!regex.hasMatch(text)) {
-    return 'Please enter a valid number for Food Price with up to two decimal places';
-  }
-
-  return null;
-}
-
-// Validations
+  // Validations
   void _validateFoodPrice(String value) {
     setState(() => isTyping = true);
   }
@@ -214,41 +209,38 @@ class _PromotionState extends State<AddPromotion> {
   }
 
   // Error Messages
- String? _foodPromotionText() {
-  final foodPriceText = _foodPriceController.value.text;
-  final promotionPriceText = _foodPromotionController.value.text;
+  String? _foodPromotionText() {
+    final foodPriceText = _foodPriceController.value.text;
+    final promotionPriceText = _foodPromotionController.value.text;
 
-  if (promotionPriceText.isEmpty) {
-    return 'Please enter Food Promotion';
+    if (promotionPriceText.isEmpty) {
+      return 'Please enter Food Promotion';
+    }
+
+    // Check if the entered value is a valid double with two decimal places
+    final RegExp regex = RegExp(r'^\d+(\.\d{1,2})?$');
+    if (!regex.hasMatch(promotionPriceText)) {
+      return 'Please enter a valid number for Food Promotion with up to two decimal places';
+    }
+
+    // Parse the values as doubles for comparison
+    final double? foodPrice = double.tryParse(foodPriceText);
+    final double? promotionPrice = double.tryParse(promotionPriceText);
+
+    // Check if promotion price is less than food price
+    if (foodPrice != null && promotionPrice != null && promotionPrice >= foodPrice) {
+      return 'Promotion price should be less than the food price';
+    }
+
+    return null;
   }
 
-  // Check if the entered value is a valid double with two decimal places
-  final RegExp regex = RegExp(r'^\d+(\.\d{1,2})?$');
-  if (!regex.hasMatch(promotionPriceText)) {
-    return 'Please enter a valid number for Food Promotion with up to two decimal places';
-  }
-
-  // Parse the values as doubles for comparison
-  final double? foodPrice = double.tryParse(foodPriceText);
-  final double? promotionPrice = double.tryParse(promotionPriceText);
-
-  // Check if promotion price is less than food price
-  if (foodPrice != null && promotionPrice != null && promotionPrice >= foodPrice) {
-    return 'Promotion price should be less than the food price';
-  }
-
-  return null;
-}
-
-
-// Validations
+  // Validations
   void _validateFoodPromotion(String value) {
     setState(() => isTyping = true);
   }
 
-
-
-  @override
+  //@override
   Widget datePromotionField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -267,7 +259,7 @@ class _PromotionState extends State<AddPromotion> {
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
               _errorMessage,
-              style: TextStyle(color: Colors.red),
+              style: const TextStyle(color: Colors.red),
             ),
           ),
       ],
@@ -276,18 +268,17 @@ class _PromotionState extends State<AddPromotion> {
 
   // Error Messages
   String? _datePromotionText() {
-  final text = _datePromotionController.value.text;
-  if (text.isEmpty) {
-    return 'Please Select the Date Promotion';
+    final text = _datePromotionController.value.text;
+    if (text.isEmpty) {
+      return 'Please Select the Date Promotion';
+    }
+    return null;
   }
-  return null;
-}
 
-// Validations
+  // Validations
   void _validateDatePromotion(String value) {
     setState(() => isTyping = true);
   }
-
 
   Widget quantityField() {
     return TextField(
@@ -300,22 +291,22 @@ class _PromotionState extends State<AddPromotion> {
   }
 
   // Error Messages
- String? _quantityText() {
-  final text = _quantityController.value.text;
-  if (text.isEmpty) {
-    return 'Please enter Food Quantity';
+  String? _quantityText() {
+    final text = _quantityController.value.text;
+    if (text.isEmpty) {
+      return 'Please enter Food Quantity';
+    }
+
+    // Check if the entered value is a valid integer
+    final int? quantity = int.tryParse(text);
+    if (quantity == null) {
+      return 'Please enter a valid integer for Food Quantity';
+    }
+
+    return null;
   }
 
-  // Check if the entered value is a valid integer
-  final int? quantity = int.tryParse(text);
-  if (quantity == null) {
-    return 'Please enter a valid integer for Food Quantity';
-  }
-
-  return null;
-}
-
-// Validations
+  // Validations
   void _validateQuantity(String value) {
     setState(() => isTyping = true);
   }
@@ -330,17 +321,16 @@ class _PromotionState extends State<AddPromotion> {
     );
   }
 
-
   // Error Messages
   String? _foodStallText() {
-  final text = _foodStallController.value.text;
-  if (text.isEmpty) {
-    return 'Please enter Food Stall';
+    final text = _foodStallController.value.text;
+    if (text.isEmpty) {
+      return 'Please enter Food Stall';
+    }
+    return null;
   }
-  return null;
-}
 
-// Validations
+  // Validations
   void _validateFoodStall(String value) {
     setState(() => isTyping = true);
   }
@@ -348,82 +338,27 @@ class _PromotionState extends State<AddPromotion> {
   Widget foodDescriptionField() {
     return TextField(
       controller: _foodDescriptionController,
-      decoration: InputDecoration(labelText: 'FoodDescription',
-   errorText:_foodDescriptionText(),
+      decoration: InputDecoration(
+        labelText: 'FoodDescription',
+        errorText:_foodDescriptionText(),
       ),
       onChanged: (value) => _validateFoodDescription(value),
     );
   }
 
-
   // Error Messages
   String? _foodDescriptionText() {
-  final text = _foodDescriptionController.value.text;
-  if (text.isEmpty) {
-    return 'Please enter Food Description';
+    final text = _foodDescriptionController.value.text;
+    if (text.isEmpty) {
+      return 'Please enter Food Description';
+    }
+    return null;
   }
-  return null;
-}
 
-// Validations
+  // Validations
   void _validateFoodDescription(String value) {
     setState(() => isTyping = true);
   }
-
-  // Widget emailField() {
-  //   return TextField(
-  //     controller: _emailController,
-  //     decoration: InputDecoration(
-  //       labelText: 'Email (someone@example.com)',
-  //       errorText: _emailErrorText(),
-  //     ),
-  //     onChanged: (value) => _validateEmail(value),
-  //   );
-  // }
-
-  // Widget passwordField() {
-  //   return TextField(
-  //     controller: _passwordController,
-  //     decoration: InputDecoration(
-  //       labelText: 'Password (minimum 8 characters)',
-  //       errorText: _passwordErrorText(),
-        
-  //       // "Show Password" icon
-  //       suffixIcon: IconButton(
-  //         icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility),
-  //         onPressed: () {
-  //           setState(() {
-  //             _showPassword = !_showPassword;
-  //           });
-  //         },
-  //       ),
-  //     ),
-  //     onChanged: (value) => _validatePassword(value),
-  //     obscureText: !_showPassword, // Hide or show password based on _showPassword value
-  //   );
-  // }
-
-  // Widget repeatPasswordField() {
-  //   return TextField(
-  //     controller: _repeatPasswordController,
-  //     decoration: InputDecoration(
-  //       labelText: 'Repeat Password',
-  //       errorText: _repeatPasswordErrorText(),
-        
-  //       // "Show Password" icon
-  //       suffixIcon: IconButton(
-  //         icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility),
-  //         onPressed: () {
-  //           setState(() {
-  //             _showPassword = !_showPassword;
-  //           });
-  //         },
-  //       ),
-  //     ),
-  //     onChanged: (value) => _validateRepeatPassword(value),
-  //     obscureText: !_showPassword, // Hide or show password based on _showPassword value
-  //   );
-  // }
 
   // Register Button
   Widget registerButton() {
@@ -456,88 +391,14 @@ class _PromotionState extends State<AddPromotion> {
           },
         );
       },
-      child: const Text('Register Now'),
       style: ElevatedButton.styleFrom(
         elevation: 5, // Set the elevation (depth) of the button
         shadowColor: Colors.black, // Set the shadow color
       ),
+      child: const Text('Register Now'),
     );
   }
 
-  // Validations
-  void _validateEmail(String value) {
-    setState(() => isTyping = true);
-  }
-
-  void _validatePassword(String value) {
-    setState(() {});
-  }
-
-  void _validateRepeatPassword(String value) {
-    setState(() {});
-  }
-
-  // Navigate to login page
-  void goToLogin() {
-    // print("Navigating to login page");
-  //   Navigator.push(
-  //   context,
-  //   MaterialPageRoute(builder: (context) => UserList()),
-  // );
-  }
-
-  // // Error Messages
-  // String? _emailErrorText() {
-  //   final text = _emailController.value.text;
-  //   if (text.isEmpty) {
-  //     return null;
-  //   } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$').hasMatch(text)) {
-  //     return 'Please enter a valid email';
-  //   }
-  //   return null;
-  // }
-
-  // String? _passwordErrorText() {
-  //   final text = _passwordController.value.text;
-  //   if (text.isEmpty) {
-  //     return null;
-  //   } else if (text.length < 8) {
-  //     return 'Password too short';
-  //   }
-  //   return null;
-  // }
-
-  // String? _repeatPasswordErrorText() {
-  //   if (_isRegistering) {
-  //     final textToCompare = _passwordController.value.text;
-  //     final inputText = _repeatPasswordController.value.text;
-  //     if (inputText != textToCompare) {
-  //       return 'Password does not match';
-  //     } else {
-  //       return null;
-  //     }
-  //   }
-  //   return null;
-  // }
-
-  // // Check whether the registration form has any errors
-  // bool _hasErrors() {
-  //   return _emailErrorText() != null ||
-  //     _passwordErrorText() != null ||
-  //     _repeatPasswordErrorText() != null;
-  // }
-
-  // Check whether the registration form has any empty fields
-  bool _hasEmptyFields() {
-    return _foodIdController.text.isEmpty || 
-      _foodNameController.text.isEmpty ||
-      _foodPriceController.text.isEmpty ||
-      _foodPromotionController.text.isEmpty ||
-      _foodStallController.text.isEmpty ||
-      _foodDescriptionController.text.isEmpty;
-  }
-
-  // Passing the data to "server/register.dart" for performing the server-side script
   void promotionRegister() async {
     String foodId = _foodIdController.text;
     String foodName = _foodNameController.text;
@@ -576,10 +437,6 @@ class _PromotionState extends State<AddPromotion> {
               },
               child: const Text('OK'),
             ),
-            // ElevatedButton(
-            //   onPressed: goToLogin,
-            //   child: const Text('Go to Promotion Page'),
-            // ),
           ]
         );
       }

@@ -37,12 +37,12 @@ class _SchoolView extends AdminStateView<SchoolView> {
       setState(() {
         _foodItems = data;
 
-         // Clear the existing data
-      itemData.clear();
+        // Clear the existing data
+        itemData.clear();
 
         for (int i = 0; i < _foodItems.length; i++) {
-          String foodNameCorrect = 'foodName: ${_foodItems[i]['foodName']}';
-          print('Food Name: ' + foodNameCorrect);
+          //String foodNameCorrect = 'foodName: ${_foodItems[i]['foodName']}';
+          //print('Food Name: ' + foodNameCorrect);
 
           itemData.add({
             'foodID': _foodItems[i]['foodID'],
@@ -117,8 +117,7 @@ class _SchoolView extends AdminStateView<SchoolView> {
     }
   }
 
-  Widget schoolItemView(
-      BuildContext context, int index, dynamic data, AdminTableItem item) {
+  Widget schoolItemView(BuildContext context, int index, dynamic data, AdminTableItem item) {
     if (index == -1) {
       return Container(
         alignment: Alignment.center,
@@ -138,27 +137,27 @@ class _SchoolView extends AdminStateView<SchoolView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-        onTap: () {
-          // Call the function to delete the item at index
-          _deleteItem(index);
-        },
-        child: const Text(
-          "Delete",
-          style: TextStyle(color: Colors.red, fontSize: 15),
-        ),
-      ),
-      const SizedBox(width: 10),
-         GestureDetector(
-        onTap: () {
-          // Call the function to delete the item at index
-          _showQuantityDialog(index);
-        },
-        child: const Text(
-          "Update",
-          style: TextStyle(color: Colors.red, fontSize: 15),
-        ),
-      ),
-        ],
+                onTap: () {
+                  // Call the function to delete the item at index
+                  _deleteItem(index);
+                },
+                child: const Text(
+                  "Delete",
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                ),
+              ),
+              const SizedBox(width: 10),
+                GestureDetector(
+                onTap: () {
+                  // Call the function to delete the item at index
+                  _showQuantityDialog(index);
+                },
+                child: const Text(
+                  "Update",
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                ),
+              ),
+            ],
           ),
         );
       }
@@ -174,40 +173,39 @@ class _SchoolView extends AdminStateView<SchoolView> {
     }
   }
 
-
   void _showQuantityDialog(int index) {
-  int newQuantity = 0;
+    int newQuantity = 0;
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Update Quantity'),
-        content: TextField(
-          keyboardType: TextInputType.number,
-          onChanged: (value) {
-            newQuantity = int.tryParse(value) ?? 0;
-          },
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Quantity'),
+          content: TextField(
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              newQuantity = int.tryParse(value) ?? 0;
             },
-            child: const Text('Cancel'),
           ),
-          ElevatedButton(
-            onPressed: () {
-              _updateQuantity(index, newQuantity);
-              Navigator.of(context).pop();
-            },
-            child: const Text('Update'),
-          ),
-        ],
-      );
-    },
-  );
-}
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _updateQuantity(index, newQuantity);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 
 

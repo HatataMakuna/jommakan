@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jom_makan/pages/Admin/views/index.dart';
 import 'package:jom_makan/pages/Admin/views/inventory/list.dart';
 import 'package:jom_makan/pages/Admin/views/inventory/list2.dart';
 import 'package:jom_makan/pages/Admin/views/login/login.dart';
 import 'package:jom_makan/pages/Admin/views/logout.dart';
-import 'package:jom_makan/pages/Admin/views/payment/paymentList.dart';
-import 'package:jom_makan/pages/Admin/views/payment/paymentList2.dart';
-import 'package:jom_makan/pages/Admin/views/payment/paymentList3.dart';
+import 'package:jom_makan/pages/Admin/views/payment/payment_list.dart';
+import 'package:jom_makan/pages/Admin/views/payment/payment_list2.dart';
+import 'package:jom_makan/pages/Admin/views/payment/payment_list3.dart';
 import 'package:jom_makan/pages/Admin/views/promotion/list.dart';
 import 'package:jom_makan/pages/Admin/views/report/daily.dart';
 import 'package:jom_makan/pages/Admin/views/report/monthly.dart';
 import 'package:jom_makan/pages/Admin/views/report/yearly.dart';
-import 'package:jom_makan/pages/Admin/views/stall/renewStall.dart';
+import 'package:jom_makan/pages/Admin/views/stall/renew_stall.dart';
 
 void main() {
   runApp(const MaterialApp(home: AdminPortal()));
@@ -39,6 +40,27 @@ class _AdminPortalState extends State<AdminPortal> {
     'Daily Sales Report', 'Monthly Sales Report', 'Yearly Sales Report', 'Payment Details',
     'Payment Method', 'Transaction Details', 'Transaction Details', 'Renew Stall', 'Logout'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    // User leaves the admin portal, change back to portrait mode only
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

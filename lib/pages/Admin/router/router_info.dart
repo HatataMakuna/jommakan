@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/Admin/views/logout.dart';
-import 'package:jom_makan/pages/Admin/views/payment/paymentList.dart';
-import 'package:jom_makan/pages/Admin/views/payment/paymentList2.dart';
-import 'package:jom_makan/pages/Admin/views/payment/paymentList3.dart';
+import 'package:jom_makan/pages/Admin/views/payment/payment_list.dart';
+import 'package:jom_makan/pages/Admin/views/payment/payment_list2.dart';
+import 'package:jom_makan/pages/Admin/views/payment/payment_list3.dart';
 import 'package:jom_makan/pages/Admin/views/report/daily.dart';
 import 'package:jom_makan/pages/Admin/views/report/monthly.dart';
 import 'package:jom_makan/pages/Admin/views/report/yearly.dart';
 import 'package:jom_makan/pages/Admin/views/router_view.dart';
 import 'package:jom_makan/pages/Admin/views/inventory/list.dart';
 import 'package:jom_makan/pages/Admin/views/inventory/list2.dart';
-import 'package:jom_makan/pages/Admin/views/stall/renewStall.dart';
+import 'package:jom_makan/pages/Admin/views/stall/renew_stall.dart';
 import 'package:jom_makan/pages/Admin/views/promotion/list.dart';
 
 import 'package:go_router/go_router.dart';

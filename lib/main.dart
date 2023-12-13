@@ -17,7 +17,7 @@ import 'package:jom_makan/pages/user/login.dart';
 import 'package:jom_makan/pages/user/create_account.dart';
 import 'package:jom_makan/pages/user/forget_password.dart';
 import 'package:jom_makan/pages/search/search.dart';
-import 'package:jom_makan/pages/Admin/admin_main.dart';
+//import 'package:jom_makan/pages/Admin/admin_main.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
 
         // Admin only
         '/admin': (context) => hasRequiredRole(context, 'Admin')
-            ? const AdminMainPage()
+            ? const AdminPortal()
             : const AccessDeniedPage(),
       },
     );

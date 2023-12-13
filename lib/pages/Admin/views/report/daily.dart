@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jom_makan/pages/Admin/views/base_views.dart';
-import 'package:jom_makan/pages/Admin/views/inventory/add_food.dart';
+//import 'package:jom_makan/pages/Admin/views/inventory/add_food.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
-import 'package:jom_makan/server/food/food.dart';
+//import 'package:jom_makan/server/food/food.dart';
 
 import 'package:jom_makan/pages/Admin/style/colors.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table.dart';
@@ -40,69 +40,57 @@ String currentDate = DateFormat('dd-MMM-yyyy').format(DateTime.now());
     try {
       final data = await paymentDisplay.getPaymentData();
 
-
       setState(() {
         _paymentItems = data;
 
-      //  _paymentItems.sort((a, b) => b['payment_date'].compareTo(a['payment_date']));
-      
-      //  _paymentItems.where((item) => item['payment_date'] == currentDate).toList();
-      // Filter items for the current date
-      // _paymentItems = _paymentItems
-      //     .where((item) => item['payment_date'] == currentDate)
-      //     .toList();
-      //     print(_paymentItems);
+        // Print currentDate and one payment_date for debugging
+        /* print('Current Date: $currentDate');
+        if (_paymentItems.isNotEmpty) {
+          print('Payment Date Example: ${_paymentItems.first['payment_date']}');
+        } */
 
-      
-// Print currentDate and one payment_date for debugging
-      print('Current Date: $currentDate');
-      if (_paymentItems.isNotEmpty) {
-        print('Payment Date Example: ${_paymentItems.first['payment_date']}');
-      }
+        // Filter items for the current date
+        _paymentItems = _paymentItems
+            .where((item) => item['payment_date'] == currentDate)
+            .toList();
 
-      // Filter items for the current date
-      _paymentItems = _paymentItems
-          .where((item) => item['payment_date'] == currentDate)
-          .toList();
-
-
-     // Calculate the total price
-totalPrice = _paymentItems.fold(
-  0.0,
-  (previous, current) {
-    final total = current['total_price'];
-    if (total is double) {
-      return previous + total;
-    } else if (total is String) {
-      // Try parsing the String to double
-      final doubleValue = double.tryParse(total);
-      if (doubleValue != null) {
-        return previous + doubleValue;
-      } else {
-        // Handle the case where parsing fails (e.g., log an error)
-        print('Error parsing total_price: $total');
-        return previous;
-      }
-    } else {
-      // Handle other types if necessary
-      return previous;
-    }
-  },
-);
+        // Calculate the total price
+        totalPrice = _paymentItems.fold(
+          0.0,
+          (previous, current) {
+            final total = current['total_price'];
+            if (total is double) {
+              return previous + total;
+            } else if (total is String) {
+              // Try parsing the String to double
+              final doubleValue = double.tryParse(total);
+              if (doubleValue != null) {
+                return previous + doubleValue;
+              } else {
+                // Handle the case where parsing fails (e.g., log an error)
+                print('Error parsing total_price: $total');
+                return previous;
+              }
+            } else {
+              // Handle other types if necessary
+              return previous;
+            }
+          },
+        );
 
 
-           // Clear the existing data
-      itemData.clear();
+        // Clear the existing data
+        itemData.clear();
 
-      itemData = _paymentItems.map((payment) {
-        return {
-          'paymentID': payment['paymentID'],
-          'payment_method': payment['payment_method'],
-          'payment_date': payment['payment_date'],
-          'payment_time': payment['payment_time'],
-          'total_price': payment['total_price'],
-        };
-      }).toList();
+        itemData = _paymentItems.map((payment) {
+          return {
+            'paymentID': payment['paymentID'],
+            'payment_method': payment['payment_method'],
+            'payment_date': payment['payment_date'],
+            'payment_time': payment['payment_time'],
+            'total_price': payment['total_price'],
+          };
+        }).toList();
 
         paymentController = AdminTableController(items: [
           AdminTableItem(
@@ -151,13 +139,11 @@ totalPrice = _paymentItems.fold(
     }
   }
 
-
   Widget buildTotalAmount() {
-  return Text('Total Amount: RM ${totalPrice.toStringAsFixed(2)}');
-}
+    return Text('Total Amount: RM ${totalPrice.toStringAsFixed(2)}');
+  }
 
-  Widget paymentItemView(
-      BuildContext context, int index, dynamic data, AdminTableItem item) {
+  Widget paymentItemView(BuildContext context, int index, dynamic data, AdminTableItem item) {
     if (index == -1) {
       return Container(
         alignment: Alignment.center,
@@ -177,27 +163,27 @@ totalPrice = _paymentItems.fold(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-        onTap: () {
-          // Call the function to delete the item at index
-          _deleteItem(index);
-        },
-        child: const Text(
-          "Delete",
-          style: TextStyle(color: Colors.red, fontSize: 15),
-        ),
-      ),
-      const SizedBox(width: 10),
-         GestureDetector(
-        onTap: () {
-          // Call the function to delete the item at index
-          _showPaymentMethodDialog(index);
-        },
-        child: const Text(
-          "Update",
-          style: TextStyle(color: Colors.red, fontSize: 15),
-        ),
-      ),
-        ],
+                onTap: () {
+                  // Call the function to delete the item at index
+                  _deleteItem(index);
+                },
+                child: const Text(
+                  "Delete",
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                ),
+              ),
+              const SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  // Call the function to delete the item at index
+                  _showPaymentMethodDialog(index);
+                },
+                child: const Text(
+                  "Update",
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                ),
+              ),
+            ],
           ),
         );
       }
@@ -213,70 +199,61 @@ totalPrice = _paymentItems.fold(
     }
   }
 
-
-
-
-
   void _showPaymentMethodDialog(int index) {
-  String newPaymentMethod = '';
+    String newPaymentMethod = '';
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Update Payment Method'),
-        content: TextField(
-          onChanged: (value) {
-            newPaymentMethod = value;
-          },
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Payment Method'),
+          content: TextField(
+            onChanged: (value) {
+              newPaymentMethod = value;
             },
-            child: const Text('Cancel'),
           ),
-          ElevatedButton(
-            onPressed: () {
-              _updatePaymentMethod(index, newPaymentMethod);
-              Navigator.of(context).pop();
-            },
-            child: const Text('Update'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-
-
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _updatePaymentMethod(index, newPaymentMethod);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   // Function to delete the item at the specified index
   void _deleteItem(int index) {
     setState(() {
-       if (index >= 0 && index < _paymentItems.length) {
-      // Remove the item from the _promoItems list
-      var deletedItem = _paymentItems.removeAt(index);
-      print('deleteItem:  + $deletedItem');
-
-      // for (int i = 0; i < _promoItems.length; i++) {
-       
-      // Remove the item from the itemData list
-      itemData.removeWhere((item) =>
+      if (index >= 0 && index < _paymentItems.length) {
+        // Remove the item from the _promoItems list
+        var deletedItem = _paymentItems.removeAt(index);
+        //print('deleteItem:  + $deletedItem');
+        
+        // Remove the item from the itemData list
+        itemData.removeWhere((item) =>
           item['paymentID'] == deletedItem['paymentID'] &&
           item['payment_method'] == deletedItem['payment_method'] &&
           item['payment_date'] == deletedItem['payment_date'] &&
           item['payment_time'] == deletedItem['payment_time']&&
-          item['total_price'] == deletedItem['total_price'] );
-       
-       // Delete the item from the database
-      paymentDisplay.deletePayment(deletedItem['paymentID']);
+          item['total_price'] == deletedItem['total_price']
+        );
+        
+        // Delete the item from the database
+        paymentDisplay.deletePayment(deletedItem['paymentID']);
 
-
-      // Update the table controller with the new data
-    paymentController.setNewData(itemData);
+        // Update the table controller with the new data
+        paymentController.setNewData(itemData);
       }
     });
   }
@@ -290,7 +267,6 @@ totalPrice = _paymentItems.fold(
         height: size.maxHeight,
          child: Column(
           children: [
-      
             const SizedBox(height: 10), // Add some space between button and table
             Expanded(
               child: AdminTable(
@@ -305,17 +281,16 @@ totalPrice = _paymentItems.fold(
   }
 
   void _updatePaymentMethod(int index, String newPaymentMethod) {
-  // Update the UI
-  setState(() {
-    _paymentItems[index]['payment_method'] = newPaymentMethod;
+    // Update the UI
+    setState(() {
+      _paymentItems[index]['payment_method'] = newPaymentMethod;
 
-    // Update the table controller with the new data
-    paymentController.setNewData(itemData);
-  });
+      // Update the table controller with the new data
+      paymentController.setNewData(itemData);
+    });
 
-  // Update the backend
-  String paymentID = _paymentItems[index]['paymentID'];
-  paymentDisplay.updatePaymentMethod(paymentID, newPaymentMethod);
-}
-
+    // Update the backend
+    String paymentID = _paymentItems[index]['paymentID'];
+    paymentDisplay.updatePaymentMethod(paymentID, newPaymentMethod);
+  }
 }

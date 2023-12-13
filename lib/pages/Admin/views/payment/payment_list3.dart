@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:jom_makan/pages/Admin/views/base_views.dart';
-import 'package:jom_makan/pages/Admin/views/inventory/add_food.dart';
+//import 'package:jom_makan/pages/Admin/views/inventory/add_food.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/controller.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table_item.dart';
-import 'package:jom_makan/server/food/food.dart';
+//import 'package:jom_makan/server/food/food.dart';
 
 import 'package:jom_makan/pages/Admin/style/colors.dart';
 import 'package:jom_makan/pages/Admin/widgets/table/table.dart';
 import 'package:jom_makan/server/payment/add_payment.dart';
 
-class PaymentView extends AdminView {
-  PaymentView({super.key});
+class PaymentDate extends AdminView {
+  PaymentDate({super.key});
 
   @override
   State<StatefulWidget> createState() => _PaymentView();
 }
 
-class _PaymentView extends AdminStateView<PaymentView> {
+class _PaymentView extends AdminStateView<PaymentDate> {
   late AdminTableController paymentController;
   late AdminTableController courseController;
 
@@ -37,13 +37,14 @@ class _PaymentView extends AdminStateView<PaymentView> {
 
       setState(() {
         _paymentItems = data;
+        _paymentItems.sort((a, b) => b['payment_date'].compareTo(a['payment_date']));
 
-         // Clear the existing data
-      itemData.clear();
+        // Clear the existing data
+        itemData.clear();
 
         for (int i = 0; i < _paymentItems.length; i++) {
-          String foodNameCorrect = 'foodName: ${_paymentItems[i]['payment_date']}';
-          print('Food Name: ' + foodNameCorrect);
+          //String foodNameCorrect = 'foodName: ${_paymentItems[i]['payment_date']}';
+          //print('Food Name: ' + foodNameCorrect);
 
           itemData.add({
             'paymentID': _paymentItems[i]['paymentID'],
@@ -60,7 +61,6 @@ class _PaymentView extends AdminStateView<PaymentView> {
               width: 150,
               label: "Payment ID",
               prop: 'paymentID',
-            fixed: FixedDirection.left
               ),
           AdminTableItem(
             itemView: paymentItemView,
@@ -73,6 +73,7 @@ class _PaymentView extends AdminStateView<PaymentView> {
             width: 150,
             label: "Payment Date",
             prop: 'payment_date',
+            fixed: FixedDirection.left
           ),
           AdminTableItem(
             itemView: paymentItemView,
@@ -101,8 +102,7 @@ class _PaymentView extends AdminStateView<PaymentView> {
     }
   }
 
-  Widget paymentItemView(
-      BuildContext context, int index, dynamic data, AdminTableItem item) {
+  Widget paymentItemView(BuildContext context, int index, dynamic data, AdminTableItem item) {
     if (index == -1) {
       return Container(
         alignment: Alignment.center,
@@ -122,27 +122,27 @@ class _PaymentView extends AdminStateView<PaymentView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-        onTap: () {
-          // Call the function to delete the item at index
-          _deleteItem(index);
-        },
-        child: const Text(
-          "Delete",
-          style: TextStyle(color: Colors.red, fontSize: 15),
-        ),
-      ),
-      const SizedBox(width: 10),
-         GestureDetector(
-        onTap: () {
-          // Call the function to delete the item at index
-          _showPaymentMethodDialog(index);
-        },
-        child: const Text(
-          "Update",
-          style: TextStyle(color: Colors.red, fontSize: 15),
-        ),
-      ),
-        ],
+                onTap: () {
+                  // Call the function to delete the item at index
+                  _deleteItem(index);
+                },
+                child: const Text(
+                  "Delete",
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                ),
+              ),
+              const SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  // Call the function to delete the item at index
+                  _showPaymentMethodDialog(index);
+                },
+                child: const Text(
+                  "Update",
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                ),
+              ),
+            ],
           ),
         );
       }
@@ -158,66 +158,62 @@ class _PaymentView extends AdminStateView<PaymentView> {
     }
   }
 
-
   void _showPaymentMethodDialog(int index) {
-  String newPaymentMethod = '';
+    String newPaymentMethod = '';
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Update Payment Method'),
-        content: TextField(
-          onChanged: (value) {
-            newPaymentMethod = value;
-          },
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Payment Method'),
+          content: TextField(
+            onChanged: (value) {
+              newPaymentMethod = value;
             },
-            child: const Text('Cancel'),
           ),
-          ElevatedButton(
-            onPressed: () {
-              _updatePaymentMethod(index, newPaymentMethod);
-              Navigator.of(context).pop();
-            },
-            child: const Text('Update'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-
-
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _updatePaymentMethod(index, newPaymentMethod);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   // Function to delete the item at the specified index
   void _deleteItem(int index) {
     setState(() {
-       if (index >= 0 && index < _paymentItems.length) {
-      // Remove the item from the _promoItems list
-      var deletedItem = _paymentItems.removeAt(index);
-      print('deleteItem:  + $deletedItem');
+      if (index >= 0 && index < _paymentItems.length) {
+        // Remove the item from the _promoItems list
+        var deletedItem = _paymentItems.removeAt(index);
+        //print('deleteItem:  + $deletedItem');
 
-      // for (int i = 0; i < _promoItems.length; i++) {
-       
-      // Remove the item from the itemData list
-      itemData.removeWhere((item) =>
+        // for (int i = 0; i < _promoItems.length; i++) {
+        
+        // Remove the item from the itemData list
+        itemData.removeWhere((item) =>
           item['paymentID'] == deletedItem['paymentID'] &&
           item['payment_method'] == deletedItem['payment_method'] &&
           item['payment_date'] == deletedItem['payment_date'] &&
-          item['payment_time'] == deletedItem['payment_time']);
-       
-       // Delete the item from the database
-      paymentDisplay.deletePayment(deletedItem['paymentID']);
+          item['payment_time'] == deletedItem['payment_time']
+        );
+        
+        // Delete the item from the database
+        paymentDisplay.deletePayment(deletedItem['paymentID']);
 
-
-      // Update the table controller with the new data
-    paymentController.setNewData(itemData);
+        // Update the table controller with the new data
+        paymentController.setNewData(itemData);
       }
     });
   }
@@ -246,17 +242,16 @@ class _PaymentView extends AdminStateView<PaymentView> {
   }
 
   void _updatePaymentMethod(int index, String newPaymentMethod) {
-  // Update the UI
-  setState(() {
-    _paymentItems[index]['payment_method'] = newPaymentMethod;
+    // Update the UI
+    setState(() {
+      _paymentItems[index]['payment_method'] = newPaymentMethod;
 
-    // Update the table controller with the new data
-    paymentController.setNewData(itemData);
-  });
+      // Update the table controller with the new data
+      paymentController.setNewData(itemData);
+    });
 
-  // Update the backend
-  String paymentID = _paymentItems[index]['paymentID'];
-  paymentDisplay.updatePaymentMethod(paymentID, newPaymentMethod);
-}
-
+    // Update the backend
+    String paymentID = _paymentItems[index]['paymentID'];
+    paymentDisplay.updatePaymentMethod(paymentID, newPaymentMethod);
+  }
 }
