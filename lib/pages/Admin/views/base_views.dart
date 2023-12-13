@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:responsive_framework/responsive_wrapper.dart';
+//import 'package:responsive_framework/responsive_wrapper.dart';
 
 import '../style/colors.dart';
 
@@ -18,13 +18,13 @@ class AdminStateView<T extends AdminView> extends State<T> {
     super.initState();
   }
 
-  // 大屏幕
+  // big screen
   Widget? buildForLarge(BuildContext context) => null;
 
-  // 中等
+  // medium screen
   Widget? buildForMedium(BuildContext context) => null;
 
-  // 小屏幕
+  // small screen
   Widget? buildForSmall(BuildContext context) => null;
 
   static bool isSmallScreen(BuildContext context) {
@@ -41,6 +41,16 @@ class AdminStateView<T extends AdminView> extends State<T> {
   }
 
   @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AdminColors().get().backgroundColor,
+      body: buildForSmall(context) ??
+        buildForMedium(context) ??
+        buildForLarge(context),
+    );
+  }
+
+  /* @override
   Widget build(BuildContext _context) {
     String? name = ResponsiveWrapper.of(_context).activeBreakpoint.name;
     return LayoutBuilder(
@@ -77,5 +87,5 @@ class AdminStateView<T extends AdminView> extends State<T> {
         }
       },
     );
-  }
+  } */
 }

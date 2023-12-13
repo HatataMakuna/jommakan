@@ -109,6 +109,7 @@ class _EditCartPageState extends State<EditCartPage> {
               buildAdditionalNotesTextField(),
               const SizedBox(height: 16),
               modifyCartItemButton(),
+              const SizedBox(height: 16),
               removeItemFromCartButton(),
             ],
           )

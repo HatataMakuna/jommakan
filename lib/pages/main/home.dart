@@ -52,6 +52,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _loadRecommendations() async {
+    if (!mounted) return; // Check if the widget is still mounted
+    
     List<Rating> ratings = await _foodRatings.getRatingsForRecommendation();
     RecommendationSystem recommendationSystem = RecommendationSystem(ratings: ratings);
 

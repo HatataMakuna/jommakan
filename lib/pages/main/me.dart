@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jom_makan/pages/FoodDelivery/location/map.dart';
 import 'package:jom_makan/pages/chatbot/chat_screen.dart';
 import 'package:jom_makan/pages/qr_code/scan_qrcode.dart';
 import 'package:jom_makan/pages/qr_code/show_qrcode.dart';
@@ -48,6 +49,7 @@ class MePage extends StatelessWidget {
                 // Light orange buttons
                 _buildButton(context, 'Scan QR code', 0xFFFBBF77),
                 _buildButton(context, 'Show QR code', 0xFFFBBF77),
+                _buildButton(context, 'Track My Order', 0xFFFBBF77),
                 
                 // Light yellow buttons
                 _buildButton(context, 'Rider info', 0xFFFFE5BA),
@@ -123,7 +125,16 @@ class MePage extends StatelessWidget {
                 return logoutConfirmation(context);
               },
             );
-          } else {
+          }
+          // TODO: Temporary button
+          else if (label == 'Track My Order') {
+            Navigator.push(
+              context, MaterialPageRoute(
+                builder: (context) => const LocationPage(),
+              ),
+            );
+          }
+          else {
             // Handle other button clicks
           }
         },

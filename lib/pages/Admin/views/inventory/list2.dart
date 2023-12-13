@@ -38,23 +38,25 @@ class _StockView extends AdminStateView<StockView> {
         _foodItems = data;
 
          // Sort the _foodItems list by the 'qty_in_stock' column in ascending order
-_foodItems.sort((a, b) => int.parse(a['qty_in_stock'].toString()).compareTo(int.parse(b['qty_in_stock'].toString())));
+        _foodItems.sort((a, b) =>
+          int.parse(a['qty_in_stock'].toString()).compareTo(int.parse(b['qty_in_stock'].toString()))
+        );
 
- // Clear the existing data
-      itemData.clear();
+        // Clear the existing data
+        itemData.clear();
 
-          itemData = _foodItems.map((item) {
-        return {
-          'foodID': item['foodID'],
-          'foodName': item['food_name'],
-          'stallID': item['stallID'],
-          'mainCategory': item['main_category'],
-          'subCategory': item['sub_category'],
-          'foodPrice': item['food_price'],
-          'qtyInStock': item['qty_in_stock'],
-          'foodImage': item['food_image'],
-          };
-      }).toList();
+        itemData = _foodItems.map((item) {
+          return {
+            'foodID': item['foodID'],
+            'foodName': item['food_name'],
+            'stallID': item['stallID'],
+            'mainCategory': item['main_category'],
+            'subCategory': item['sub_category'],
+            'foodPrice': item['food_price'],
+            'qtyInStock': item['qty_in_stock'],
+            'foodImage': item['food_image'],
+            };
+        }).toList();
 
         courseController = AdminTableController(items: [
           AdminTableItem(
@@ -117,8 +119,7 @@ _foodItems.sort((a, b) => int.parse(a['qty_in_stock'].toString()).compareTo(int.
     }
   }
 
-  Widget itemView(
-      BuildContext context, int index, dynamic data, AdminTableItem item) {
+  Widget itemView(BuildContext context, int index, dynamic data, AdminTableItem item) {
     if (index == -1) {
       return Container(
         alignment: Alignment.center,

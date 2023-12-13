@@ -15,12 +15,6 @@ class LoginView extends AdminView {
 }
 
 class _LoginView extends AdminStateView<LoginView> {
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget? buildForLarge(BuildContext context) {
     return Scaffold(

@@ -48,15 +48,6 @@ class PaymentSuccessPage extends StatefulWidget {
     required this.address, required this.seatNumbers,
   });
 
-  /*
-  required int userID, required bool noCutlery,
-    required List<Map<String, dynamic>> cartItems,
-    required String paymentMethod,
-
-    userID: Provider.of<UserProvider>(context, listen: false).userID!,
-    noCutlery: 
-  */
-
   @override
   State<StatefulWidget> createState() => _PaymentSuccessPageState();
 }
@@ -66,7 +57,7 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
   final AddPayment _addPayment = AddPayment();
   final AddDelivery _addDelivery = AddDelivery();
   bool isDataAvailable = true;
-  late String formattedTime;  // Define formattedTime variable
+  late String formattedTime; // Define formattedTime variable
 
   @override
   void initState() {
@@ -130,13 +121,6 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
 
   @override
   Widget build(BuildContext context) {
-    /* Future.delayed(Duration.zero, () {
-      Provider.of<UserProvider>(context, listen: false).setUserName('Testing');
-      Provider.of<UserProvider>(context, listen: false).setUserID(1);
-      Provider.of<UserProvider>(context, listen: false).setUserRole('User');
-      Provider.of<UserProvider>(context, listen: false).setUserEmail('testing@tarc.edu.my');
-    }); */
-
     return Scaffold(
       body: bodyData(),
     );
@@ -177,96 +161,68 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
 
   Widget successTicket() {
     return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16.0),
-        child: Material(
-          clipBehavior: Clip.antiAlias,
-          elevation: 2.0,
-          borderRadius: BorderRadius.circular(4.0),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                ProfileTile(
-                  title: "Thank You!",
-                  textColor: Colors.black,
-                  subtitle: "Your transaction was successful",
-                ),
-                ListTile(
-                  title: const Text("Date"),
-                  subtitle: Text(_addPayment.paymentDate),
-                  trailing: Text(_addPayment.paymentTime),
-                ),
-                ListTile(
-                  title: Text(Provider.of<UserProvider>(context, listen: false).userName!),
-                  subtitle: Text(Provider.of<UserProvider>(context, listen: false).userEmail!),
-                  trailing: const CircleAvatar(
-                    radius: 20.0,
-                    backgroundImage: NetworkImage(
-                      "https://lh3.googleusercontent.com/-pkPFE8SoLfI/XCkghv3J5SI/AAAAAAAAApg/0wY2TMfjTvAlJHA5iQ0BQ-e5u0jvwCIzACEwYBhgL/w138-h140-p/Screenshot_2018-12-19-11-42-04-053_com.instagram.android.png"
-                    ),
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      child: Material(
+        clipBehavior: Clip.antiAlias,
+        elevation: 2.0,
+        borderRadius: BorderRadius.circular(4.0),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              ProfileTile(
+                title: "Thank You!",
+                textColor: Colors.black,
+                subtitle: "Your transaction was successful",
+              ),
+              ListTile(
+                title: const Text("Date"),
+                subtitle: Text(_addPayment.paymentDate),
+                trailing: Text(_addPayment.paymentTime),
+              ),
+              ListTile(
+                title: Text(Provider.of<UserProvider>(context, listen: false).userName!),
+                subtitle: Text(Provider.of<UserProvider>(context, listen: false).userEmail!),
+                trailing: const CircleAvatar(
+                  radius: 20.0,
+                  backgroundImage: NetworkImage(
+                    "https://lh3.googleusercontent.com/-pkPFE8SoLfI/XCkghv3J5SI/AAAAAAAAApg/0wY2TMfjTvAlJHA5iQ0BQ-e5u0jvwCIzACEwYBhgL/w138-h140-p/Screenshot_2018-12-19-11-42-04-053_com.instagram.android.png"
                   ),
                 ),
-                ListTile(
-                  title: const Text("Amount"),
-                  subtitle: Text("RM ${widget.totalPrice.toStringAsFixed(2)}"),
-                  trailing: const Text("Completed"),
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  elevation: 0.0,
-                  color: Colors.grey.shade300,
-                  child: ListTile(
-                    leading: const Icon(
-                      FontAwesomeIcons.ccVisa,
-                      color: Color(0xfffeb324),
-                    ),
-                    title: Text(widget.paymentMethod),
-                    subtitle: const Text("PNB Card ending ***6"), 
+              ),
+              ListTile(
+                title: const Text("Amount"),
+                subtitle: Text("RM ${widget.totalPrice.toStringAsFixed(2)}"),
+                trailing: const Text("Completed"),
+              ),
+              Card(
+                clipBehavior: Clip.antiAlias,
+                elevation: 0.0,
+                color: Colors.grey.shade300,
+                child: ListTile(
+                  leading: const Icon(
+                    FontAwesomeIcons.ccVisa,
+                    color: Color(0xfffeb324),
                   ),
+                  title: Text(widget.paymentMethod),
+                  subtitle: const Text("PNB Card ending ***6"), 
                 ),
-                const SizedBox(height: 10),
-                if (widget.orderMethod == 'Delivery') ...[
-                  GestureDetector(
-                    child: Container(
-                      height: 40.0,
-                      width: 220,
-                      decoration: BoxDecoration(
-                        color: const Color(0xfffeb324),
-                        borderRadius: BorderRadius.circular(25.0),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Track Your Order",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => const Location(),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                ],
+              ),
+              const SizedBox(height: 10),
+              if (widget.orderMethod == 'Delivery') ...[
                 GestureDetector(
                   child: Container(
-                    height: 40,
+                    height: 40.0,
                     width: 220,
                     decoration: BoxDecoration(
                       color: const Color(0xfffeb324),
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(25.0),
                     ),
                     child: const Center(
                       child: Text(
-                        'Return to Home Page',
+                        "Track Your Order",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
@@ -275,29 +231,45 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.push(
-                      context, MaterialPageRoute(
-                        builder: (BuildContext context) => const MainPage(),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => const LocationPage(),
                       ),
                     );
-                  }
+                  },
                 ),
+                const SizedBox(height: 10),
               ],
-            ),
+              GestureDetector(
+                child: Container(
+                  height: 40,
+                  width: 220,
+                  decoration: BoxDecoration(
+                    color: const Color(0xfffeb324),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Return to Home Page',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context, MaterialPageRoute(
+                      builder: (BuildContext context) => const MainPage(),
+                    ),
+                  );
+                }
+              ),
+            ],
           ),
         ),
-  );
+      ),
+    );
   }
-
-  /* String _formatTime(DateTime dateTime) {
-    return "${_formatTwoDigitNumber(dateTime.hour)}:${_formatTwoDigitNumber(dateTime.minute)} ${_getPeriod(dateTime.hour)}";
-  }
-
-  String _formatTwoDigitNumber(int number) {
-    return number.toString().padLeft(2, '0');
-  }
-
-  String _getPeriod(int hour) {
-    return hour < 12 ? 'AM' : 'PM';
-  } */
 }

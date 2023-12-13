@@ -1,7 +1,9 @@
 // ignore_for_file: use_key_in_widget_constructors
 // THE OFFICIAL ROUTES PAGE
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jom_makan/access_denied.dart';
+import 'package:jom_makan/pages/Admin/admin_portal.dart';
 import 'package:jom_makan/pages/order/order_history.dart';
 import 'package:jom_makan/pages/rider/rider_info.dart';
 import 'package:jom_makan/pages/user/change_password.dart';
@@ -15,9 +17,16 @@ import 'package:jom_makan/pages/user/login.dart';
 import 'package:jom_makan/pages/user/create_account.dart';
 import 'package:jom_makan/pages/user/forget_password.dart';
 import 'package:jom_makan/pages/search/search.dart';
-import 'package:jom_makan/pages/Admin/admin_main.dart';
+//import 'package:jom_makan/pages/Admin/admin_main.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(
     MultiProvider(
       providers: [
@@ -26,7 +35,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => SeatListProvider()),
       ],
       child: const MyApp(),
-    )
+    ),
   );
 }
 
@@ -55,14 +64,26 @@ class MyApp extends StatelessWidget {
         '/user/forget-password': (context) => const ForgetPasswordPage(),
 
         // Users only
-        '/user/change-password': (context) => hasRequiredRole(context, 'User') ? const ChangePassword() : const AccessDeniedPage(),
-        '/user/order-history': (context) => hasRequiredRole(context, 'User') ? const OrderHistoryPage() : const AccessDeniedPage(),
-        '/home': (context) => hasRequiredRole(context, 'User') ? const MainPage() : const AccessDeniedPage(),
-        '/search': (context) => hasRequiredRole(context, 'User') ? const SearchPage() : const AccessDeniedPage(),
-        '/rider/rider-info': (context) => hasRequiredRole(context, 'User') ? const RiderInfo() : const AccessDeniedPage(),
+        '/user/change-password': (context) => hasRequiredRole(context, 'User')
+            ? const ChangePassword()
+            : const AccessDeniedPage(),
+        '/user/order-history': (context) => hasRequiredRole(context, 'User')
+            ? const OrderHistoryPage()
+            : const AccessDeniedPage(),
+        '/home': (context) => hasRequiredRole(context, 'User')
+            ? const MainPage()
+            : const AccessDeniedPage(),
+        '/search': (context) => hasRequiredRole(context, 'User')
+            ? const SearchPage()
+            : const AccessDeniedPage(),
+        '/rider/rider-info': (context) => hasRequiredRole(context, 'User')
+            ? const RiderInfo()
+            : const AccessDeniedPage(),
 
         // Admin only
-        '/admin': (context) => hasRequiredRole(context, 'Admin') ? const AdminMainPage() : const AccessDeniedPage(),
+        '/admin': (context) => hasRequiredRole(context, 'Admin')
+            ? const AdminPortal()
+            : const AccessDeniedPage(),
       },
     );
   }

@@ -10,27 +10,26 @@ class IndexView extends AdminView {
   IndexView({super.key});
 
   @override
-  State<IndexView> createState() => _IndexView();
+  State<StatefulWidget> createState() => _IndexView();
 }
-
+// AdminStateView<IndexView>
 class _IndexView extends AdminStateView<IndexView> {
   late AdminTableController<dynamic> controller;
-
-
-var itemData = [];
+  var itemData = [];
   final Food foodDisplay = Food();
   List<Map<String, dynamic>> _foodItems = [];
 
-   @override
+  @override
   void initState() {
     super.initState();
     controller = AdminTableController<dynamic>(items: []);
     _getData();
   }
-
   
-  Widget itemView(BuildContext context, int index, dynamic data,
-      AdminTableItem<dynamic> item) {
+  Widget itemView(
+    BuildContext context, int index, dynamic data,
+    AdminTableItem<dynamic> item
+  ) {
     if (index == -1) {
       return Container(
         alignment: Alignment.center,
@@ -49,7 +48,6 @@ var itemData = [];
     }
   }
 
-  @override
   void _getData() async {
     try {
       final data = await foodDisplay.getFoodData();
@@ -57,8 +55,10 @@ var itemData = [];
       setState(() {
         _foodItems = data;
 
-       // Sort the _foodItems list by the 'views' column in descending order
-      _foodItems.sort((a, b) =>int.parse(b['views'].toString()).compareTo(int.parse(a['views'].toString())));
+        // Sort the _foodItems list by the 'views' column in descending order
+        _foodItems.sort(
+          (a, b) => int.parse(b['views'].toString()).compareTo(int.parse(a['views'].toString()))
+        );
 
       itemData = _foodItems.map((item) {
         return {
@@ -73,9 +73,6 @@ var itemData = [];
           'views': item['views'],
         };
       }).toList();
-
-        
-
 
     controller = AdminTableController(items: [
       AdminTableItem<dynamic>(
@@ -137,8 +134,6 @@ var itemData = [];
       print('Error loading View data: $e');
     }
   }
-    
-  
 
   @override
   Widget? buildForLarge(BuildContext context) {
