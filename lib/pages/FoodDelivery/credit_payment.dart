@@ -22,6 +22,7 @@ class CreditCardPage extends StatefulWidget {
   State<StatefulWidget> createState() => _CreditCardPageState();
 }
 
+
 class _CreditCardPageState extends State<CreditCardPage> {
   late BuildContext _context;
   TextEditingController ccController = TextEditingController();
@@ -172,104 +173,166 @@ class _CreditCardPageState extends State<CreditCardPage> {
         ),
       );
 
-  Widget fillEntries() => Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            TextField(
-              controller: ccController,
-              keyboardType: TextInputType.number,
-              maxLength: 19,
-              style: const TextStyle(fontFamily: 'Raleway', color: Colors.black),
-              decoration: const InputDecoration(
-                labelText: "Credit Card Number",
-                labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  showCardImage = false;
-                });
-              },
+ Widget fillEntries() => Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          TextField(
+            controller: ccController,
+            keyboardType: TextInputType.number,
+            maxLength: 19,
+            style: const TextStyle(fontFamily: 'Raleway', color: Colors.black),
+            decoration: InputDecoration(
+              labelText: "Credit Card Number",
+              labelStyle: TextStyle(fontWeight: FontWeight.bold),
+              errorText: _ccText(),
+              border: OutlineInputBorder(),
             ),
-            TextField(
-              controller: expController,
-              keyboardType: TextInputType.number,
-              maxLength: 5,
-              style: const TextStyle(fontFamily: 'Raleway', color: Colors.black),
-              decoration: const InputDecoration(
-                labelStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-                labelText: "MM/YY",
-                border: OutlineInputBorder(),
+            onChanged: (value) {
+              setState(() {
+                showCardImage = false;
+              });
+            },
+          ),
+          TextField(
+            controller: expController,
+            keyboardType: TextInputType.number,
+            maxLength: 5,
+            style: const TextStyle(fontFamily: 'Raleway', color: Colors.black),
+            decoration: InputDecoration(
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
-              onChanged: (value) {
-                setState(() {
-                  showCardImage = false;
-                });
-              },
+              labelText: "MM/YY",
+              errorText: _expText(),
+              border: OutlineInputBorder(),
             ),
-            TextField(
-              controller: cvvController,
-              keyboardType: TextInputType.number,
-              maxLength: 3,
-              style: const TextStyle(fontFamily: 'Raleway', color: Colors.black),
-              decoration: const InputDecoration(
-                labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                labelText: "CVV",
-                border: OutlineInputBorder(),
+            onChanged: (value) {
+              setState(() {
+                showCardImage = false;
+              });
+            },
+          ),
+          TextField(
+            controller: cvvController,
+            keyboardType: TextInputType.number,
+            maxLength: 3,
+            style: const TextStyle(fontFamily: 'Raleway', color: Colors.black),
+            decoration: InputDecoration(
+              labelStyle: TextStyle(fontWeight: FontWeight.bold),
+              labelText: "CVV",
+              errorText: _cvvText(),
+              border: OutlineInputBorder(),
+            ),
+            onChanged: (value) {
+              setState(() {
+                showCardImage = false;
+              });
+            },
+          ),
+          TextField(
+            controller: nameController,
+            keyboardType: TextInputType.text,
+            maxLength: 20,
+            style: const TextStyle(fontFamily: 'Raleway', color: Colors.black),
+            decoration: InputDecoration(
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
-              onChanged: (value) {
-                setState(() {
-                  showCardImage = false;
-                });
-              },
+              labelText: "Name on card",
+              errorText: _nameText(),
+              border: OutlineInputBorder(),
             ),
-            TextField(
-              controller: nameController,
-              keyboardType: TextInputType.text,
-              maxLength: 20,
-              style: const TextStyle(fontFamily: 'Raleway', color: Colors.black),
-              decoration: const InputDecoration(
-                labelStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-                labelText: "Name on card",
-                border: OutlineInputBorder(),
+          ),
+          // Additional fields for account details
+          TextField(
+            controller: accountNumberController,
+            keyboardType: TextInputType.number,
+            maxLength: 16,
+            style: const TextStyle(fontFamily: 'Raleway', color: Colors.black),
+            decoration: InputDecoration(
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
+              labelText: "Account Number",
+              errorText: _accountNumberText(),
+              border: OutlineInputBorder(),
             ),
-            // Additional fields for account details
-            TextField(
-              controller: accountNumberController,
-              keyboardType: TextInputType.number,
-              maxLength: 16,
-              style: const TextStyle(fontFamily: 'Raleway', color: Colors.black),
-              decoration: const InputDecoration(
-                labelStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-                labelText: "Account Number",
-                border: OutlineInputBorder(),
+          ),
+          TextField(
+            controller: bankNameController,
+            keyboardType: TextInputType.text,
+            maxLength: 20,
+            style: const TextStyle(fontFamily: 'Raleway', color: Colors.black),
+            decoration: InputDecoration(
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
+              labelText: "Bank Name",
+              errorText: _bankNameText(),
+              border: OutlineInputBorder(),
             ),
-            TextField(
-              controller: bankNameController,
-              keyboardType: TextInputType.text,
-              maxLength: 20,
-              style: const TextStyle(fontFamily: 'Raleway', color: Colors.black),
-              decoration: const InputDecoration(
-                labelStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-                labelText: "Bank Name",
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+
+// Validation Functions
+String? _ccText() {
+  final text = ccController.text;
+  if (text.isEmpty) {
+    return 'Please enter Credit Card Number';
+  }
+  // Add additional validation if needed
+  return null;
+}
+
+String? _expText() {
+  final text = expController.text;
+  if (text.isEmpty) {
+    return 'Please enter MM/YY';
+  }
+  // Add additional validation if needed
+  return null;
+}
+
+String? _cvvText() {
+  final text = cvvController.text;
+  if (text.isEmpty) {
+    return 'Please enter CVV';
+  }
+  // Add additional validation if needed
+  return null;
+}
+
+String? _nameText() {
+  final text = nameController.text;
+  if (text.isEmpty) {
+    return 'Please enter Name on card';
+  }
+  // Add additional validation if needed
+  return null;
+}
+
+String? _accountNumberText() {
+  final text = accountNumberController.text;
+  if (text.isEmpty) {
+    return 'Please enter Account Number';
+  }
+  // Add additional validation if needed
+  return null;
+}
+
+String? _bankNameText() {
+  final text = bankNameController.text;
+  if (text.isEmpty) {
+    return 'Please enter Bank Name';
+  }
+  // Add additional validation if needed
+  return null;
+}
+
 
   Widget toggleCardImage() => Padding(
         padding: const EdgeInsets.all(16.0),
