@@ -42,16 +42,16 @@ class _OrderItemState extends State<OrderItemWidget> {
               children: [
                 Text(
                   widget.item['food_name'] ?? '',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   widget.item['stall_name'] ?? '',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8.0),
                 Text(
                   'x ${widget.item['quantity'] ?? '0'}',
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
                 const SizedBox(height: 8.0),
                 _buildPreferencesDropdown(preferences),
@@ -67,7 +67,7 @@ class _OrderItemState extends State<OrderItemWidget> {
           ],
           Text(
             'Price: RM ${(int.parse(widget.item['quantity'] ?? '0') * double.parse(widget.item['price'] ?? '0.0')).toStringAsFixed(2)}',
-            style: const TextStyle(fontSize: 14),
+            style: const TextStyle(fontSize: 12),
           ),
           if (widget.selectedDelivery['status'] == 'In progress') ...[
             const SizedBox(width: 4.0),
