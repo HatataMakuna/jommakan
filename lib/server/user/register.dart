@@ -34,7 +34,7 @@ class Register {
       for (final row in results.rows) {
         existingEmail = row.colAt(0);
       }
-      print('Email checking: ' + existingEmail.toString());
+      //print('Email checking: ' + existingEmail.toString());
 
       if (existingEmail == null) {
         return false;

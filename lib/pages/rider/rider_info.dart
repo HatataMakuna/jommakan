@@ -87,16 +87,16 @@ class _RiderInfoState extends State<RiderInfo> {
           'You are not yet registered as a rider. Join our delivery team and start earning passive money!',
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 13,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
         const Text(
           'Rules and Regulations:',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: 14,
           ),
         ),
         // Need change the rules
@@ -106,10 +106,12 @@ class _RiderInfoState extends State<RiderInfo> {
             Text(
               '1. Riders must stay at the campus by the time you accept any delivery offer.',
               textAlign: TextAlign.start,
+              style: TextStyle(fontSize: 12),
             ),
             Text(
               '2. Riders must complete at least 2 deliveries every week.',
               textAlign: TextAlign.start,
+              style: TextStyle(fontSize: 12),
             ),
           ],
         ),
@@ -129,7 +131,7 @@ class _RiderInfoState extends State<RiderInfo> {
             ),
             const Text(
               'I have read and agree to the rules and regulations.',
-              style: TextStyle(fontSize: 14),
+              style: TextStyle(fontSize: 12),
             ),
           ],
         ),
