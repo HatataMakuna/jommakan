@@ -103,7 +103,7 @@ class _PendingDeliveryPageState extends State<PendingDeliveryPage> {
       padding: const EdgeInsets.all(8.0),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
       ),
     );
   }
