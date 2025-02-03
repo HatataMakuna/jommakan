@@ -1,5 +1,8 @@
-# JomMakan
-A TAR UMT online food ordering system project using Dart and Flutter.
+# JomMakan (Final Year Project)
+A mobile-based campus canteen ordering system using Dart and Flutter. This application is created to solve hidden dangers in school cafeterias such as reduce time wasted on standing in long queues. Apply technologies to improve the school's canteen problems and increase overall usage and efficiency.
+
+*	**Methodology:** Implement AI selected seat and generate QR Code and integrate database with Cloud Computing server.
+*	**Project outcome(s):** Successfully provide the necessary functions to allow students and staff to perform ordering process in the mobile application.
 
 ## Getting Started
 
