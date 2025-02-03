@@ -1,0 +1,43 @@
+INSTALLATION GUIDE
+
+Installing on Device
+==================================================
+1. The `apk` file is already provided in project folder. You can directly use the `app-release.apk` file to install the JomMakan application on your Android device.
+
+
+Opening the project in Visual Studio Code (VS Code)
+==================================================
+1. Install Flutter through this link: https://docs.flutter.dev/get-started/install
+2. Right click on the project folder, then select 'Open with Code'.
+3. Make sure you have Flutter and Dart extensions both installed on your VS Code.
+4. Press Ctrl+Shift+P, then select 'Flutter: Get Packages' to get all the package dependencies.
+5. Click device (by default Flutter selects the last device connected automatically) in the status bar to select the device you want to use for running the project.
+	5A. If you already run a Flutter project before, Flutter extension selects the last device connected automatically. You can ignore this step unless you want to change device.
+	5B. If you haven't run a Flutter project before, the status bar reads 'No Devices', which means you must select a device before proceed.
+6. Go to `lib/main.dart`, click the 'Run' button at the top of main() method.
+7. Wait for a while and the project will be launched.
+
+NOTES:
+- Location services only works in release mode.
+
+
+Viewing the database
+==================================================
+1. Download and install the HeidiSQL software from this link: https://www.heidisql.com/download.php
+2. Open HeidiSQL.
+3. Click New button at the bottom left of the HeidiSQL window.
+4. Fill in the following details:
+Hostname / IP: jommakan.cfogfqygdcer.us-east-1.rds.amazonaws.com
+User: admin
+Password: fypjommakan
+Port: 3306
+
+5. Click "Open" button to start connect to the database.
+6. You should be able to see the main screen with the list of databases located at the left of the window.
+7. Expand the 'jommakan' database, you should able to see a lot of tables.
+8. Select the corresponding table you want to view.
+9. To view the table data, click the 'Data' tab.
+10. In case if there's any changes to the table data, click the 'Refresh' icon or press F5.
+
+NOTES:
+- In case if you can't connect to the server, we have provided the database snapshot to make it up. The SQL script can be found at `lib/database/jommakan.sql` in the project folder.
